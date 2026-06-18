@@ -177,10 +177,7 @@ mod tests {
 
     #[test]
     fn test_bandit_ucb1() {
-        let policy = BanditRouterPolicy::new(
-            vec!["m1".into(), "m2".into()],
-            BanditStrategy::UCB1,
-        );
+        let policy = BanditRouterPolicy::new(vec!["m1".into(), "m2".into()], BanditStrategy::UCB1);
         let ctx = RoutingContext::default();
         let selected = policy.select_model(&ctx);
         assert!(!selected.is_empty());

@@ -11,11 +11,7 @@ pub trait MemoryBackend: Send + Sync {
         source: &str,
         metadata: Option<&Value>,
     ) -> Result<String, OpenJarvisError>;
-    fn retrieve(
-        &self,
-        query: &str,
-        top_k: usize,
-    ) -> Result<Vec<RetrievalResult>, OpenJarvisError>;
+    fn retrieve(&self, query: &str, top_k: usize) -> Result<Vec<RetrievalResult>, OpenJarvisError>;
     fn delete(&self, doc_id: &str) -> Result<bool, OpenJarvisError>;
     fn clear(&self) -> Result<(), OpenJarvisError>;
     fn count(&self) -> Result<usize, OpenJarvisError>;

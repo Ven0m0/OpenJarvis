@@ -242,9 +242,9 @@ impl PyHybridMemory {
         for key in &backend_keys {
             let backend: Box<dyn MemoryBackend> = match key.as_str() {
                 "sqlite" => {
-                    let m = openjarvis_tools::storage::SQLiteMemory::new(
-                        std::path::Path::new(":memory:"),
-                    )
+                    let m = openjarvis_tools::storage::SQLiteMemory::new(std::path::Path::new(
+                        ":memory:",
+                    ))
                     .map_err(|e| {
                         PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string())
                     })?;
@@ -258,10 +258,9 @@ impl PyHybridMemory {
                     Box::new(m)
                 }
                 "colbert" => {
-                    let m =
-                        openjarvis_tools::storage::ColBERTMemory::in_memory().map_err(|e| {
-                            PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string())
-                        })?;
+                    let m = openjarvis_tools::storage::ColBERTMemory::in_memory().map_err(|e| {
+                        PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string())
+                    })?;
                     Box::new(m)
                 }
                 other => {
@@ -318,8 +317,9 @@ impl PyKnowledgeGraphMemory {
     #[new]
     #[pyo3(signature = (path=":memory:"))]
     fn new(path: &str) -> PyResult<Self> {
-        let inner = openjarvis_tools::storage::KnowledgeGraphMemory::new(std::path::Path::new(path))
-            .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?;
+        let inner =
+            openjarvis_tools::storage::KnowledgeGraphMemory::new(std::path::Path::new(path))
+                .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?;
         Ok(Self { inner })
     }
 

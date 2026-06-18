@@ -14,10 +14,7 @@ pub struct GRPORouterPolicy {
 
 impl GRPORouterPolicy {
     pub fn new(models: Vec<String>, temperature: f64) -> Self {
-        let weights = models
-            .iter()
-            .map(|m| (m.clone(), 0.0))
-            .collect();
+        let weights = models.iter().map(|m| (m.clone(), 0.0)).collect();
         Self {
             models,
             weights: Mutex::new(weights),
@@ -30,8 +27,7 @@ impl GRPORouterPolicy {
             return;
         }
 
-        let mean_reward: f64 =
-            rewards.iter().map(|(_, r)| r).sum::<f64>() / rewards.len() as f64;
+        let mean_reward: f64 = rewards.iter().map(|(_, r)| r).sum::<f64>() / rewards.len() as f64;
         let std_reward: f64 = {
             let var = rewards
                 .iter()
@@ -93,10 +89,7 @@ mod tests {
 
     #[test]
     fn test_grpo_selection() {
-        let policy = GRPORouterPolicy::new(
-            vec!["m1".into(), "m2".into()],
-            1.0,
-        );
+        let policy = GRPORouterPolicy::new(vec!["m1".into(), "m2".into()], 1.0);
         let ctx = RoutingContext::default();
         let selected = policy.select_model(&ctx);
         assert!(!selected.is_empty());
@@ -104,10 +97,7 @@ mod tests {
 
     #[test]
     fn test_grpo_update_biases() {
-        let policy = GRPORouterPolicy::new(
-            vec!["good".into(), "bad".into()],
-            0.5,
-        );
+        let policy = GRPORouterPolicy::new(vec!["good".into(), "bad".into()], 0.5);
 
         let rewards = vec![
             ("good".into(), 0.9),
