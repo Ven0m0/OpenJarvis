@@ -54,7 +54,18 @@ function loadConversations(): ConversationStore {
     const raw = localStorage.getItem(CONVERSATIONS_KEY);
     if (!raw) return { version: 1, conversations: {}, activeId: null };
     const parsed = JSON.parse(raw);
-    if (parsed.version === 1) return parsed;
+    if (parsed.version === 1) {
+      // Object URLs (blob:) created for spoken replies die when the app
+      // reloads; drop them so stale, unplayable players don't render.
+      for (const conv of Object.values(parsed.conversations || {}) as Array<{
+        messages?: Array<{ audio?: { url?: string } }>;
+      }>) {
+        for (const msg of conv?.messages || []) {
+          if (msg?.audio?.url?.startsWith('blob:')) delete msg.audio;
+        }
+      }
+      return parsed;
+    }
     return { version: 1, conversations: {}, activeId: null };
   } catch {
     return { version: 1, conversations: {}, activeId: null };

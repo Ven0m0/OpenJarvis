@@ -305,9 +305,7 @@ async def memory_index(req: MemoryIndexRequest, request: Request):
                 for d in workspace.split(os.pathsep)
                 if d.strip()
             ]
-            if not any(
-                target == root or root in target.parents for root in roots
-            ):
+            if not any(target == root or root in target.parents for root in roots):
                 raise HTTPException(
                     status_code=403,
                     detail="Path is outside the allowed workspace directories.",
@@ -912,6 +910,64 @@ async def speech_health(request: Request):
         "available": backend.health(),
         "backend": backend.backend_id,
     }
+
+
+@speech_router.post("/tts")
+async def synthesize_speech(request: Request):
+    """Synthesize text to speech and return raw audio bytes.
+
+    Used by the desktop client to speak the actual assistant reply. The TTS
+    backend (and its loaded model) is cached on ``app.state`` so only the
+    first call pays the model-load cost.
+    """
+    from starlette.concurrency import run_in_threadpool
+    from starlette.responses import Response
+
+    import openjarvis.speech  # noqa: F401  -- registers TTS backends
+    from openjarvis.core.registry import TTSRegistry
+
+    body = await request.json()
+    text = (body.get("text") or "").strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Missing 'text'")
+
+    cfg = getattr(request.app.state, "config", None)
+    digest_cfg = getattr(cfg, "digest", None)
+    aliases = {"openai": "openai_tts"}
+    backend_key = (
+        body.get("backend") or getattr(digest_cfg, "tts_backend", "") or "kokoro"
+    )
+    backend_key = aliases.get(backend_key, backend_key)
+    voice_id = body.get("voice_id") or getattr(digest_cfg, "voice_id", "") or ""
+    speed = float(body.get("speed") or getattr(digest_cfg, "voice_speed", 1.0) or 1.0)
+
+    if not TTSRegistry.contains(backend_key):
+        raise HTTPException(
+            status_code=501, detail=f"TTS backend '{backend_key}' not available"
+        )
+
+    # Reuse one backend instance (and its loaded model) across calls.
+    backend = getattr(request.app.state, "tts_backend", None)
+    if backend is None or getattr(backend, "backend_id", "") != backend_key:
+        backend = TTSRegistry.get(backend_key)()
+        request.app.state.tts_backend = backend
+
+    try:
+        result = await run_in_threadpool(
+            backend.synthesize, text, voice_id=voice_id, speed=speed
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"TTS failed: {exc}")
+
+    ext = (result.format or "wav").lower()
+    media_type = {
+        "wav": "audio/wav",
+        "mp3": "audio/mpeg",
+        "ogg": "audio/ogg",
+        "flac": "audio/flac",
+        "opus": "audio/opus",
+    }.get(ext, "application/octet-stream")
+    return Response(content=result.audio, media_type=media_type)
 
 
 # ---- Feedback routes ----

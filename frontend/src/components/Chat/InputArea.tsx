@@ -3,7 +3,7 @@ import { Send, Square, Paperclip, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAppStore, generateId } from '../../lib/store';
 import { streamChat, streamResearch } from '../../lib/sse';
-import { fetchSavings, getBase } from '../../lib/api';
+import { fetchSavings, synthesizeSpeech } from '../../lib/api';
 import { listConnectors, getSyncStatus } from '../../lib/connectors-api';
 import { MicButton } from './MicButton';
 import { useSpeech } from '../../hooks/useSpeech';
@@ -97,7 +97,9 @@ export function InputArea() {
   const setDeepResearch = useAppStore((s) => s.setDeepResearch);
   const corpusSync = useResearchCorpusSync(deepResearch);
 
-  const { state: speechState, available: speechAvailable, startRecording, stopRecording } = useSpeech();
+  const { state: speechState, available: speechAvailable, startRecording, stopRecording } = useSpeech({
+    onTranscript: (text) => setInput((prev) => (prev ? prev + ' ' + text : text)),
+  });
 
   // Abort in-flight stream when the user switches models mid-generation.
   // This prevents errors from trying to continue a stream with a stale model.
@@ -124,14 +126,9 @@ export function InputArea() {
 
   const handleMicClick = useCallback(async () => {
     if (speechState === 'recording') {
-      try {
-        const text = await stopRecording();
-        if (text) {
-          setInput((prev) => (prev ? prev + ' ' + text : text));
-        }
-      } catch {
-        // Error is captured in useSpeech
-      }
+      // Manual stop; recording also auto-stops on trailing silence. The
+      // transcript is delivered via the onTranscript callback above.
+      void stopRecording();
     } else {
       await startRecording();
     }
@@ -463,18 +460,16 @@ export function InputArea() {
         complexity_tier: complexity?.tier,
         suggested_max_tokens: complexity?.suggested_max_tokens,
       };
-      // Check if the response has digest audio available
+      // Speak the actual assistant reply via local TTS (kokoro). The
+      // AudioPlayer auto-plays it and keeps a control to replay/stop.
       let audioMeta: { url: string } | undefined;
-      try {
-        const digestRes = await fetch(`${getBase()}/api/digest`);
-        if (digestRes.ok) {
-          const digest = await digestRes.json();
-          if (digest.audio_available) {
-            audioMeta = { url: `${getBase()}/api/digest/audio` };
-          }
-        }
-      } catch {
-        // Not a digest response or server unavailable — skip
+      const speakText = accumulatedContent?.trim();
+      if (
+        speakText &&
+        speakText !== 'No response was generated. Please try again.'
+      ) {
+        const audioUrl = await synthesizeSpeech(speakText);
+        if (audioUrl) audioMeta = { url: audioUrl };
       }
 
       updateLastAssistant(

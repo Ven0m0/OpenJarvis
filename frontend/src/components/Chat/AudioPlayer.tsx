@@ -3,6 +3,8 @@ import { Play, Pause, Volume2 } from 'lucide-react';
 
 interface AudioPlayerProps {
   src: string;
+  autoPlay?: boolean;
+  label?: string;
 }
 
 function formatTime(seconds: number): string {
@@ -11,7 +13,7 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-export function AudioPlayer({ src }: AudioPlayerProps) {
+export function AudioPlayer({ src, autoPlay = false, label = 'Voice reply' }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -42,12 +44,20 @@ export function AudioPlayer({ src }: AudioPlayerProps) {
     el.addEventListener('timeupdate', onTime);
     el.addEventListener('loadedmetadata', onMeta);
     el.addEventListener('ended', onEnded);
+
+    // Auto-play freshly synthesized replies once on mount. Requires the
+    // webview's autoplay policy to allow playback without a click (set via
+    // --autoplay-policy in the Tauri browser args).
+    if (autoPlay) {
+      el.play().then(() => setPlaying(true)).catch(() => {});
+    }
+
     return () => {
       el.removeEventListener('timeupdate', onTime);
       el.removeEventListener('loadedmetadata', onMeta);
       el.removeEventListener('ended', onEnded);
     };
-  }, []);
+  }, [autoPlay]);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -88,7 +98,7 @@ export function AudioPlayer({ src }: AudioPlayerProps) {
             className="text-xs font-medium"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            Morning Digest
+            {label}
           </span>
         </div>
 
