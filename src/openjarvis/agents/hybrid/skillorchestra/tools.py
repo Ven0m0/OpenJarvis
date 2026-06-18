@@ -128,15 +128,17 @@ def gemini_tools() -> List[Dict[str, Any]]:
         ("enhance_reasoning", _CODE_DESC),
         ("answer", _ANSWER_DESC),
     ):
-        out.append({
-            "name": name,
-            "description": desc,
-            "parameters": {
-                "type": "object",
-                "properties": {"model": _model_prop(name)},
-                "required": ["model"],
-            },
-        })
+        out.append(
+            {
+                "name": name,
+                "description": desc,
+                "parameters": {
+                    "type": "object",
+                    "properties": {"model": _model_prop(name)},
+                    "required": ["model"],
+                },
+            }
+        )
     return out
 
 

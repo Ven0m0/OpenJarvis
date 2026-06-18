@@ -64,11 +64,7 @@ def is_reasoning_model(model: str) -> bool:
     before emitting visible answer text. At max_tokens=4096 these silently
     truncate with empty answers on GAIA (26/100 GPT-5, 18/100 Gemini Pro)."""
     m = (model or "").lower()
-    return (
-        is_gpt5_family(model)
-        or "gemini-2.5-pro" in m
-        or "gemini-3.1-pro" in m
-    )
+    return is_gpt5_family(model) or "gemini-2.5-pro" in m or "gemini-3.1-pro" in m
 
 
 def default_max_output_tokens(model: str) -> int:

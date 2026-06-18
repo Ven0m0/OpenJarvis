@@ -512,7 +512,9 @@ def _build_conductor_prompt(
     if capable:
         cap_str = ", ".join(str(i) for i in capable)
         if search_backend == "tavily":
-            capability = "External Tavily search results will be prepended to worker prompts"
+            capability = (
+                "External Tavily search results will be prepended to worker prompts"
+            )
         else:
             capability = "Only these model indices can perform live web search"
         constraint = (
@@ -992,14 +994,14 @@ class ConductorAgent(LocalCloudAgent):
                     )
                     tool_calls += bash_turns
                 else:
-                    (
-                        text, w_in, w_out, is_local, n_searches, extra_cost
-                    ) = _call_worker(
-                        worker,
-                        prompt,
-                        cfg,
-                        web_search_tool=ws_tool,
-                        web_search_max_uses=ws_max_uses,
+                    (text, w_in, w_out, is_local, n_searches, extra_cost) = (
+                        _call_worker(
+                            worker,
+                            prompt,
+                            cfg,
+                            web_search_tool=ws_tool,
+                            web_search_max_uses=ws_max_uses,
+                        )
                     )
 
                 if is_local:
