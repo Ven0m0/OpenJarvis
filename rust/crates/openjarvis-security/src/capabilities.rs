@@ -74,12 +74,13 @@ impl CapabilityPolicy {
     }
 
     pub fn grant(&mut self, agent_id: &str, capability: &str, pattern: &str) {
-        let policy = self.policies.entry(agent_id.to_string()).or_insert_with(|| {
-            AgentPolicy {
+        let policy = self
+            .policies
+            .entry(agent_id.to_string())
+            .or_insert_with(|| AgentPolicy {
                 grants: Vec::new(),
                 deny: Vec::new(),
-            }
-        });
+            });
         policy.grants.push(CapabilityGrant {
             capability: capability.to_string(),
             pattern: pattern.to_string(),
@@ -87,12 +88,13 @@ impl CapabilityPolicy {
     }
 
     pub fn deny(&mut self, agent_id: &str, capability: &str) {
-        let policy = self.policies.entry(agent_id.to_string()).or_insert_with(|| {
-            AgentPolicy {
+        let policy = self
+            .policies
+            .entry(agent_id.to_string())
+            .or_insert_with(|| AgentPolicy {
                 grants: Vec::new(),
                 deny: Vec::new(),
-            }
-        });
+            });
         policy.deny.push(capability.to_string());
     }
 

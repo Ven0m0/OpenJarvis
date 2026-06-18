@@ -18,83 +18,69 @@ impl PyEngine {
     #[pyo3(signature = (engine_key="ollama", host=None))]
     fn new(engine_key: &str, host: Option<&str>) -> PyResult<Self> {
         let engine = match engine_key {
-            "ollama" => openjarvis_engine::Engine::Ollama(
-                openjarvis_engine::OllamaEngine::new(
-                    host.unwrap_or("http://localhost:11434"),
-                    120.0,
-                ),
-            ),
-            "vllm" => openjarvis_engine::Engine::Vllm(
-                openjarvis_engine::OpenAICompatEngine::vllm(
-                    host.unwrap_or("http://localhost:8000"),
-                ),
-            ),
-            "sglang" => openjarvis_engine::Engine::Sglang(
-                openjarvis_engine::OpenAICompatEngine::sglang(
+            "ollama" => openjarvis_engine::Engine::Ollama(openjarvis_engine::OllamaEngine::new(
+                host.unwrap_or("http://localhost:11434"),
+                120.0,
+            )),
+            "vllm" => openjarvis_engine::Engine::Vllm(openjarvis_engine::OpenAICompatEngine::vllm(
+                host.unwrap_or("http://localhost:8000"),
+            )),
+            "sglang" => {
+                openjarvis_engine::Engine::Sglang(openjarvis_engine::OpenAICompatEngine::sglang(
                     host.unwrap_or("http://localhost:30000"),
-                ),
-            ),
+                ))
+            }
             "llamacpp" => openjarvis_engine::Engine::LlamaCpp(
                 openjarvis_engine::OpenAICompatEngine::llamacpp(
                     host.unwrap_or("http://localhost:8080"),
                 ),
             ),
-            "mlx" => openjarvis_engine::Engine::Mlx(
-                openjarvis_engine::OpenAICompatEngine::mlx(
-                    host.unwrap_or("http://localhost:8080"),
-                ),
-            ),
+            "mlx" => openjarvis_engine::Engine::Mlx(openjarvis_engine::OpenAICompatEngine::mlx(
+                host.unwrap_or("http://localhost:8080"),
+            )),
             "lmstudio" => openjarvis_engine::Engine::LmStudio(
                 openjarvis_engine::OpenAICompatEngine::lmstudio(
                     host.unwrap_or("http://localhost:1234"),
                 ),
             ),
-            "exo" => openjarvis_engine::Engine::Exo(
-                openjarvis_engine::OpenAICompatEngine::exo(
-                    host.unwrap_or("http://localhost:52415"),
-                ),
-            ),
-            "nexa" => openjarvis_engine::Engine::Nexa(
-                openjarvis_engine::OpenAICompatEngine::nexa(
-                    host.unwrap_or("http://localhost:18181"),
-                ),
-            ),
-            "uzu" => openjarvis_engine::Engine::Uzu(
-                openjarvis_engine::OpenAICompatEngine::uzu(
-                    host.unwrap_or("http://localhost:8080"),
-                ),
-            ),
-            "apple_fm" => openjarvis_engine::Engine::AppleFm(
-                openjarvis_engine::OpenAICompatEngine::apple_fm(
+            "exo" => openjarvis_engine::Engine::Exo(openjarvis_engine::OpenAICompatEngine::exo(
+                host.unwrap_or("http://localhost:52415"),
+            )),
+            "nexa" => openjarvis_engine::Engine::Nexa(openjarvis_engine::OpenAICompatEngine::nexa(
+                host.unwrap_or("http://localhost:18181"),
+            )),
+            "uzu" => openjarvis_engine::Engine::Uzu(openjarvis_engine::OpenAICompatEngine::uzu(
+                host.unwrap_or("http://localhost:8080"),
+            )),
+            "apple_fm" => {
+                openjarvis_engine::Engine::AppleFm(openjarvis_engine::OpenAICompatEngine::apple_fm(
                     host.unwrap_or("http://localhost:8079"),
-                ),
-            ),
-            "vllm_native" => openjarvis_engine::Engine::VLLM(
-                openjarvis_engine::VLLMEngine::new(
-                    host.unwrap_or("http://localhost"),
-                    8000,
-                    None,
-                    120.0,
-                ),
-            ),
-            "sglang_native" => openjarvis_engine::Engine::SGLang(
-                openjarvis_engine::SGLangEngine::new(
+                ))
+            }
+            "vllm_native" => openjarvis_engine::Engine::VLLM(openjarvis_engine::VLLMEngine::new(
+                host.unwrap_or("http://localhost"),
+                8000,
+                None,
+                120.0,
+            )),
+            "sglang_native" => {
+                openjarvis_engine::Engine::SGLang(openjarvis_engine::SGLangEngine::new(
                     host.unwrap_or("http://localhost"),
                     30000,
                     120.0,
-                ),
-            ),
-            "llamacpp_native" => openjarvis_engine::Engine::LlamaCppNative(
-                openjarvis_engine::LlamaCppEngine::new(
+                ))
+            }
+            "llamacpp_native" => {
+                openjarvis_engine::Engine::LlamaCppNative(openjarvis_engine::LlamaCppEngine::new(
                     host.unwrap_or("http://localhost"),
                     8080,
                     120.0,
-                ),
-            ),
+                ))
+            }
             other => {
-                return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
-                    format!("Unknown engine: {other}"),
-                ));
+                return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+                    "Unknown engine: {other}"
+                )));
             }
         };
         Ok(Self { inner: engine })

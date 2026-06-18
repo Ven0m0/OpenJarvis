@@ -1,8 +1,8 @@
 //! Think tool — allows the agent to express reasoning steps.
 
 use crate::traits::BaseTool;
-use openjarvis_core::{OpenJarvisError, ToolResult, ToolSpec};
 use once_cell::sync::Lazy;
+use openjarvis_core::{OpenJarvisError, ToolResult, ToolSpec};
 use serde_json::Value;
 use std::collections::HashMap;
 

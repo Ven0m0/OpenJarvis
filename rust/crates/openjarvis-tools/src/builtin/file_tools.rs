@@ -1,9 +1,9 @@
 //! File read/write tools.
 
 use crate::traits::BaseTool;
+use once_cell::sync::Lazy;
 use openjarvis_core::{OpenJarvisError, ToolResult, ToolSpec};
 use openjarvis_security::file_policy::is_sensitive_file;
-use once_cell::sync::Lazy;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::path::Path;
@@ -129,9 +129,7 @@ mod tests {
     #[test]
     fn test_file_read_sensitive_blocked() {
         let tool = FileReadTool;
-        let result = tool
-            .execute(&serde_json::json!({"path": ".env"}))
-            .unwrap();
+        let result = tool.execute(&serde_json::json!({"path": ".env"})).unwrap();
         assert!(!result.success);
         assert!(result.content.contains("sensitive"));
     }

@@ -1,8 +1,8 @@
 //! Engine discovery — probe health endpoints to find running engines.
 
-use crate::traits::InferenceEngine;
 use crate::ollama::OllamaEngine;
 use crate::openai_compat::OpenAICompatEngine;
+use crate::traits::InferenceEngine;
 use openjarvis_core::config::JarvisConfig;
 use openjarvis_core::OpenJarvisError;
 
@@ -103,9 +103,7 @@ pub fn get_engine_static(
             &config.engine.apple_fm.host,
         ))),
         other => Err(OpenJarvisError::Engine(
-            openjarvis_core::error::EngineError::ModelNotFound(format!(
-                "Unknown engine: {other}"
-            )),
+            openjarvis_core::error::EngineError::ModelNotFound(format!("Unknown engine: {other}")),
         )),
     }
 }
