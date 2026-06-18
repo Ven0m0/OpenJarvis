@@ -222,6 +222,11 @@ select = ["E", "F", "I", "W"]
 # research_loop.py carries long prompt strings too (documented in CLAUDE.md);
 # the ignore was missing here.
 "src/openjarvis/agents/research_loop.py" = ["E501"]
+# examples/ and tools/ are illustrative demos and dev scripts that embed long
+# literal strings (marketing copy, sample prompts, single f-string log lines)
+# which ruff-format cannot wrap — same relaxation as the research code above.
+"examples/**/*.py" = ["E501"]
+"tools/**/*.py" = ["E501"]
 
 [dependency-groups]
 dev = [
