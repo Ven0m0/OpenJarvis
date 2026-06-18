@@ -55,10 +55,23 @@ def create_digest_router(*, db_path: str = "") -> APIRouter:
             raise HTTPException(status_code=404, detail="No digest for today")
         if not artifact.audio_path.exists():
             raise HTTPException(status_code=404, detail="Audio not available")
+        # Derive the MIME type from the actual file extension. Local backends
+        # (kokoro) emit WAV while cloud backends (cartesia, openai) emit MP3.
+        # Serving WAV bytes mislabelled as audio/mpeg breaks playback in
+        # strict players.
+        ext = artifact.audio_path.suffix.lower().lstrip(".") or "mp3"
+        media_type = {
+            "mp3": "audio/mpeg",
+            "wav": "audio/wav",
+            "ogg": "audio/ogg",
+            "flac": "audio/flac",
+            "opus": "audio/opus",
+            "webm": "audio/webm",
+        }.get(ext, "application/octet-stream")
         return FileResponse(
             str(artifact.audio_path),
-            media_type="audio/mpeg",
-            filename="digest.mp3",
+            media_type=media_type,
+            filename=f"digest.{ext}",
         )
 
     @router.post("/generate")
