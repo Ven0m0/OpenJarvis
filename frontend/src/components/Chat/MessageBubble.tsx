@@ -160,8 +160,8 @@ export function MessageBubble({ message, isLive = false }: Props) {
         </div>
       )}
 
-      {/* Audio player (e.g. morning digest) */}
-      {message.audio?.url && <AudioPlayer src={message.audio.url} />}
+      {/* Spoken reply (text-to-speech of the assistant's message) */}
+      {message.audio?.url && <AudioPlayer src={message.audio.url} autoPlay />}
 
       {/* Assistant message */}
       {cleanContent && (

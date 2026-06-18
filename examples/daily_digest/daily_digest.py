@@ -59,8 +59,7 @@ def main() -> None:
         from openjarvis import Jarvis
     except ImportError:
         print(
-            "Error: openjarvis is not installed. "
-            "Install it with:  uv sync --extra dev",
+            "Error: openjarvis is not installed. Install it with:  uv sync --extra dev",
             file=sys.stderr,
         )
         sys.exit(1)

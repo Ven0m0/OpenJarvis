@@ -68,15 +68,22 @@ pub struct PyInstrumentedEngine {
 impl PyInstrumentedEngine {
     #[new]
     #[pyo3(signature = (engine_key="ollama", host="http://localhost:11434", store_path=None, agent_name="default"))]
-    fn new(engine_key: &str, host: &str, store_path: Option<&str>, agent_name: &str) -> PyResult<Self> {
+    fn new(
+        engine_key: &str,
+        host: &str,
+        store_path: Option<&str>,
+        agent_name: &str,
+    ) -> PyResult<Self> {
         let config = openjarvis_core::JarvisConfig::default();
         let engine = openjarvis_engine::get_engine_static(&config, Some(engine_key))
             .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?;
-        let store = Arc::new(match store_path {
-            Some(p) => openjarvis_telemetry::TelemetryStore::new(std::path::Path::new(p)),
-            None => openjarvis_telemetry::TelemetryStore::in_memory(),
-        }
-        .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?);
+        let store = Arc::new(
+            match store_path {
+                Some(p) => openjarvis_telemetry::TelemetryStore::new(std::path::Path::new(p)),
+                None => openjarvis_telemetry::TelemetryStore::in_memory(),
+            }
+            .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?,
+        );
         Ok(Self {
             inner: openjarvis_telemetry::InstrumentedEngine::new(
                 engine,
@@ -318,8 +325,12 @@ impl PyPhaseMetrics {
                 gpu_mem_gb: s.gpu_mem_gb,
             })
             .collect();
-        let metrics =
-            openjarvis_telemetry::phase::compute_phase_metrics(&rust_samples, start_ns, end_ns, tokens);
+        let metrics = openjarvis_telemetry::phase::compute_phase_metrics(
+            &rust_samples,
+            start_ns,
+            end_ns,
+            tokens,
+        );
         pyo3::Python::with_gil(|py| {
             let dict = pyo3::types::PyDict::new(py);
             dict.set_item("energy_j", metrics.energy_j)?;

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import tempfile
+import io
 from typing import List, Optional
 
 from openjarvis.core.registry import SpeechRegistry
@@ -30,6 +30,16 @@ class FasterWhisperBackend(SpeechBackend):
         self._device = device
         self._compute_type = compute_type
         self._model: Optional[WhisperModel] = None
+        self._device_used: str = ""
+
+    def _build_model(self, device: str, compute_type: str) -> WhisperModel:
+        """Construct a WhisperModel, normalising CPU-incompatible settings."""
+        # float16 is a GPU-only compute type; CTranslate2 rejects it on CPU.
+        if device == "cpu" and compute_type in ("float16", "fp16"):
+            compute_type = "int8"
+        model = WhisperModel(self._model_size, device=device, compute_type=compute_type)
+        self._device_used = device
+        return model
 
     def _ensure_model(self) -> WhisperModel:
         """Lazy-load the Whisper model on first use."""
@@ -39,11 +49,15 @@ class FasterWhisperBackend(SpeechBackend):
                     "faster-whisper is not installed. "
                     "Install with: uv sync --extra speech"
                 )
-            self._model = WhisperModel(
-                self._model_size,
-                device=self._device,
-                compute_type=self._compute_type,
-            )
+            device = self._device
+            if device == "auto":
+                try:
+                    import torch
+
+                    device = "cuda" if torch.cuda.is_available() else "cpu"
+                except Exception:  # noqa: BLE001
+                    device = "cpu"
+            self._model = self._build_model(device, self._compute_type)
         return self._model
 
     def transcribe(
@@ -56,18 +70,32 @@ class FasterWhisperBackend(SpeechBackend):
         """Transcribe audio bytes using Faster-Whisper."""
         model = self._ensure_model()
 
-        # Write audio to a temp file (faster-whisper needs a file path)
-        suffix = f".{format}" if not format.startswith(".") else format
-        with tempfile.NamedTemporaryFile(suffix=suffix, delete=True) as tmp:
-            tmp.write(audio)
-            tmp.flush()
+        kwargs = {}
+        if language:
+            kwargs["language"] = language
 
-            kwargs = {}
-            if language:
-                kwargs["language"] = language
-
-            segments_iter, info = model.transcribe(tmp.name, **kwargs)
+        # faster-whisper accepts a file-like object directly. Passing an
+        # in-memory buffer avoids a temp file — and sidesteps the Windows
+        # bug where a still-open NamedTemporaryFile cannot be reopened by
+        # the decoder (PermissionError [Errno 13]).
+        try:
+            segments_iter, info = model.transcribe(io.BytesIO(audio), **kwargs)
             segments_list = list(segments_iter)
+        except RuntimeError as exc:
+            # GPU runtime libraries (cuBLAS/cuDNN) may be missing even when a
+            # CUDA device is present. Fall back to CPU once, then retry.
+            msg = str(exc).lower()
+            gpu_lib_error = any(
+                k in msg for k in ("cublas", "cudnn", "cuda", "library", "gpu")
+            )
+            if self._device_used != "cpu" and gpu_lib_error:
+                self._model = self._build_model("cpu", "int8")
+                segments_iter, info = self._model.transcribe(
+                    io.BytesIO(audio), **kwargs
+                )
+                segments_list = list(segments_iter)
+            else:
+                raise
 
         # Build result
         text = "".join(seg.text for seg in segments_list).strip()

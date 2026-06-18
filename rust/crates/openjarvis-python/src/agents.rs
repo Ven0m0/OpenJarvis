@@ -73,7 +73,9 @@ impl PySimpleAgent {
     ) -> PyResult<Self> {
         let adapter = make_adapter(engine_key, model)?;
         let agent = openjarvis_agents::SimpleAgent::new(adapter, system_prompt, temperature);
-        Ok(Self { inner: AgentEnum::Simple(agent) })
+        Ok(Self {
+            inner: AgentEnum::Simple(agent),
+        })
     }
 
     fn agent_id(&self) -> &str {
@@ -115,9 +117,15 @@ impl PyOrchestratorAgent {
         let adapter = make_adapter(engine_key, model)?;
         let executor = Arc::new(openjarvis_tools::ToolExecutor::new(None, None));
         let agent = openjarvis_agents::OrchestratorAgent::new(
-            adapter, system_prompt, executor, max_turns, temperature,
+            adapter,
+            system_prompt,
+            executor,
+            max_turns,
+            temperature,
         );
-        Ok(Self { inner: AgentEnum::Orchestrator(agent) })
+        Ok(Self {
+            inner: AgentEnum::Orchestrator(agent),
+        })
     }
 
     fn agent_id(&self) -> &str {
@@ -157,10 +165,11 @@ impl PyNativeReActAgent {
     ) -> PyResult<Self> {
         let adapter = make_adapter(engine_key, model)?;
         let executor = Arc::new(openjarvis_tools::ToolExecutor::new(None, None));
-        let agent = openjarvis_agents::NativeReActAgent::new(
-            adapter, executor, max_turns, temperature,
-        );
-        Ok(Self { inner: AgentEnum::NativeReAct(agent) })
+        let agent =
+            openjarvis_agents::NativeReActAgent::new(adapter, executor, max_turns, temperature);
+        Ok(Self {
+            inner: AgentEnum::NativeReAct(agent),
+        })
     }
 
     fn agent_id(&self) -> &str {
@@ -207,12 +216,8 @@ impl PyNativeOpenHandsAgent {
             model.to_string(),
         );
         let executor = Arc::new(openjarvis_tools::ToolExecutor::new(None, None));
-        let agent = openjarvis_agents::NativeOpenHandsAgent::new(
-            adapter,
-            executor,
-            max_turns,
-            temperature,
-        );
+        let agent =
+            openjarvis_agents::NativeOpenHandsAgent::new(adapter, executor, max_turns, temperature);
         Ok(Self {
             inner: Box::new(agent),
         })

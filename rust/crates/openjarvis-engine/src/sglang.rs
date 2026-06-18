@@ -18,7 +18,8 @@ impl SGLangEngine {
     pub fn new(host: &str, port: u16, timeout_secs: f64) -> Self {
         let host = format!(
             "{}:{}",
-            host.trim_end_matches('/').trim_end_matches(|c: char| c == ':' || c.is_ascii_digit()),
+            host.trim_end_matches('/')
+                .trim_end_matches(|c: char| c == ':' || c.is_ascii_digit()),
             port
         );
         let host = if host.starts_with("http") {
@@ -119,9 +120,9 @@ impl InferenceEngine for SGLangEngine {
             ))));
         }
 
-        let data: Value = resp.json().map_err(|e| {
-            OpenJarvisError::Engine(EngineError::Deserialization(e.to_string()))
-        })?;
+        let data: Value = resp
+            .json()
+            .map_err(|e| OpenJarvisError::Engine(EngineError::Deserialization(e.to_string())))?;
 
         let choice = &data["choices"][0];
         let content = choice["message"]["content"]
@@ -142,23 +143,18 @@ impl InferenceEngine for SGLangEngine {
 
         let model_name = data["model"].as_str().unwrap_or(model).to_string();
 
-        let tool_calls = choice["message"]["tool_calls"]
-            .as_array()
-            .map(|arr| {
-                arr.iter()
-                    .map(|tc| {
-                        let func = &tc["function"];
-                        ToolCall {
-                            id: tc["id"].as_str().unwrap_or("").to_string(),
-                            name: func["name"].as_str().unwrap_or("").to_string(),
-                            arguments: func["arguments"]
-                                .as_str()
-                                .unwrap_or("{}")
-                                .to_string(),
-                        }
-                    })
-                    .collect()
-            });
+        let tool_calls = choice["message"]["tool_calls"].as_array().map(|arr| {
+            arr.iter()
+                .map(|tc| {
+                    let func = &tc["function"];
+                    ToolCall {
+                        id: tc["id"].as_str().unwrap_or("").to_string(),
+                        name: func["name"].as_str().unwrap_or("").to_string(),
+                        arguments: func["arguments"].as_str().unwrap_or("{}").to_string(),
+                    }
+                })
+                .collect()
+        });
 
         Ok(GenerateResult {
             content,
@@ -198,9 +194,7 @@ impl InferenceEngine for SGLangEngine {
         let async_client = reqwest::Client::builder()
             .timeout(self.timeout)
             .build()
-            .map_err(|e| {
-                OpenJarvisError::Engine(EngineError::Connection(e.to_string()))
-            })?;
+            .map_err(|e| OpenJarvisError::Engine(EngineError::Connection(e.to_string())))?;
 
         let resp = async_client
             .post(format!("{}/v1/chat/completions", self.host))
@@ -261,9 +255,7 @@ impl InferenceEngine for SGLangEngine {
             .get(format!("{}/v1/models", self.host))
             .send()
             .map_err(|_| {
-                OpenJarvisError::Engine(EngineError::Connection(
-                    "SGLang not reachable".into(),
-                ))
+                OpenJarvisError::Engine(EngineError::Connection("SGLang not reachable".into()))
             })?;
 
         if !resp.status().is_success() {

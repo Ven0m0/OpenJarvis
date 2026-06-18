@@ -1,8 +1,8 @@
 //! Calculator tool — evaluate mathematical expressions.
 
 use crate::traits::BaseTool;
-use openjarvis_core::{OpenJarvisError, ToolResult, ToolSpec};
 use once_cell::sync::Lazy;
+use openjarvis_core::{OpenJarvisError, ToolResult, ToolSpec};
 use serde_json::Value;
 use std::collections::HashMap;
 
@@ -40,9 +40,7 @@ impl BaseTool for CalculatorTool {
     }
 
     fn execute(&self, params: &Value) -> Result<ToolResult, OpenJarvisError> {
-        let expression = params["expression"]
-            .as_str()
-            .unwrap_or("");
+        let expression = params["expression"].as_str().unwrap_or("");
 
         match meval::eval_str(expression) {
             Ok(result) => Ok(ToolResult::success("calculator", result.to_string())),
