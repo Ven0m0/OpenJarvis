@@ -86,7 +86,7 @@ MINIONS_FIRST_TURN_SCHEMA = {
             "type": "object",
             "properties": {
                 "reasoning": {"type": "string"},
-                "message":   {"type": "string"},
+                "message": {"type": "string"},
             },
             "required": ["reasoning", "message"],
             "additionalProperties": False,
@@ -103,7 +103,7 @@ MINIONS_CONVERSATION_SCHEMA = {
                     "type": "object",
                     "properties": {
                         "decision": {"const": "request_additional_info"},
-                        "message":  {"type": "string"},
+                        "message": {"type": "string"},
                     },
                     "required": ["decision", "message"],
                     "additionalProperties": False,
@@ -112,7 +112,7 @@ MINIONS_CONVERSATION_SCHEMA = {
                     "type": "object",
                     "properties": {
                         "decision": {"const": "provide_final_answer"},
-                        "answer":   {"type": "string"},
+                        "answer": {"type": "string"},
                     },
                     "required": ["decision", "answer"],
                     "additionalProperties": False,
@@ -125,8 +125,8 @@ MINIONS_CONVERSATION_SCHEMA = {
 # Markers from Minions's supervisor prompts (prompts/minion.py). Any one
 # being present in the call's messages/system is a strong Minions signal.
 MINIONS_PROMPT_MARKERS = (
-    "small language model that has read",   # SUPERVISOR_INITIAL_PROMPT
-    "provide_final_answer",                  # SUPERVISOR_CONVERSATION_PROMPT
+    "small language model that has read",  # SUPERVISOR_INITIAL_PROMPT
+    "provide_final_answer",  # SUPERVISOR_CONVERSATION_PROMPT
     "request_additional_info",
 )
 
@@ -170,6 +170,7 @@ def _stub_missing_imports() -> None:
     """
     try:
         import mistralai
+
         if not hasattr(mistralai, "Mistral"):
             mistralai.Mistral = type("Mistral", (), {})  # type: ignore[attr-defined]
     except ImportError:
@@ -214,12 +215,12 @@ def _patch_anthropic_globally() -> None:
                 model = kwargs.get("model", "")
                 if model.startswith(NO_TEMP_PREFIXES):
                     kwargs.pop("temperature", None)
-                    if (
-                        "output_config" not in kwargs
-                        and _looks_like_minions_call(kwargs)
+                    if "output_config" not in kwargs and _looks_like_minions_call(
+                        kwargs
                     ):
                         kwargs["output_config"] = _minions_turn_schema(kwargs)
                 return orig(self, **kwargs)
+
             patched._hybrid_patched = True  # type: ignore[attr-defined]
             return patched
 
@@ -357,6 +358,7 @@ def _apply_patches_once() -> None:
 
 # ---------- Pre-fetch helper (GAIA only) ----------
 
+
 def _prefetch_context(
     question: str,
     cloud_endpoint: str,
@@ -373,7 +375,10 @@ def _prefetch_context(
     and zeros — the protocol still runs.
     """
     out: Dict[str, Any] = {
-        "text": "", "tokens": 0, "cost_usd": 0.0, "n_searches": 0,
+        "text": "",
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "n_searches": 0,
     }
     if cloud_endpoint != "anthropic" or not (question or "").strip():
         return out
@@ -393,10 +398,12 @@ def _prefetch_context(
             tool_choice={"type": "any"},
         )
         from openjarvis.agents.hybrid._prices import cost as _cost_usd
+
         out.update(
             text=text,
             tokens=p + c,
-            cost_usd=_cost_usd(cloud_model, p, c) + n_searches * WEB_SEARCH_COST_PER_CALL,
+            cost_usd=_cost_usd(cloud_model, p, c)
+            + n_searches * WEB_SEARCH_COST_PER_CALL,
             n_searches=n_searches,
         )
     except Exception as e:
@@ -404,9 +411,7 @@ def _prefetch_context(
     return out
 
 
-def _context_for(
-    task: Optional[Dict[str, Any]], prefetched: str = ""
-) -> List[str]:
+def _context_for(task: Optional[Dict[str, Any]], prefetched: str = "") -> List[str]:
     """Minions wants a context list."""
     bits: List[str] = []
     task = task or {}
@@ -421,6 +426,7 @@ def _context_for(
 
 # ---------- Main agent ----------
 
+
 @AgentRegistry.register("minions")
 class MinionsAgent(LocalCloudAgent):
     """HazyResearch Minions supervisor/worker protocol. See module docstring."""
@@ -432,6 +438,7 @@ class MinionsAgent(LocalCloudAgent):
         # 400/529, KeyError on missing schema fields.
         try:
             import anthropic
+
             if isinstance(exc, anthropic.BadRequestError):
                 return f"{type(exc).__name__}: {str(exc)[:120]}"
         except Exception:
@@ -543,9 +550,14 @@ class MinionsAgent(LocalCloudAgent):
         #   - enabled = false  → prefetch OFF
         #   - enabled = true   → prefetch ON (honors max_uses)
         prefetch: Dict[str, Any] = {
-            "text": "", "tokens": 0, "cost_usd": 0.0, "n_searches": 0,
+            "text": "",
+            "tokens": 0,
+            "cost_usd": 0.0,
+            "n_searches": 0,
         }
-        ws_block = cfg.get("web_search") if isinstance(cfg.get("web_search"), dict) else None
+        ws_block = (
+            cfg.get("web_search") if isinstance(cfg.get("web_search"), dict) else None
+        )
         ws_enabled, ws_max_uses = web_search_cfg(cfg)
         # If the cell explicitly set web_search.enabled = false, honor that.
         # If it set web_search.enabled = true, honor max_uses. If it didn't
@@ -563,14 +575,16 @@ class MinionsAgent(LocalCloudAgent):
             )
 
         if prefetch.get("text"):
-            self.record_trace_event({
-                "kind": "minions_prefetch",
-                "n_searches": prefetch["n_searches"],
-                "tokens": prefetch["tokens"],
-                "cost_usd": prefetch["cost_usd"],
-                "text": prefetch["text"],
-                "error": prefetch.get("error"),
-            })
+            self.record_trace_event(
+                {
+                    "kind": "minions_prefetch",
+                    "n_searches": prefetch["n_searches"],
+                    "tokens": prefetch["tokens"],
+                    "cost_usd": prefetch["cost_usd"],
+                    "text": prefetch["text"],
+                    "error": prefetch.get("error"),
+                }
+            )
 
         out = protocol(
             task=input,  # full formatted prompt (with bench instruction)
@@ -582,15 +596,17 @@ class MinionsAgent(LocalCloudAgent):
         # The Minions library doesn't go through our SDK helpers, so the
         # auto-trace missed every turn. Record the protocol output directly —
         # supervisor_messages + worker_messages contain the full conversation.
-        self.record_trace_event({
-            "kind": "minions_protocol",
-            "mode": mode,
-            "supervisor_messages": out.get("supervisor_messages"),
-            "worker_messages": out.get("worker_messages"),
-            "timing": out.get("timing"),
-            "log_file": out.get("log_file"),
-            "final_answer": out.get("final_answer", ""),
-        })
+        self.record_trace_event(
+            {
+                "kind": "minions_protocol",
+                "mode": mode,
+                "supervisor_messages": out.get("supervisor_messages"),
+                "worker_messages": out.get("worker_messages"),
+                "timing": out.get("timing"),
+                "log_file": out.get("log_file"),
+                "final_answer": out.get("final_answer", ""),
+            }
+        )
 
         local_usage = out.get("local_usage")
         remote_usage = out.get("remote_usage")
@@ -625,7 +641,6 @@ class MinionsAgent(LocalCloudAgent):
         }
         return out.get("final_answer", ""), meta
 
-
     # ------------------------------------------------------------------
     # SWE-bench variant
     # ------------------------------------------------------------------
@@ -643,21 +658,23 @@ class MinionsAgent(LocalCloudAgent):
         # 1. Cloud supervisor writes a high-level plan (no tools).
         plan_text, p_in, p_out = self._call_cloud(
             user=(
-                f"Issue:\n{task.get('problem_statement','')}\n\n"
-                f"Repo: {task.get('repo','')}\n"
-                f"Base commit: {task.get('base_commit','')}\n\n"
-                f"{task.get('hints_text','')}"
+                f"Issue:\n{task.get('problem_statement', '')}\n\n"
+                f"Repo: {task.get('repo', '')}\n"
+                f"Base commit: {task.get('base_commit', '')}\n\n"
+                f"{task.get('hints_text', '')}"
             ),
             system=MINIONS_SWE_PLANNER_SYS,
             max_tokens=int(cfg.get("supervisor_max_tokens", 1024)),
             temperature=0.0,
         )
-        self.record_trace_event({
-            "kind": "minions_swe_plan",
-            "plan": plan_text,
-            "tokens_in": p_in,
-            "tokens_out": p_out,
-        })
+        self.record_trace_event(
+            {
+                "kind": "minions_swe_plan",
+                "plan": plan_text,
+                "tokens_in": p_in,
+                "tokens_out": p_out,
+            }
+        )
         supervisor_cost = self.cost_usd(self._cloud_model, p_in, p_out)
 
         # 2. Local worker runs mini-SWE-agent with the plan as context.

@@ -77,7 +77,6 @@ class TestMessagesToPrompt:
         assert result == "<start_of_turn>model\n"
 
     def test_multiple_system_messages_concatenated(self) -> None:
-
         engine = self._make_engine()
         msgs = [
             Message(role=Role.SYSTEM, content="Rule 1"),

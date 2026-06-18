@@ -56,8 +56,7 @@ def main(
         from openjarvis import Jarvis
     except ImportError:
         click.echo(
-            "Error: openjarvis is not installed. "
-            "Install it with:  uv sync --extra dev",
+            "Error: openjarvis is not installed. Install it with:  uv sync --extra dev",
             err=True,
         )
         sys.exit(1)
