@@ -53,8 +53,7 @@ def main() -> None:
         from openjarvis import Jarvis
     except ImportError:
         print(
-            "Error: openjarvis is not installed. "
-            "Install it with:  uv sync --extra dev",
+            "Error: openjarvis is not installed. Install it with:  uv sync --extra dev",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -75,8 +74,7 @@ def main() -> None:
 
     print(f"Query: {args.query}")
     print(
-        f"Model: {args.model}  |  Engine: {args.engine}"
-        f"  |  Max turns: {args.max_turns}"
+        f"Model: {args.model}  |  Engine: {args.engine}  |  Max turns: {args.max_turns}"
     )
     print("-" * 60)
 

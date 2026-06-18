@@ -344,6 +344,30 @@ export async function fetchSpeechHealth(): Promise<SpeechHealth> {
   return res.json();
 }
 
+/**
+ * Synthesize text to speech via the local backend and return an object URL
+ * for the audio (or null on failure). The caller is responsible for revoking
+ * the URL when done; here it lives for the session so the reply can be
+ * replayed, and is dropped from persistence on reload.
+ */
+export async function synthesizeSpeech(text: string): Promise<string | null> {
+  const trimmed = (text || '').trim();
+  if (!trimmed) return null;
+  try {
+    const res = await apiFetch(`/v1/speech/tts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: trimmed }),
+    });
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    if (!blob.size) return null;
+    return URL.createObjectURL(blob);
+  } catch {
+    return null;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Agent Manager
 // ---------------------------------------------------------------------------
