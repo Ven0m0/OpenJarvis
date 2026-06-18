@@ -13,6 +13,10 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+// Track which audio URLs have already auto-played this session so that
+// remounting (e.g. switching conversations) doesn't replay old replies.
+const autoPlayedUrls = new Set<string>();
+
 export function AudioPlayer({ src, autoPlay = false, label = 'Voice reply' }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -48,7 +52,8 @@ export function AudioPlayer({ src, autoPlay = false, label = 'Voice reply' }: Au
     // Auto-play freshly synthesized replies once on mount. Requires the
     // webview's autoplay policy to allow playback without a click (set via
     // --autoplay-policy in the Tauri browser args).
-    if (autoPlay) {
+    if (autoPlay && !autoPlayedUrls.has(src)) {
+      autoPlayedUrls.add(src);
       el.play().then(() => setPlaying(true)).catch(() => {});
     }
 
@@ -57,7 +62,7 @@ export function AudioPlayer({ src, autoPlay = false, label = 'Voice reply' }: Au
       el.removeEventListener('loadedmetadata', onMeta);
       el.removeEventListener('ended', onEnded);
     };
-  }, [autoPlay]);
+  }, [autoPlay, src]);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 

@@ -463,7 +463,14 @@ export function InputArea() {
       // Speak the actual assistant reply via local TTS (kokoro). The
       // AudioPlayer auto-plays it and keeps a control to replay/stop.
       let audioMeta: { url: string } | undefined;
-      const speakText = accumulatedContent?.trim();
+      // Strip fenced/inline code so we don't read code aloud, and cap the
+      // length so very long answers don't trigger a huge (slow) synthesis.
+      const speakText = (accumulatedContent ?? '')
+        .replace(/```[\s\S]*?```/g, ' ')
+        .replace(/`[^`]+`/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 1000);
       if (
         speakText &&
         speakText !== 'No response was generated. Please try again.'

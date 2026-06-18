@@ -35,6 +35,21 @@ export function useSpeech(options: UseSpeechOptions = {}) {
       .catch(() => setAvailable(false));
   }, []);
 
+  // Release recording resources on unmount: stop the VAD timer/AudioContext,
+  // the recorder, and — importantly — the microphone stream, so the mic
+  // indicator doesn't stay on after the component goes away.
+  useEffect(() => {
+    return () => {
+      if (vadTimerRef.current != null) clearInterval(vadTimerRef.current);
+      if (audioCtxRef.current) audioCtxRef.current.close().catch(() => {});
+      const recorder = mediaRecorderRef.current;
+      if (recorder && recorder.state === 'recording') recorder.stop();
+      streamRef.current?.getTracks().forEach((track) => {
+        track.stop();
+      });
+    };
+  }, []);
+
   const teardownVad = useCallback(() => {
     if (vadTimerRef.current != null) {
       clearInterval(vadTimerRef.current);

@@ -920,6 +920,8 @@ async def synthesize_speech(request: Request):
     backend (and its loaded model) is cached on ``app.state`` so only the
     first call pays the model-load cost.
     """
+    import asyncio
+
     from starlette.concurrency import run_in_threadpool
     from starlette.responses import Response
 
@@ -952,10 +954,18 @@ async def synthesize_speech(request: Request):
         backend = TTSRegistry.get(backend_key)()
         request.app.state.tts_backend = backend
 
+    # Serialize access to the shared model: the underlying TTS pipeline is not
+    # safe to run from multiple threads concurrently.
+    lock = getattr(request.app.state, "tts_lock", None)
+    if lock is None:
+        lock = asyncio.Lock()
+        request.app.state.tts_lock = lock
+
     try:
-        result = await run_in_threadpool(
-            backend.synthesize, text, voice_id=voice_id, speed=speed
-        )
+        async with lock:
+            result = await run_in_threadpool(
+                backend.synthesize, text, voice_id=voice_id, speed=speed
+            )
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"TTS failed: {exc}")
 
