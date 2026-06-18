@@ -79,9 +79,7 @@ def _resolve_local_model(endpoint: str, registry_model: str) -> str:
     a model id (e.g. ``Qwen3.5-9B``) that's different from what's loaded.
     """
     try:
-        with urllib.request.urlopen(
-            endpoint.rstrip("/") + "/models", timeout=5
-        ) as r:
+        with urllib.request.urlopen(endpoint.rstrip("/") + "/models", timeout=5) as r:
             data = json.loads(r.read())
         served = [m["id"] for m in data.get("data", [])]
     except Exception:
@@ -176,7 +174,8 @@ class AdvisorsAgent(LocalCloudAgent):
             )
         local_model = _resolve_local_model(self._local_endpoint, self._local_model)
         advisor_prompt = ADVISOR_TEMPLATE.format(
-            question=question, initial_response=initial_resp,
+            question=question,
+            initial_response=initial_resp,
         )
         advisor_text, adv_in, adv_out = self._call_vllm(
             local_model,
@@ -379,8 +378,10 @@ class AdvisorsAgent(LocalCloudAgent):
 
         tokens_local = adv_in + adv_out
         tokens_cloud = (
-            initial_out["tokens_in"] + initial_out["tokens_out"]
-            + final_out["tokens_in"] + final_out["tokens_out"]
+            initial_out["tokens_in"]
+            + initial_out["tokens_out"]
+            + final_out["tokens_in"]
+            + final_out["tokens_out"]
         )
         cost = initial_out["cost_usd"] + final_out["cost_usd"]
         meta: Dict[str, Any] = {

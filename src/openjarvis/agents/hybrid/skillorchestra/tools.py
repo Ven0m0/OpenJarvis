@@ -40,8 +40,7 @@ _SEARCH_CAPABLE_ENDPOINTS = ("anthropic", "openai", "gemini")
 
 _SEARCH_DESC = "Search for missing information."
 _CODE_DESC = (
-    "Write and execute Python code to compute intermediate results for "
-    "the problem."
+    "Write and execute Python code to compute intermediate results for the problem."
 )
 _ANSWER_DESC = (
     "Extract the final answer when you have gathered enough information "
@@ -51,8 +50,14 @@ _ANSWER_DESC = (
 _ENUMS = {
     "search": ["search-1", "search-2", "search-3"],
     "enhance_reasoning": ["reasoner-1", "reasoner-2", "reasoner-3"],
-    "answer": ["answer-1", "answer-2", "answer-3", "answer-4",
-               "answer-math-1", "answer-math-2"],
+    "answer": [
+        "answer-1",
+        "answer-2",
+        "answer-3",
+        "answer-4",
+        "answer-math-1",
+        "answer-math-2",
+    ],
 }
 
 
@@ -75,15 +80,17 @@ def anthropic_tools() -> List[Dict[str, Any]]:
         ("enhance_reasoning", _CODE_DESC),
         ("answer", _ANSWER_DESC),
     ):
-        out.append({
-            "name": name,
-            "description": desc,
-            "input_schema": {
-                "type": "object",
-                "properties": {"model": _model_prop(name)},
-                "required": ["model"],
-            },
-        })
+        out.append(
+            {
+                "name": name,
+                "description": desc,
+                "input_schema": {
+                    "type": "object",
+                    "properties": {"model": _model_prop(name)},
+                    "required": ["model"],
+                },
+            }
+        )
     return out
 
 
@@ -95,24 +102,27 @@ def openai_tools() -> List[Dict[str, Any]]:
         ("enhance_reasoning", _CODE_DESC),
         ("answer", _ANSWER_DESC),
     ):
-        out.append({
-            "type": "function",
-            "function": {
-                "name": name,
-                "description": desc,
-                "parameters": {
-                    "type": "object",
-                    "properties": {"model": _model_prop(name)},
-                    "required": ["model"],
+        out.append(
+            {
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "description": desc,
+                    "parameters": {
+                        "type": "object",
+                        "properties": {"model": _model_prop(name)},
+                        "required": ["model"],
+                    },
                 },
-            },
-        })
+            }
+        )
     return out
 
 
 # ---------------------------------------------------------------------------
 # enhance_reasoning / code  —  eval_frames.py:659-812
 # ---------------------------------------------------------------------------
+
 
 def run_code(
     agent: Any,
@@ -129,7 +139,8 @@ def run_code(
     rather than raising — the orchestrator learns the model can't code.
     """
     prompt = (
-        context_str.strip() + "\n\n"
+        context_str.strip()
+        + "\n\n"
         + f"Question: {problem}\nInstead of directly answering the question, "
         "please write additional python code that will give intermidiate "
         "results after execution. Wrap the code within ```python and ```. "
@@ -137,7 +148,11 @@ def run_code(
         "initialization."
     )
     text, p, c, cost = call_alias(
-        agent, spec, user=prompt, max_tokens=8000, temperature=1.0,
+        agent,
+        spec,
+        user=prompt,
+        max_tokens=8000,
+        temperature=1.0,
     )
     generated_code = ""
     if "```python" in text:
@@ -176,6 +191,7 @@ def run_code(
 # answer  —  eval_frames.py:814-997
 # ---------------------------------------------------------------------------
 
+
 def run_answer(
     agent: Any,
     spec: ModelSpec,
@@ -198,11 +214,15 @@ def run_answer(
     boxed = False
 
     if "qwen3" in model_l and "235" not in model_l:
-        system = "Please reason step by step, and put your final answer within \\boxed{}."
+        system = (
+            "Please reason step by step, and put your final answer within \\boxed{}."
+        )
         user = base
         boxed = True
     elif "qwen2.5-math" in model_l or "qwen-2.5-math" in model_l:
-        system = "Please reason step by step, and put your final answer within \\boxed{}."
+        system = (
+            "Please reason step by step, and put your final answer within \\boxed{}."
+        )
         user = base
         boxed = True
     else:
@@ -215,8 +235,12 @@ def run_answer(
         )
 
     text, p, c, cost = call_alias(
-        agent, spec, user=user, system=system,
-        max_tokens=max_tokens, temperature=1.0,
+        agent,
+        spec,
+        user=user,
+        system=system,
+        max_tokens=max_tokens,
+        temperature=1.0,
     )
 
     pred = ""
@@ -247,6 +271,7 @@ def run_answer(
 # search  —  eval_frames.py:999-1096
 # ---------------------------------------------------------------------------
 
+
 def run_search(
     agent: Any,
     spec: ModelSpec,
@@ -265,13 +290,18 @@ def run_search(
     OpenJarvis substitution for the missing FAISS wiki index).
     """
     prompt = (
-        context_str.strip() + "\n\n"
+        context_str.strip()
+        + "\n\n"
         + f"Question: {problem}\nInstead of directly answering the question, "
         "please think hard and write a concise query to search Wikipedia. "
         "Wrap the query within <query> and </query>."
     )
     text, p, c, cost = call_alias(
-        agent, spec, user=prompt, max_tokens=8000, temperature=1.0,
+        agent,
+        spec,
+        user=prompt,
+        max_tokens=8000,
+        temperature=1.0,
     )
     if "<query>" in text:
         query = text.split("<query>")[-1].split("</query>")[0].strip()
@@ -294,7 +324,9 @@ def run_search(
         }
         try:
             results = requests.post(
-                f"{retriever_url.rstrip('/')}/retrieve", json=payload, timeout=120,
+                f"{retriever_url.rstrip('/')}/retrieve",
+                json=payload,
+                timeout=120,
             ).json()
             for r in results[0]:
                 doc = r.get("document", {})
