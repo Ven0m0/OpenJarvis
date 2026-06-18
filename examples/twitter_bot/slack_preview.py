@@ -101,10 +101,12 @@ def main() -> None:
     tool_log: list[dict] = []
 
     def on_tool(event):
-        tool_log.append({
-            "tool": event.data.get("tool", ""),
-            "args": event.data.get("arguments", ""),
-        })
+        tool_log.append(
+            {
+                "tool": event.data.get("tool", ""),
+                "args": event.data.get("arguments", ""),
+            }
+        )
 
     j._bus.subscribe(EventType.TOOL_CALL_START, on_tool)
 
@@ -129,9 +131,7 @@ def main() -> None:
             recent_list = "\n".join('  - "' + t + '"' for t in recent[-8:])
             recent_section = (
                 "Your recent tweets (DO NOT repeat any of these ideas "
-                "— write something completely different):\n"
-                + recent_list
-                + "\n"
+                "— write something completely different):\n" + recent_list + "\n"
             )
 
         tool_log.clear()
@@ -148,10 +148,10 @@ def main() -> None:
             "Tweets we love:\n"
             '- "88.7% of queries run fine on local hardware. why is '
             'everyone still paying per API call?"\n'
-            '- "your most personal data routes through someone else\'s '
+            "- \"your most personal data routes through someone else's "
             'server. we built openjarvis to fix that"\n'
             '- "in the 70s computing moved from mainframes to pcs. not '
-            'because pcs were more powerful — because they got efficient '
+            "because pcs were more powerful — because they got efficient "
             'enough. ai is at that moment right now"\n'
             '- "we measure energy per query the way most people measure '
             'accuracy. if your ai runs on battery, efficiency is the whole game"\n'
@@ -203,7 +203,7 @@ def main() -> None:
         # Wait with jitter
         jitter = random.uniform(0.8, 1.2)
         wait = INTERVAL_MINUTES * 60 * jitter
-        print(f"  next tweet in {wait/60:.0f} min")
+        print(f"  next tweet in {wait / 60:.0f} min")
         time.sleep(wait)
 
 

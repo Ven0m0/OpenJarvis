@@ -94,8 +94,7 @@ def _run_demo(model: str, engine_key: str) -> None:
         from openjarvis import Jarvis
     except ImportError:
         click.echo(
-            "Error: openjarvis is not installed. "
-            "Install it with:  uv sync --extra dev",
+            "Error: openjarvis is not installed. Install it with:  uv sync --extra dev",
             err=True,
         )
         sys.exit(1)
@@ -135,9 +134,7 @@ def _run_demo(model: str, engine_key: str) -> None:
             )
 
             category, reply = _parse_classification(response)
-            results.append(
-                {"message": message, "category": category, "reply": reply}
-            )
+            results.append({"message": message, "category": category, "reply": reply})
             click.echo(f"           -> {category}")
 
         # Print results table
@@ -145,9 +142,7 @@ def _run_demo(model: str, engine_key: str) -> None:
 
         # Generate end-of-day summary
         click.echo("Generating end-of-day summary...\n")
-        triage_log = "\n".join(
-            f"- [{r['category']}] {r['message']}" for r in results
-        )
+        triage_log = "\n".join(f"- [{r['category']}] {r['message']}" for r in results)
         summary_prompt = SUMMARY_PROMPT.format(triage_log=triage_log)
         summary = j.ask(
             summary_prompt,
