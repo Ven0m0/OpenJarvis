@@ -11,10 +11,10 @@
  */
 
 export interface DeepLinkTarget {
-  /** The resource type extracted from the URL path (e.g. "research", "connector"). */
-  type: string;
-  /** The resource identifier (e.g. a session ID or connector name). */
-  id: string;
+	/** The resource type extracted from the URL path (e.g. "research", "connector"). */
+	type: string;
+	/** The resource identifier (e.g. a session ID or connector name). */
+	id: string;
 }
 
 /**
@@ -35,27 +35,30 @@ export interface DeepLinkTarget {
  * // → null
  */
 export function parseDeepLink(url: string): DeepLinkTarget | null {
-  try {
-    const parsed = new URL(url);
-    if (parsed.protocol !== "openjarvis:") return null;
+	try {
+		const parsed = new URL(url);
+		if (parsed.protocol !== "openjarvis:") return null;
 
-    // The URL constructor treats "openjarvis://research/abc123" such that
-    // parsed.hostname === "research" and parsed.pathname === "/abc123".
-    // We also handle the double-slash form where both end up in pathname.
-    const parts = parsed.pathname.replace(/^\/\//, "").split("/").filter(Boolean);
+		// The URL constructor treats "openjarvis://research/abc123" such that
+		// parsed.hostname === "research" and parsed.pathname === "/abc123".
+		// We also handle the double-slash form where both end up in pathname.
+		const parts = parsed.pathname
+			.replace(/^\/\//, "")
+			.split("/")
+			.filter(Boolean);
 
-    // If the path part is empty but hostname is set, use hostname as type
-    // and the first path segment as id.
-    if (parsed.hostname && parts.length >= 1) {
-      return { type: parsed.hostname, id: parts[0] };
-    }
+		// If the path part is empty but hostname is set, use hostname as type
+		// and the first path segment as id.
+		if (parsed.hostname && parts.length >= 1) {
+			return { type: parsed.hostname, id: parts[0] };
+		}
 
-    if (parts.length >= 2) {
-      return { type: parts[0], id: parts[1] };
-    }
+		if (parts.length >= 2) {
+			return { type: parts[0], id: parts[1] };
+		}
 
-    return null;
-  } catch {
-    return null;
-  }
+		return null;
+	} catch {
+		return null;
+	}
 }
