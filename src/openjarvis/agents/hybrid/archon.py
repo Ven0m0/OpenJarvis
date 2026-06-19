@@ -391,12 +391,7 @@ def _apply_patches_once() -> None:
 
 def _presets():
     return {
-        "ensemble_rank_fuse": lambda K,
-        local_model,
-        ranker_model,
-        fuser_model,
-        max_tokens,
-        temperature: [
+        "ensemble_rank_fuse": lambda K, local_model, ranker_model, fuser_model, max_tokens, temperature: [
             [
                 {
                     "type": "generator",
@@ -437,12 +432,7 @@ def _presets():
         # like ``ensemble_rank_fuse``). Previously it hard-coded 2048, which
         # cut Qwen off mid-reasoning before it could emit the GAIA
         # ``FINAL ANSWER:`` line — the scorer then had nothing to extract.
-        "single_local": lambda K,
-        local_model,
-        ranker_model,
-        fuser_model,
-        max_tokens,
-        temperature: [
+        "single_local": lambda K, local_model, ranker_model, fuser_model, max_tokens, temperature: [
             [
                 {
                     "type": "generator",
