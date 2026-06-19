@@ -365,6 +365,7 @@ def _paper_expert_for(
 
 # ---- Tavily + Modal helpers -------------------------------------------------
 
+
 def _call_tavily_search(
     query: str,
     max_results: int = 5,
@@ -737,36 +738,42 @@ def _default_pool(
         search_type = "anthropic-web-search"
         search_model = _DEFAULT_WEB_SEARCH_MODEL
         search_desc = "Anthropic server-side web_search."
-    pool.append({
-        "id": len(pool),
-        "name": "web-search",
-        "type": search_type,
-        "model": search_model,
-        "description": (
-            f"{search_desc} Use for facts that need a lookup "
-            "(recent events, rare names/dates, niche sources). Returns a digest."
-        ),
-    })
-    pool.append({
-        "id": len(pool),
-        "name": f"frontier-{ep}",
-        "type": ep,
-        "model": cloud_model,
-        "description": (
-            "Frontier reasoning model. Use for hard multi-step reasoning, "
-            "code review, or a final synthesis pass. Expensive — use sparingly."
-        ),
-    })
-    pool.append({
-        "id": len(pool),
-        "name": "frontier-openai-mini",
-        "type": "openai",
-        "model": "gpt-5-mini",
-        "description": (
-            "Mid-tier OpenAI model. Solid general knowledge and reasoning at a "
-            "fraction of frontier cost."
-        ),
-    })
+    pool.append(
+        {
+            "id": len(pool),
+            "name": "web-search",
+            "type": search_type,
+            "model": search_model,
+            "description": (
+                f"{search_desc} Use for facts that need a lookup "
+                "(recent events, rare names/dates, niche sources). Returns a digest."
+            ),
+        }
+    )
+    pool.append(
+        {
+            "id": len(pool),
+            "name": f"frontier-{ep}",
+            "type": ep,
+            "model": cloud_model,
+            "description": (
+                "Frontier reasoning model. Use for hard multi-step reasoning, "
+                "code review, or a final synthesis pass. Expensive — use sparingly."
+            ),
+        }
+    )
+    pool.append(
+        {
+            "id": len(pool),
+            "name": "frontier-openai-mini",
+            "type": "openai",
+            "model": "gpt-5-mini",
+            "description": (
+                "Mid-tier OpenAI model. Solid general knowledge and reasoning at a "
+                "fraction of frontier cost."
+            ),
+        }
+    )
     return pool
 
 
@@ -894,7 +901,10 @@ def _resolve_worker_pool(
                 raise ValueError(
                     f"Invalid worker_pool entry [{wid}]: 'model' must be a string when set"
                 )
-            if wtype in ("openai-web-search", "gemini-web-search") and model not in PRICES:
+            if (
+                wtype in ("openai-web-search", "gemini-web-search")
+                and model not in PRICES
+            ):
                 raise ValueError(
                     f"Invalid worker_pool entry [{wid}]: model {model!r} "
                     f"is not in PRICES (known: {sorted(PRICES)})"
@@ -1002,7 +1012,9 @@ def _call_worker(
         text, p, c, n_searches, _ = LocalCloudAgent._call_openai_agent(
             worker["model"],
             user=prompt,
-            max_tokens=max(max_tok, 16384) if is_gpt5_family(worker["model"]) else max_tok,
+            max_tokens=max(max_tok, 16384)
+            if is_gpt5_family(worker["model"])
+            else max_tok,
             temperature=eff_temp,
         )
         extra = n_searches * OPENAI_WEB_SEARCH_COST_PER_CALL
@@ -1019,7 +1031,8 @@ def _call_worker(
     if wtype == "tavily-search":
         max_results = int(cfg.get("tavily_max_results", 5))
         text, p, c, extra, n_searches = _call_tavily_search(
-            str(prompt), max_results=max_results,
+            str(prompt),
+            max_results=max_results,
         )
         return text, p, c, False, extra, n_searches
     if wtype == "openrouter":
@@ -1328,8 +1341,7 @@ class ToolOrchestraAgent(LocalCloudAgent):
                 # Search workers are excluded — they answer fact-lookup
                 # questions, not synthesis.
                 non_search = [
-                    w for w in workers
-                    if w.get("type") not in _TOOLORCH_SEARCH_TYPES
+                    w for w in workers if w.get("type") not in _TOOLORCH_SEARCH_TYPES
                 ] or workers
                 worker = max(
                     non_search,

@@ -156,14 +156,15 @@ class AdvisorsAgent(LocalCloudAgent):
         # only the cloud executor passes do. With web_search on, dispatch
         # to the search-capable agent loop for the configured provider.
         if use_ws:
-            (initial_resp, e1_in, e1_out, n_s1, e1_turns,
-             e1_search_cost) = self._executor_search(
-                user=f"Question:\n{question}",
-                system=EXECUTOR_INITIAL_SYS,
-                max_tokens=executor_max_tokens,
-                ws_max_uses=ws_max_uses,
-                max_turns=gaia_max_turns,
-                query=question,
+            (initial_resp, e1_in, e1_out, n_s1, e1_turns, e1_search_cost) = (
+                self._executor_search(
+                    user=f"Question:\n{question}",
+                    system=EXECUTOR_INITIAL_SYS,
+                    max_tokens=executor_max_tokens,
+                    ws_max_uses=ws_max_uses,
+                    max_turns=gaia_max_turns,
+                    query=question,
+                )
             )
             n_searches_total += n_s1
             search_cost_total += e1_search_cost
@@ -205,14 +206,15 @@ class AdvisorsAgent(LocalCloudAgent):
             f"answer-format rules."
         )
         if use_ws:
-            (final_answer, e2_in, e2_out, n_s2, e2_turns,
-             e2_search_cost) = self._executor_search(
-                user=final_user,
-                system=EXECUTOR_FINAL_SYS,
-                max_tokens=executor_max_tokens,
-                ws_max_uses=ws_max_uses,
-                max_turns=gaia_max_turns,
-                query=question,
+            (final_answer, e2_in, e2_out, n_s2, e2_turns, e2_search_cost) = (
+                self._executor_search(
+                    user=final_user,
+                    system=EXECUTOR_FINAL_SYS,
+                    max_tokens=executor_max_tokens,
+                    ws_max_uses=ws_max_uses,
+                    max_turns=gaia_max_turns,
+                    query=question,
+                )
             )
             n_searches_total += n_s2
             search_cost_total += e2_search_cost

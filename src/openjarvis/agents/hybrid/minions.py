@@ -525,8 +525,7 @@ class MinionsAgent(LocalCloudAgent):
             local=True,
         )
         cloud_max_tokens = int(
-            cfg.get("cloud_max_tokens")
-            or default_max_output_tokens(self._cloud_model)
+            cfg.get("cloud_max_tokens") or default_max_output_tokens(self._cloud_model)
         )
         if self._cloud_endpoint == "openai":
             cloud_client = OpenAIClient(

@@ -127,9 +127,7 @@ def _orchestrate_step(
         from google import genai
         from google.genai import types
 
-        client = genai.Client(
-            http_options=types.HttpOptions(timeout=600_000)
-        )
+        client = genai.Client(http_options=types.HttpOptions(timeout=600_000))
         cfg = types.GenerateContentConfig(
             temperature=1.0,
             max_output_tokens=max_tokens,
