@@ -12,6 +12,6 @@
     "qrcode-terminal": "^0.12"
   },
   "devDependencies": {
-    "typescript": "^5.0"
+    "typescript": "^6.0.0"
   }
 }
