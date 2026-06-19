@@ -1,5 +1,5 @@
 # Stage 1: Build frontend SPA
-FROM node:22-slim AS frontend
+FROM node:24-slim AS frontend
 
 WORKDIR /frontend
 COPY frontend/package.json frontend/package-lock.json* ./
@@ -8,7 +8,7 @@ COPY frontend/ .
 RUN npm run build
 
 # Stage 2: Build Python package
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.13-slim-bookworm AS builder
 
 WORKDIR /app
 COPY pyproject.toml README.md ./
@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir uv && \
     uv pip install --system ".[server]"
 
 # Stage 3: Runtime
-FROM python:3.12-slim-bookworm
+FROM python:3.13-slim-bookworm
 
 COPY --from=builder /usr/local /usr/local
 COPY --from=builder /app /app
