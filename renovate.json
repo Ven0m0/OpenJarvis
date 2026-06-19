@@ -52,10 +52,41 @@
     "enabled": false
   },
   "npm": {
-    "managerFilePatterns": ["/.kilo/package.json/"]
+    "enabled": true,
+    "rangeStrategy": "bump"
+  },
+  "cargo": {
+    "enabled": true,
+    "rangeStrategy": "bump"
   },
   "postUpdateOptions": ["uvLockUpdate"],
   "packageRules": [
+    {
+      "description": "Group Rust/Cargo workspace updates",
+      "matchManagers": ["cargo"],
+      "groupName": "Rust dependencies",
+      "groupSlug": "rust-deps"
+    },
+    {
+      "description": "Group Node.js/npm package updates",
+      "matchManagers": ["npm"],
+      "groupName": "Node.js dependencies",
+      "groupSlug": "node-deps"
+    },
+    {
+      "description": "Group Tauri-related Rust crate updates",
+      "matchManagers": ["cargo"],
+      "matchPackageNames": ["tauri*", "tauri-*", "@tauri-apps/*"],
+      "groupName": "Tauri dependencies",
+      "groupSlug": "tauri-deps"
+    },
+    {
+      "description": "Group Tauri npm package updates",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["@tauri-apps/*"],
+      "groupName": "Tauri npm dependencies",
+      "groupSlug": "tauri-npm-deps"
+    },
     {
       "description": "Allow Python Docker images >=3.13 but exclude 3.14.x series",
       "matchDatasources": ["docker"],

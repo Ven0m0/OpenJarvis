@@ -1,0 +1,213 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1781825749912,
+  "projectRoot": "c:\\Users\\Ven0m0\\project\\OpenJarvis",
+  "techStack": {
+    "languages": [
+      {
+        "name": "Python",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "pyproject.toml"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "fastapi",
+        "version": null,
+        "category": "backend"
+      },
+      {
+        "name": "pytest",
+        "version": null,
+        "category": "testing"
+      }
+    ],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": "pytest",
+    "lintCommand": "ruff check",
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "assets",
+      "docs",
+      "examples",
+      "scripts",
+      "src",
+      "tests"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "assets": {
+      "path": "assets",
+      "purpose": "Static assets",
+      "fileCount": 4,
+      "lastAccessed": 1781825749846,
+      "keyFiles": [
+        "openjarvis-slack-icon.jpg",
+        "OpenJarvis_Circular_Logo.png",
+        "openjarvis_demo_reel.webp",
+        "OpenJarvis_Horizontal_Logo.png"
+      ]
+    },
+    "configs": {
+      "path": "configs",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1781825749847,
+      "keyFiles": []
+    },
+    "deploy": {
+      "path": "deploy",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1781825749848,
+      "keyFiles": []
+    },
+    "desktop": {
+      "path": "desktop",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1781825749848,
+      "keyFiles": []
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 7,
+      "lastAccessed": 1781825749849,
+      "keyFiles": [
+        "desktop-auto-update.md",
+        "downloads.md",
+        "gen_install_script.py",
+        "gen_ref_pages.py",
+        "index.md"
+      ]
+    },
+    "examples": {
+      "path": "examples",
+      "purpose": "Example code",
+      "fileCount": 0,
+      "lastAccessed": 1781825749850,
+      "keyFiles": []
+    },
+    "frontend": {
+      "path": "frontend",
+      "purpose": null,
+      "fileCount": 7,
+      "lastAccessed": 1781825749850,
+      "keyFiles": [
+        "components.json",
+        "index.html",
+        "package-lock.json",
+        "package.json",
+        "tsconfig.json"
+      ]
+    },
+    "rust": {
+      "path": "rust",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1781825749851,
+      "keyFiles": [
+        "Cargo.lock",
+        "Cargo.toml",
+        "rust-toolchain.toml"
+      ]
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 5,
+      "lastAccessed": 1781825749851,
+      "keyFiles": [
+        "bump-desktop-version.sh",
+        "index_docs.py",
+        "oauth_all.py",
+        "quickstart.sh",
+        "smoke_framework_comparison.sh"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1781825749851,
+      "keyFiles": []
+    },
+    "tests": {
+      "path": "tests",
+      "purpose": "Test files",
+      "fileCount": 5,
+      "lastAccessed": 1781825749852,
+      "keyFiles": [
+        "conftest.py",
+        "test_digest_integration.py",
+        "test_query_orchestrator.py",
+        "test_vision.py",
+        "__init__.py"
+      ]
+    },
+    "tools": {
+      "path": "tools",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1781825749853,
+      "keyFiles": []
+    },
+    "docs\\assets": {
+      "path": "docs\\assets",
+      "purpose": "Static assets",
+      "fileCount": 1,
+      "lastAccessed": 1781825749857,
+      "keyFiles": [
+        "OpenJarvis_Architecture.png"
+      ]
+    },
+    "frontend\\public": {
+      "path": "frontend\\public",
+      "purpose": "Public files",
+      "fileCount": 4,
+      "lastAccessed": 1781825749858,
+      "keyFiles": [
+        "apple-touch-icon.png",
+        "favicon.ico",
+        "pwa-192x192.png"
+      ]
+    },
+    "frontend\\src": {
+      "path": "frontend\\src",
+      "purpose": "Source code",
+      "fileCount": 4,
+      "lastAccessed": 1781825749858,
+      "keyFiles": [
+        "App.tsx",
+        "index.css",
+        "main.tsx"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}
