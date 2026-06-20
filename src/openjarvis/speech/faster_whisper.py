@@ -70,7 +70,20 @@ class FasterWhisperBackend(SpeechBackend):
         """Transcribe audio bytes using Faster-Whisper."""
         model = self._ensure_model()
 
-        kwargs = {}
+        # Tuned for short, browser-captured voice clips:
+        # - vad_filter drops leading/trailing silence so Whisper stops
+        #   hallucinating filler ("Thank you.", "Thanks for watching!") on quiet
+        #   audio.
+        # - condition_on_previous_text=False stops repetition loops on short
+        #   utterances.
+        # - beam_size=5 trades a little latency for accuracy over greedy decode.
+        # ponytail: hard-coded sane defaults; lift to SpeechConfig if a user
+        # needs to tune the VAD threshold for a noisy mic.
+        kwargs = {
+            "vad_filter": True,
+            "condition_on_previous_text": False,
+            "beam_size": 5,
+        }
         if language:
             kwargs["language"] = language
 
