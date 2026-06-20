@@ -13,9 +13,9 @@ from __future__ import annotations
 import importlib
 import re
 import sys
-from typing import Any, Dict, List
 import time
 from pathlib import Path
+from typing import Any, Dict, List
 
 _THIS = Path(__file__).resolve().parent
 sys.path.insert(0, str(_THIS))

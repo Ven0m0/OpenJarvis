@@ -40,7 +40,10 @@ class TestLoraStubApplier:
         ctx = ApplyContext(openjarvis_home=tmp_path, session_id="s1")
         result = applier.validate(_make_lora_edit(), ctx)
         assert not result.ok
-        assert "v2" in (result.reason or "").lower() or "deferred" in (result.reason or "").lower()
+        assert (
+            "v2" in (result.reason or "").lower()
+            or "deferred" in (result.reason or "").lower()
+        )
 
     def test_apply_raises_not_implemented(self, tmp_path: Path) -> None:
         from openjarvis.learning.spec_search.execute.appliers.lora_stub import (

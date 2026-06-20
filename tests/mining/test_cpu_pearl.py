@@ -81,7 +81,9 @@ def test_detect_unsupported_on_windows(windows_hw):
     with patch(_AVAIL, return_value=True):
         cap = CpuPearlProvider.detect(windows_hw, engine_id="any", model="any")
     assert cap.supported is False
-    assert "win32" in (cap.reason or "").lower() or "windows" in (cap.reason or "").lower()
+    assert (
+        "win32" in (cap.reason or "").lower() or "windows" in (cap.reason or "").lower()
+    )
 
 
 def test_detect_unsupported_when_pearl_not_installed(darwin_apple_hw):

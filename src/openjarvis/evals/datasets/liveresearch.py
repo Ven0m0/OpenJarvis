@@ -137,7 +137,10 @@ class LiveResearchBenchDataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             queries = apply_split(
-                queries, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2
+                queries,
+                split=cast(SplitName, split),
+                seed=effective_seed,
+                train_frac=0.2,
             )
         elif seed is not None:
             random.Random(seed).shuffle(queries)
