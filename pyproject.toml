@@ -236,4 +236,13 @@ select = ["E", "F", "I", "W"]
 [dependency-groups]
 dev = [
     "maturin>=1.12.6",
+    # The native extension is mandatory for memory/retrieval, telemetry and
+    # security scanning. Declaring it here (built from the local crate via the
+    # path source below) means `uv sync` installs it and, crucially, does not
+    # wipe a prior `maturin develop` build — without this, every sync left the
+    # venv without `openjarvis_rust` and the memory service showed unavailable.
+    "openjarvis-rust",
 ]
+
+[tool.uv.sources]
+openjarvis-rust = { path = "rust/crates/openjarvis-python", editable = true }
