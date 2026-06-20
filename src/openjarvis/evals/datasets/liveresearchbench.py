@@ -133,7 +133,10 @@ class LiveResearchBenchDataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             records = apply_split(
-                records, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2
+                records,
+                split=cast(SplitName, split),
+                seed=effective_seed,
+                train_frac=0.2,
             )
         elif seed is not None:
             random.Random(seed).shuffle(records)

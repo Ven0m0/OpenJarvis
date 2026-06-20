@@ -162,7 +162,9 @@ class PinchBenchDataset(DatasetProvider):
 
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
-            tasks = apply_split(tasks, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2)
+            tasks = apply_split(
+                tasks, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2
+            )
         elif seed is not None:
             random.Random(seed).shuffle(tasks)
         if max_samples is not None:

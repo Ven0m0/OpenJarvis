@@ -73,7 +73,8 @@ class SQLiteMemory(MemoryBackend):
                 source,
                 tokenize='porter unicode61'
             );
-        """)
+        """
+        )
 
     def store(
         self,

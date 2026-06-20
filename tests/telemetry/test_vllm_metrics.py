@@ -68,7 +68,8 @@ class TestParseHistogramBuckets:
     def test_parses_ttft_buckets(self):
         lines = SAMPLE_METRICS.splitlines()
         buckets, sum_val, count_val = _parse_histogram_buckets(
-            lines, "vllm:time_to_first_token_seconds"  # type: ignore
+            lines,
+            "vllm:time_to_first_token_seconds",  # type: ignore
         )
         assert len(buckets) == 7
         assert sum_val == 5.5
@@ -102,7 +103,8 @@ class TestPercentileFromBuckets:
     def test_median_interpolation(self):
         lines = SAMPLE_METRICS.splitlines()
         buckets, _, _ = _parse_histogram_buckets(
-            lines, "vllm:time_to_first_token_seconds"  # type: ignore
+            lines,
+            "vllm:time_to_first_token_seconds",  # type: ignore
         )
         p50 = _percentile_from_buckets(buckets, 50)
         # 50th percentile: target = 50 out of 100
@@ -114,7 +116,8 @@ class TestPercentileFromBuckets:
     def test_p95(self):
         lines = SAMPLE_METRICS.splitlines()
         buckets, _, _ = _parse_histogram_buckets(
-            lines, "vllm:time_to_first_token_seconds"  # type: ignore
+            lines,
+            "vllm:time_to_first_token_seconds",  # type: ignore
         )
         p95 = _percentile_from_buckets(buckets, 95)
         # target = 95, bucket le=0.25 has 95 exactly

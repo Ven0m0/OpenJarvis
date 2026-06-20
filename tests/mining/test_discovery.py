@@ -28,7 +28,10 @@ def test_detect_unsupported_on_ada_4090(ada_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "sm90" in (cap.reason or "").lower() or "compute_capability" in (cap.reason or "").lower()
+    assert (
+        "sm90" in (cap.reason or "").lower()
+        or "compute_capability" in (cap.reason or "").lower()
+    )
 
 
 def test_detect_unsupported_on_apple_engine(apple_hw):
@@ -56,7 +59,9 @@ def test_detect_unsupported_on_apple_gpu_vendor(apple_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "nvidia" in (cap.reason or "").lower() or "hopper" in (cap.reason or "").lower()
+    assert (
+        "nvidia" in (cap.reason or "").lower() or "hopper" in (cap.reason or "").lower()
+    )
 
 
 def test_detect_unsupported_for_non_vllm_engine(hopper_hw):
@@ -69,7 +74,9 @@ def test_detect_unsupported_for_non_vllm_engine(hopper_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "vllm" in (cap.reason or "").lower() or "engine" in (cap.reason or "").lower()
+    assert (
+        "vllm" in (cap.reason or "").lower() or "engine" in (cap.reason or "").lower()
+    )
 
 
 def test_detect_unsupported_for_non_pearl_model(hopper_hw):
@@ -137,7 +144,9 @@ def test_detect_unsupported_for_low_vram():
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "vram" in (cap.reason or "").lower() or "memory" in (cap.reason or "").lower()
+    assert (
+        "vram" in (cap.reason or "").lower() or "memory" in (cap.reason or "").lower()
+    )
 
 
 def test_check_docker_available_true():
