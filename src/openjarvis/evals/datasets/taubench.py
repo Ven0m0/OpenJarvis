@@ -232,7 +232,10 @@ class TauBenchDataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             all_records = apply_split(
-                all_records, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2
+                all_records,
+                split=cast(SplitName, split),
+                seed=effective_seed,
+                train_frac=0.2,
             )
         elif seed is not None:
             import random

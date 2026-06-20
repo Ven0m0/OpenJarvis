@@ -91,7 +91,9 @@ class GAIADataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             rows = list(rows)
-            rows = apply_split(rows, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2)
+            rows = apply_split(
+                rows, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2
+            )
         elif seed is not None:
             rng = random.Random(seed)
             rows = list(rows)

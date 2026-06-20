@@ -119,7 +119,9 @@ class TestConfigBuilding:
     def test_no_provider_when_no_base_url(self, tmp_path):
         # Pass-through model -> rely on opencode's own provider; no provider block.
         cfg = OpenCodeAgent(
-            SimpleNamespace(), "ollama/llama3", workspace=str(tmp_path)  # type: ignore
+            SimpleNamespace(),
+            "ollama/llama3",
+            workspace=str(tmp_path),  # type: ignore
         )._build_config()  # type: ignore
         assert "provider" not in cfg
 
@@ -155,7 +157,9 @@ class TestConfigBuilding:
     def test_does_not_pollute_workspace(self, tmp_path):
         # The config goes to a private OPENCODE_CONFIG file, never the workspace.
         OpenCodeAgent(
-            SimpleNamespace(_host="http://h:1"), "m", workspace=str(tmp_path)  # type: ignore
+            SimpleNamespace(_host="http://h:1"),
+            "m",
+            workspace=str(tmp_path),  # type: ignore
         )._build_config()  # type: ignore
         assert not (tmp_path / "opencode.json").exists()
 
