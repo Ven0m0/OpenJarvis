@@ -183,7 +183,7 @@ class EmailChannel(BaseChannel):
                     if msg_data[0] is None:
                         continue
                     raw = msg_data[0][1]
-                    parsed = email.message_from_bytes(raw)
+                    parsed = email.message_from_bytes(raw)  # type: ignore
                     body = ""
                     if parsed.is_multipart():
                         for part in parsed.walk():

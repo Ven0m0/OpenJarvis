@@ -53,7 +53,7 @@ class TestExactMatch:
         assert exact_match("1, 2", "1, 2, 3") is False
 
     def test_none_answer(self):
-        assert exact_match(None, "42") is False
+        assert exact_match(None, "42") is False  # type: ignore
 
     def test_punctuation_handling(self):
         assert exact_match("Hello!", "Hello") is True

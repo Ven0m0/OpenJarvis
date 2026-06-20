@@ -37,7 +37,7 @@ def messages_to_dicts(messages: Sequence[Message]) -> List[Dict[str, Any]]:
         # Vision: forward base64 images to the engine. Ollama's /api/chat
         # accepts an "images" array on a message; text messages skip this.
         if getattr(m, "images", None):
-            d["images"] = list(m.images)
+            d["images"] = list(m.images)  # type: ignore
         out.append(d)
     return out
 

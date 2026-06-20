@@ -78,11 +78,15 @@ impl LoopGuard {
     }
 
     fn hash_call(&self, tool_name: &str, arguments: &str) -> String {
+        use std::fmt::Write as _;
         let mut hasher = Sha256::new();
         hasher.update(tool_name.as_bytes());
         hasher.update(b"|");
         hasher.update(arguments.as_bytes());
-        format!("{:x}", hasher.finalize())
+        hasher.finalize().iter().fold(String::new(), |mut acc, b| {
+            write!(acc, "{b:02x}").ok();
+            acc
+        })
     }
 }
 

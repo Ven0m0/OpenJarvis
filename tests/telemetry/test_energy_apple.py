@@ -26,11 +26,11 @@ def _make_fake_zeus():
     zeus_device_soc_apple = types.ModuleType("zeus.device.soc.apple")
 
     mock_monitor_cls = MagicMock()
-    zeus_device_soc_apple.AppleSiliconMonitor = mock_monitor_cls
+    zeus_device_soc_apple.AppleSiliconMonitor = mock_monitor_cls  # type: ignore
 
-    zeus.device = zeus_device
-    zeus_device.soc = zeus_device_soc
-    zeus_device_soc.apple = zeus_device_soc_apple
+    zeus.device = zeus_device  # type: ignore
+    zeus_device.soc = zeus_device_soc  # type: ignore
+    zeus_device_soc.apple = zeus_device_soc_apple  # type: ignore
 
     return zeus, zeus_device, zeus_device_soc, zeus_device_soc_apple, mock_monitor_cls
 

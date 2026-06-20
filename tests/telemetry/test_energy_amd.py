@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 import time
 import types
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -23,7 +24,7 @@ from tests.telemetry.energy_test_helpers import (
 
 def _make_fake_amdsmi(device_count: int = 1):
     """Return a fake amdsmi module object."""
-    mod = types.ModuleType("amdsmi")
+    mod: Any = types.ModuleType("amdsmi")
     mod.amdsmi_init = MagicMock()
     mod.amdsmi_shut_down = MagicMock()
     handles = [f"amd-handle-{i}" for i in range(device_count)]

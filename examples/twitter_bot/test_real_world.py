@@ -13,6 +13,7 @@ from __future__ import annotations
 import importlib
 import re
 import sys
+from typing import Any, Dict, List
 import time
 from pathlib import Path
 
@@ -110,7 +111,7 @@ _EMOJI_RE = re.compile(
 )
 
 
-def _check_voice(reply: str) -> dict:
+def _check_voice(reply: str) -> Dict[str, Any]:
     has_upper = bool(re.search(r"[A-Z]", reply))
     has_emoji = bool(_EMOJI_RE.search(reply))
     has_hashtag = "#" in reply
@@ -139,12 +140,12 @@ def main():
     j = Jarvis(model=model, engine_key="ollama")
     demo_channel = _DemoChannel()
 
-    results = []
+    results: List[Dict[str, Any]] = []
     print(f"Testing {len(REAL_WORLD_MENTIONS)} mentions with {model}...\n", flush=True)
 
     try:
         for idx, tweet in enumerate(REAL_WORLD_MENTIONS, 1):
-            mention_type = _classify_mention(tweet["text"])
+            mention_type = _classify_mention(tweet["text"])  # type: ignore
             print(
                 f"[{idx}/{len(REAL_WORLD_MENTIONS)}] [{mention_type}] "
                 f"@{tweet['author']}: {tweet['text'][:70]}",
@@ -241,7 +242,7 @@ def main():
         if r["voice"] is None:
             print(
                 f"| {r['n']} | {r['type']} | - | - | "
-                f"@{r['author']}: {r['text'][:50]}... "
+                f"@{r['author']}: {(r['text'] or '')[:50]}... "
                 "| _[ignored]_ | - | - |",
             )
         else:
@@ -249,11 +250,11 @@ def main():
             ok = all([v["<=280"], v["lowercase"], v["no_emoji"], v["no_hashtag"]])
             score_str = f"{r['score']:.2f}" if r["type"] == "QUESTION" else "-"
             state = r["ground_state"] or "-"
-            short_reply = r["reply"][:80].replace("\n", " ").replace("|", "/")
-            short_text = r["text"][:50].replace("|", "/")
-            reply_suffix = "..." if len(r["reply"]) > 80 else ""
+            short_reply = (r["reply"] or "")[:80].replace("\n", " ").replace("|", "/")
+            short_text = (r["text"] or "")[:50].replace("|", "/")
+            reply_suffix = "..." if len(r["reply"] or "") > 80 else ""
             print(
-                f"| {r['n']} | {r['type'][:8]} | {state} | {score_str} | "
+                f"| {r['n']} | {(r['type'] or '')[:8]} | {state} | {score_str} | "
                 f"@{r['author']}: {short_text}... "
                 f"| {short_reply}{reply_suffix} "
                 f"| {v['len']} | {'yes' if ok else 'NO'} |",
@@ -263,10 +264,10 @@ def main():
     scored = [r for r in results if r["voice"] is not None]
     if scored:
         n = len(scored)
-        n280 = sum(1 for r in scored if r["voice"]["<=280"])
-        nlow = sum(1 for r in scored if r["voice"]["lowercase"])
-        nemo = sum(1 for r in scored if r["voice"]["no_emoji"])
-        nhash = sum(1 for r in scored if r["voice"]["no_hashtag"])
+        n280 = sum(1 for r in scored if r["voice"] and r["voice"]["<=280"])
+        nlow = sum(1 for r in scored if r["voice"] and r["voice"]["lowercase"])
+        nemo = sum(1 for r in scored if r["voice"] and r["voice"]["no_emoji"])
+        nhash = sum(1 for r in scored if r["voice"] and r["voice"]["no_hashtag"])
         print(
             f"\nVoice compliance: <=280: {n280}/{n}, "
             f"lowercase: {nlow}/{n}, no emoji: {nemo}/{n}, "

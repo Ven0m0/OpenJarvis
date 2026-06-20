@@ -150,7 +150,7 @@ def _print_hits(query: str, backend: DenseMemory, top_k: int = 3) -> None:
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(description=__doc__.strip().splitlines()[0])
+    p = argparse.ArgumentParser(description=__doc__.strip().splitlines()[0])  # type: ignore
     p.add_argument(
         "--repo-root",
         default=str(Path(__file__).resolve().parents[1]),

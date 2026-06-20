@@ -90,7 +90,7 @@ def _make_safe_import(allowed: frozenset = _SAFE_IMPORT_MODULES):
     if isinstance(__builtins__, dict):
         real_import = __builtins__["__import__"]
     else:
-        real_import = __builtins__.__import__  # type: ignore[union-attr]
+        real_import = __builtins__.__import__  # type: ignore
 
     def _safe_import(name: str, *args: Any, **kwargs: Any) -> Any:
         top_level = name.split(".")[0]

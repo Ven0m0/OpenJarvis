@@ -193,7 +193,7 @@ class IMessageConnector(BaseConnector):
                     author = handle_map.get(handle_id, "unknown")
 
                 # Determine chat name / title
-                chat_id = msg_to_chat.get(rowid)
+                chat_id = msg_to_chat.get(rowid)  # type: ignore
                 if chat_id is not None and chat_id in chat_map:
                     _chat_identifier, chat_name = chat_map[chat_id]
                 else:

@@ -127,7 +127,7 @@ def test_event_bus_store():
     import openjarvis.tools.storage.bm25 as mod
 
     original = mod.get_event_bus
-    mod.get_event_bus = lambda: bus
+    mod.get_event_bus = lambda *, record_history=False: bus  # type: ignore
     try:
         backend.store("test event emission")
         events = [e for e in bus.history if e.event_type == EventType.MEMORY_STORE]
@@ -145,7 +145,7 @@ def test_event_bus_retrieve():
     import openjarvis.tools.storage.bm25 as mod
 
     original = mod.get_event_bus
-    mod.get_event_bus = lambda: bus
+    mod.get_event_bus = lambda *, record_history=False: bus  # type: ignore
     try:
         backend.retrieve("searchable")
         events = [e for e in bus.history if e.event_type == EventType.MEMORY_RETRIEVE]

@@ -24,7 +24,7 @@ def emb_store(tmp_path: Path) -> EmbeddingStore:
 
 def _make_tensor(rows: int = 20, cols: int = 128):
     """Create a dummy tensor (rows, cols) mimicking ColBERT token embeddings."""
-    import torch  # type: ignore[import]
+    import torch  # type: ignore
 
     return torch.randn(rows, cols)
 
@@ -36,7 +36,7 @@ def _make_tensor(rows: int = 20, cols: int = 128):
 
 def test_store_and_get(emb_store: EmbeddingStore) -> None:
     """Storing a tensor and getting it back preserves shape and values."""
-    import torch  # type: ignore[import]
+    import torch  # type: ignore
 
     tensor = _make_tensor(25, 128)
     emb_store.store("chunk-abc", tensor)
@@ -149,7 +149,7 @@ def test_graceful_without_torch(tmp_path: Path) -> None:
 
 def test_store_overwrites(emb_store: EmbeddingStore) -> None:
     """Storing the same chunk_id twice overwrites the previous embedding."""
-    import torch  # type: ignore[import]
+    import torch  # type: ignore
 
     t1 = _make_tensor(10, 128)
     t2 = _make_tensor(15, 128)

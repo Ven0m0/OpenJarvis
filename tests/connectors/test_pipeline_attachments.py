@@ -17,7 +17,7 @@ from openjarvis.connectors.store import KnowledgeStore
 # ---------------------------------------------------------------------------
 
 
-def _make_doc(**kwargs) -> Document:  # type: ignore[type-arg]
+def _make_doc(**kwargs) -> Document:  # type: ignore
     """Build a Document with sensible defaults."""
     defaults = dict(
         doc_id="doc:att:001",
@@ -34,7 +34,7 @@ def _make_doc(**kwargs) -> Document:  # type: ignore[type-arg]
         metadata={},
     )
     defaults.update(kwargs)
-    return Document(**defaults)  # type: ignore[arg-type]
+    return Document(**defaults)  # type: ignore
 
 
 # ---------------------------------------------------------------------------

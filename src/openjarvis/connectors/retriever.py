@@ -101,13 +101,13 @@ class ColBERTReranker(Reranker):
         try:
             import os
 
-            from colbert.infra.config import ColBERTConfig  # type: ignore[import]
-            from colbert.modeling.checkpoint import Checkpoint  # type: ignore[import]
+            from colbert.infra.config import ColBERTConfig  # type: ignore
+            from colbert.modeling.checkpoint import Checkpoint  # type: ignore
 
             # Force CPU if CUDA unavailable
             gpus = 0
             try:
-                import torch  # type: ignore[import]
+                import torch  # type: ignore
 
                 if torch.cuda.is_available():
                     gpus = 1
@@ -147,10 +147,10 @@ class ColBERTReranker(Reranker):
             return candidates[:top_k]
 
         try:
-            import torch  # type: ignore[import]
+            import torch  # type: ignore
 
             # Encode query: (Q, dim) where Q=query_maxlen (32)
-            q_emb = self._model.queryFromText([query])[0]
+            q_emb = self._model.queryFromText([query])[0]  # type: ignore
 
             # Score each candidate via MaxSim, using cached embeddings
             # from the EmbeddingStore when available.
@@ -165,7 +165,7 @@ class ColBERTReranker(Reranker):
 
                 if d_emb is None:
                     # Encode on the fly
-                    d_emb = self._model.docFromText([r.content], bsize=1)[0]
+                    d_emb = self._model.docFromText([r.content], bsize=1)[0]  # type: ignore
                     # d_emb shape: (1, T, dim) or (T, dim)
                     if d_emb.dim() == 3:
                         d_emb = d_emb.squeeze(0)

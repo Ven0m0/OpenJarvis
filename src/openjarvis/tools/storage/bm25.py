@@ -41,6 +41,7 @@ class BM25Memory(MemoryBackend):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         """Persist *content* and return a unique document id."""
         meta_json = json.dumps(metadata) if metadata else None

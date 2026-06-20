@@ -31,7 +31,7 @@ from typing import Dict, List, Optional
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 LOGGER = logging.getLogger(__name__)
 

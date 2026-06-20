@@ -220,7 +220,7 @@ def _terminate_pid(pid: int | None, *, grace_seconds: float = 3.0) -> None:
             return
         time.sleep(0.05)
     if _pid_alive(pid):
-        os.kill(pid, signal.SIGKILL)
+        os.kill(pid, signal.SIGKILL)  # type: ignore
 
 
 def _row(name: str, ok: bool, info: str) -> None:

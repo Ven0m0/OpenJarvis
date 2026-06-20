@@ -34,7 +34,7 @@ def _tb_config(**overrides) -> RunConfig:
         temperature=0.2,
     )
     defaults.update(overrides)
-    return RunConfig(**defaults)
+    return RunConfig(**defaults)  # type: ignore
 
 
 class TestBuildBackendForwardsEndpoint:

@@ -14,6 +14,10 @@ from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
     import types as _types
 
+    from openjarvis.security.injection_scanner import InjectionScanResult
+    from openjarvis.security.types import ScanResult
+    from openjarvis.tools.storage._stubs import RetrievalResult
+
 # ---------------------------------------------------------------------------
 # Mandatory import — Rust backend is required
 # ---------------------------------------------------------------------------
@@ -27,7 +31,7 @@ def get_rust_module() -> _types.ModuleType:
     The Rust backend is mandatory for all modules that have Rust
     implementations — there is no Python fallback.
     """
-    import openjarvis_rust  # type: ignore[import-untyped]
+    import openjarvis_rust  # type: ignore
 
     return openjarvis_rust
 
@@ -54,7 +58,7 @@ RUST_AVAILABLE: bool = _detect_rust()
 # ---------------------------------------------------------------------------
 
 
-def scan_result_from_json(json_str: str) -> object:
+def scan_result_from_json(json_str: str) -> ScanResult:
     """Convert a Rust scanner JSON string to a Python ``ScanResult``."""
     from openjarvis.security.types import (
         ScanFinding,
@@ -80,7 +84,7 @@ def scan_result_from_json(json_str: str) -> object:
     return ScanResult(findings=findings)
 
 
-def injection_result_from_json(json_str: str) -> object:
+def injection_result_from_json(json_str: str) -> InjectionScanResult:
     """Convert Rust ``InjectionScanner.scan()`` JSON to dataclass."""
     from openjarvis.security.injection_scanner import (
         InjectionScanResult,
@@ -116,7 +120,7 @@ def injection_result_from_json(json_str: str) -> object:
     )
 
 
-def retrieval_results_from_json(json_str: str) -> list:
+def retrieval_results_from_json(json_str: str) -> List[RetrievalResult]:
     """Convert Rust memory ``retrieve()`` JSON to a list of results."""
     from openjarvis.tools.storage._stubs import RetrievalResult
 

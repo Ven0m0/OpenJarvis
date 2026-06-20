@@ -528,8 +528,8 @@ class AgenticRunner:
             turns = [
                 TurnTrace(
                     turn_index=0,
-                    input_tokens=in_tok,
-                    output_tokens=out_tok,
+                    input_tokens=in_tok,  # type: ignore
+                    output_tokens=out_tok,  # type: ignore
                     wall_clock_s=end_time - start_time,
                     cost_usd=cost if cost else None,
                 )
@@ -540,8 +540,8 @@ class AgenticRunner:
             total_turn_in = sum(t.input_tokens for t in turns)
             total_turn_out = sum(t.output_tokens for t in turns)
             if total_turn_in == 0 and total_turn_out == 0:
-                turns[0].input_tokens = in_tok
-                turns[0].output_tokens = out_tok
+                turns[0].input_tokens = in_tok  # type: ignore
+                turns[0].output_tokens = out_tok  # type: ignore
                 turns[0].wall_clock_s = turns[0].wall_clock_s or (end_time - start_time)
                 if cost and turns[0].cost_usd is None:
                     turns[0].cost_usd = cost

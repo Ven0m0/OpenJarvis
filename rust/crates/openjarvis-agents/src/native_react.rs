@@ -9,15 +9,15 @@ use crate::utils::strip_think_tags;
 use openjarvis_core::{AgentContext, AgentResult, OpenJarvisError, ToolResult};
 use openjarvis_tools::executor::ToolExecutor;
 use regex::Regex;
-use rig::agent::AgentBuilder;
-use rig::completion::message::Message as RigMessage;
-use rig::completion::request::{Chat, CompletionModel};
+use rig_core::agent::AgentBuilder;
+use rig_core::completion::message::Message as RigMessage;
+use rig_core::completion::request::{Chat, CompletionModel};
 use std::collections::HashMap;
 use std::sync::Arc;
 
 /// ReAct agent with Thought-Action-Observation loop.
 pub struct NativeReActAgent<M: CompletionModel> {
-    agent: rig::agent::Agent<M>,
+    agent: rig_core::agent::Agent<M>,
     executor: Arc<ToolExecutor>,
     max_turns: usize,
 }
@@ -112,7 +112,7 @@ impl<M: CompletionModel + 'static> OjAgent for NativeReActAgent<M> {
         for turn in 1..=self.max_turns {
             let response = self
                 .agent
-                .chat(&current_input, history.clone())
+                .chat(&current_input, &mut history.clone())
                 .await
                 .map_err(|e| {
                     OpenJarvisError::Agent(openjarvis_core::error::AgentError::Execution(

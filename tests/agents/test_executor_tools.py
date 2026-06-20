@@ -42,6 +42,7 @@ def test_executor_runs_with_tools_from_config(tmp_path):
 
     executor.execute_tick(agent["id"])
     result_agent = mgr.get_agent(agent["id"])
+    assert result_agent is not None
     assert result_agent["status"] == "idle"
     assert result_agent["total_runs"] == 1
     mgr.close()
@@ -71,6 +72,7 @@ def test_executor_handles_missing_tools(tmp_path):
 
     executor.execute_tick(agent["id"])
     result_agent = mgr.get_agent(agent["id"])
+    assert result_agent is not None
     assert result_agent["status"] == "idle"
     assert result_agent["total_runs"] == 1
     mgr.close()
@@ -100,5 +102,6 @@ def test_executor_handles_string_tools(tmp_path):
 
     executor.execute_tick(agent["id"])
     result_agent = mgr.get_agent(agent["id"])
+    assert result_agent is not None
     assert result_agent["status"] == "idle"
     mgr.close()

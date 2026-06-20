@@ -526,7 +526,7 @@ def _replay_history_messages(
                 messages.append(
                     Message(
                         role=Role.ASSISTANT,
-                        content=m.get("content") or None,
+                        content=m.get("content") or None,  # type: ignore
                         tool_calls=calls,
                     )
                 )
@@ -559,7 +559,7 @@ def _instantiate_managed_tool(
     except Exception:  # pragma: no cover - cli import should always succeed
         _MEMORY_TOOLS = frozenset()
         _CHANNEL_TOOLS = frozenset()
-        _get_memory_backend = None
+        _get_memory_backend = None  # type: ignore
 
     if name in _MEMORY_TOOLS:
         backend = getattr(app_state, "memory_backend", None) if app_state else None
@@ -986,7 +986,7 @@ async def _stream_managed_agent(
                     )
                     return result
 
-                dr_agent._executor.execute = _tracked_execute
+                dr_agent._executor.execute = _tracked_execute  # type: ignore
 
                 def _run_agent():
                     agent_metadata = {}
@@ -1328,7 +1328,7 @@ async def _stream_managed_agent(
 
                 assistant_msg = Message(
                     role=Role.ASSISTANT,
-                    content=turn_content or None,
+                    content=turn_content or None,  # type: ignore
                     tool_calls=[
                         MsgToolCall(
                             id=tc["id"],

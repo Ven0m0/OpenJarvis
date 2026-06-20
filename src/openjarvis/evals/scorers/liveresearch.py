@@ -122,7 +122,7 @@ A score of 5 represents adequate but unremarkable quality."""
 
 # Optional permissive JSON parser (json5 if available; fallback otherwise).
 try:
-    import json5 as _json5  # type: ignore[import-not-found]
+    import json5 as _json5  # type: ignore
 except ImportError:  # pragma: no cover - json5 is optional
     _json5 = None
 

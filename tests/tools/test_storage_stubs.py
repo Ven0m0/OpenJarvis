@@ -14,7 +14,7 @@ class _DummyStorage(MemoryBackend):
         self._data = {}
         self._counter = 0
 
-    def store(self, content, *, source="", metadata=None):
+    def store(self, content, *, source="", metadata=None):  # type: ignore
         self._counter += 1
         doc_id = f"doc-{self._counter}"
         self._data[doc_id] = {"content": content, "source": source}
@@ -46,7 +46,7 @@ class _DummyStorage(MemoryBackend):
 class TestStorageStubs:
     def test_abc_cannot_instantiate(self) -> None:
         with pytest.raises(TypeError):
-            MemoryBackend()  # type: ignore[abstract]
+            MemoryBackend()  # type: ignore
 
     def test_concrete_implementation(self) -> None:
         storage = _DummyStorage()

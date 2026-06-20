@@ -122,7 +122,7 @@ class TestTraceAnalyzer:
         qwen_stats = [s for s in stats if s.model == "qwen3:8b"][0]
         assert qwen_stats.count == 2
         assert qwen_stats.success_rate == 1.0
-        assert abs(qwen_stats.avg_feedback - 0.85) < 1e-9
+        assert abs(qwen_stats.avg_feedback - 0.85) < 1e-9  # type: ignore
 
         llama_stats = [s for s in stats if s.model == "llama3:70b"][0]
         assert llama_stats.count == 1

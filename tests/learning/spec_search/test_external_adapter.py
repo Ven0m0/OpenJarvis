@@ -20,7 +20,7 @@ def _fake_records(n: int) -> list[EvalRecord]:
             problem=f"question {i}",
             reference=f"answer {i}",
             category="test-category",
-            metadata={"difficulty": "hard"} if i % 2 else None,
+            metadata={"difficulty": "hard"} if i % 2 else None,  # type: ignore
         )
         for i in range(n)
     ]

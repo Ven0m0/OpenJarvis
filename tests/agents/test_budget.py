@@ -17,6 +17,7 @@ def test_budget_exceeded_sets_status(tmp_path):
     executor._finalize_tick(agent["id"], result, error=None, duration=1.0)
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "budget_exceeded"
 
     budget_events = [
@@ -39,6 +40,7 @@ def test_budget_not_exceeded_stays_idle(tmp_path):
     executor._finalize_tick(agent["id"], result, error=None, duration=1.0)
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "idle"
     mgr.close()
 
@@ -59,6 +61,7 @@ def test_budget_unlimited_skips_check(tmp_path):
     executor._finalize_tick(agent["id"], result, error=None, duration=1.0)
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "idle"
     mgr.close()
 
@@ -76,5 +79,6 @@ def test_token_budget_exceeded(tmp_path):
     executor._finalize_tick(agent["id"], result, error=None, duration=1.0)
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "budget_exceeded"
     mgr.close()

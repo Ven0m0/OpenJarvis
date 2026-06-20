@@ -11,7 +11,7 @@ from openjarvis.evals.core.types import EvalResult, MetricStats, RunConfig, RunS
 try:
     import wandb
 except ImportError:
-    wandb = None  # type: ignore[assignment]
+    wandb = None  # type: ignore
 
 LOGGER = logging.getLogger(__name__)
 
@@ -73,7 +73,7 @@ class WandbTracker(ResultTracker):
         if config.engine_key:
             run_config["engine_key"] = config.engine_key
 
-        self._run = wandb.init(
+        self._run = wandb.init(  # type: ignore
             project=self._project,
             entity=self._entity,
             tags=self._tags or None,
@@ -102,7 +102,7 @@ class WandbTracker(ResultTracker):
         }
         if result.error:
             log_data["sample/has_error"] = 1.0
-        wandb.log(log_data, step=self._step)
+        wandb.log(log_data, step=self._step)  # type: ignore
 
     def on_summary(self, summary: RunSummary) -> None:
         if self._run is None:
@@ -146,7 +146,7 @@ class WandbTracker(ResultTracker):
             )
         )
         flat.update(_flatten_metric_stats("itl", summary.itl_stats))
-        wandb.run.summary.update(flat)
+        wandb.run.summary.update(flat)  # type: ignore
 
     def on_run_end(self) -> None:
         if self._run is not None:

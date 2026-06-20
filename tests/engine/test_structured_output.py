@@ -36,7 +36,7 @@ class TestResponseFormat:
     def test_slots(self) -> None:
         rf = ResponseFormat()
         with pytest.raises(AttributeError):
-            rf.extra = "nope"  # type: ignore[attr-defined]
+            rf.extra = "nope"  # type: ignore
 
 
 # ---------------------------------------------------------------------------
@@ -53,7 +53,7 @@ class TestOpenAIStructuredOutput:
         EngineRegistry.register_value("cloud", CloudEngine)
         engine = CloudEngine()
         fake_client = mock.MagicMock()
-        engine._openai_client = fake_client
+        engine._openai_client = fake_client  # type: ignore
 
         fake_usage = SimpleNamespace(
             prompt_tokens=10, completion_tokens=5, total_tokens=15
@@ -128,7 +128,7 @@ class TestAnthropicStructuredOutput:
         EngineRegistry.register_value("cloud", CloudEngine)
         engine = CloudEngine()
         fake_client = mock.MagicMock()
-        engine._anthropic_client = fake_client
+        engine._anthropic_client = fake_client  # type: ignore
 
         fake_usage = SimpleNamespace(input_tokens=12, output_tokens=8)
         fake_tool_use = SimpleNamespace(
@@ -220,7 +220,7 @@ class TestGoogleStructuredOutput:
         EngineRegistry.register_value("cloud", CloudEngine)
         engine = CloudEngine()
         fake_client = mock.MagicMock()
-        engine._google_client = fake_client
+        engine._google_client = fake_client  # type: ignore
 
         fake_part = SimpleNamespace(
             text='{"answer": 42}',

@@ -51,7 +51,7 @@ class GoogleTasksConnector(BaseConnector):
 
     def _get_access_token(self) -> str:
         tokens = load_tokens(str(self._credentials_path))
-        return tokens.get("access_token") or tokens.get("token", "")
+        return tokens.get("access_token") or tokens.get("token", "")  # type: ignore
 
     def is_connected(self) -> bool:
         """Return ``True`` if the credentials file has a real access token.

@@ -18,7 +18,7 @@ def test_dataset_full_size():
 def test_record_structure():
     ds = SecurityScannerDataset()
     ds.load(max_samples=1, seed=42)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     assert record.record_id.startswith("security-scanner-")
     assert record.category == "agentic"
     assert "security" in record.problem.lower() or "scan" in record.problem.lower()
@@ -40,7 +40,7 @@ def test_difficulty_tiers():
 def test_vulnerability_structure():
     ds = SecurityScannerDataset()
     ds.load(max_samples=1, seed=0)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     vuln = record.metadata["vulnerabilities"][0]
     assert "file" in vuln
     assert "type" in vuln

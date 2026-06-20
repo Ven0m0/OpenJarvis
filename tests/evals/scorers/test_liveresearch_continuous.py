@@ -80,7 +80,7 @@ def test_continuous_score_fields_present_in_summary(tmp_path):
         model="test-model",
         output_path=str(out),
     )
-    runner = EvalRunner(cfg, dataset, backend, scorer)
+    runner = EvalRunner(cfg, dataset, backend, scorer)  # type: ignore
     summary = runner.run()
 
     summary_path = out.with_suffix(".summary.json")

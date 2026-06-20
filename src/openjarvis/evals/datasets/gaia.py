@@ -9,11 +9,11 @@ import os
 import random
 import shutil
 from pathlib import Path
-from typing import Iterable, List, MutableMapping, Optional, Sequence
+from typing import Iterable, List, MutableMapping, Optional, Sequence, cast
 
 from openjarvis.core.paths import get_cache_dir
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 _DEFAULT_CACHE_DIR = get_cache_dir() / "gaia_benchmark"
@@ -91,7 +91,7 @@ class GAIADataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             rows = list(rows)
-            rows = apply_split(rows, split=split, seed=effective_seed, train_frac=0.2)
+            rows = apply_split(rows, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2)
         elif seed is not None:
             rng = random.Random(seed)
             rows = list(rows)

@@ -156,11 +156,11 @@ function FilesystemPanel({
 
 function OAuthPanel({
 	displayName,
-	_authUrl,
+	authUrl: _authUrl,
 	connectorId,
 	onConnect,
 	onSkip,
-	_isConnecting,
+	isConnecting: _isConnecting,
 }: {
 	displayName: string;
 	authUrl?: string;

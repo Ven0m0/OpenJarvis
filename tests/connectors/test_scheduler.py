@@ -32,7 +32,7 @@ class _FakeConnector(BaseConnector):
         connected: bool = True,
         doc_count: int = 2,
     ) -> None:
-        self.connector_id = connector_id  # type: ignore[misc]
+        self.connector_id = connector_id  # type: ignore
         self._connected = connected
         self._doc_count = doc_count
 

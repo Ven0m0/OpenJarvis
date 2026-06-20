@@ -319,7 +319,7 @@ def _launch_chat(store: KnowledgeStore, console: Console) -> None:
     agent = DeepResearchAgent(
         engine=engine,
         model=_OLLAMA_MODEL,
-        tools=tools,
+        tools=tools,  # type: ignore
         interactive=True,
     )
 

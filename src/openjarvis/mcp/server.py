@@ -197,7 +197,7 @@ class MCPServer:
             return self._handle_tools_call(request)
         else:
             return MCPResponse.error_response(
-                request.id,
+                request.id,  # type: ignore
                 METHOD_NOT_FOUND,
                 f"Unknown method: {request.method}",
             )
@@ -216,7 +216,7 @@ class MCPServer:
                     "title": "OpenJarvis Tool Server",
                 },
             },
-            id=req.id,
+            id=req.id,  # type: ignore
         )
 
     def _handle_tools_list(self, req: MCPRequest) -> MCPResponse:
@@ -234,7 +234,7 @@ class MCPServer:
             if annotations:
                 entry["annotations"] = annotations
             tool_list.append(entry)
-        return MCPResponse(result={"tools": tool_list}, id=req.id)
+        return MCPResponse(result={"tools": tool_list}, id=req.id)  # type: ignore
 
     def _handle_tools_call(self, req: MCPRequest) -> MCPResponse:
         """Handle tools/call — execute a tool and return the result."""
@@ -243,14 +243,14 @@ class MCPServer:
 
         if not tool_name:
             return MCPResponse.error_response(
-                req.id,
+                req.id,  # type: ignore
                 INVALID_PARAMS,
                 "Missing required parameter: name",
             )
 
         if tool_name not in self._tools:
             return MCPResponse.error_response(
-                req.id,
+                req.id,  # type: ignore
                 INVALID_PARAMS,
                 f"Unknown tool: {tool_name}",
             )
@@ -271,11 +271,11 @@ class MCPServer:
                     ],
                     "isError": not result.success,
                 },
-                id=req.id,
+                id=req.id,  # type: ignore
             )
         except Exception as exc:
             return MCPResponse.error_response(
-                req.id,
+                req.id,  # type: ignore
                 INTERNAL_ERROR,
                 f"Tool execution error: {exc}",
             )

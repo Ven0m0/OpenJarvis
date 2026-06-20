@@ -155,6 +155,7 @@ class ColBERTMemory(MemoryBackend):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         """Persist *content* and return a unique document id."""
         doc_id = uuid.uuid4().hex

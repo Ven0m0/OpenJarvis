@@ -609,7 +609,7 @@ class TestFullPipeline:
                 )
                 return AgentResult(content=result["content"], turns=1)
 
-        AgentRegistry.register_value("pipeline-test", PipelineAgent)
+        AgentRegistry.register_value("pipeline-test", PipelineAgent)  # type: ignore
 
         cfg = JarvisConfig()
         cfg.telemetry.db_path = str(tmp_path / "telemetry.db")

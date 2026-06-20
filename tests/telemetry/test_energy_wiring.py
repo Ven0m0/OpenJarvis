@@ -295,7 +295,7 @@ class TestCliAskWiring:
 
         AgentRegistry.register_value(
             "test-wiring-agent",
-            _TestAgent,
+            _TestAgent,  # type: ignore
         )
 
         result = CliRunner().invoke(

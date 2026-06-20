@@ -56,7 +56,7 @@ def test_different_seeds_give_different_order():
 
 def test_invalid_split_raises():
     with pytest.raises(ValueError, match=r"split must be one of train/test/all"):
-        apply_split([1, 2, 3], split="foo", seed=42, train_frac=0.2)
+        apply_split([1, 2, 3], split="foo", seed=42, train_frac=0.2)  # type: ignore
 
 
 @pytest.mark.parametrize("bad_frac", [0.0, 1.0, -0.5, 1.5])

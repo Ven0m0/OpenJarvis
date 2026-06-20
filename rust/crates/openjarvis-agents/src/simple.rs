@@ -5,13 +5,13 @@
 use crate::traits::OjAgent;
 use crate::utils::strip_think_tags;
 use openjarvis_core::{AgentContext, AgentResult, OpenJarvisError};
-use rig::agent::AgentBuilder;
-use rig::completion::request::{Chat, CompletionModel};
+use rig_core::agent::AgentBuilder;
+use rig_core::completion::request::{Chat, CompletionModel};
 use std::collections::HashMap;
 
 /// Single-turn agent that delegates to rig-core's agent builder.
 pub struct SimpleAgent<M: CompletionModel> {
-    agent: rig::agent::Agent<M>,
+    agent: rig_core::agent::Agent<M>,
 }
 
 impl<M: CompletionModel> SimpleAgent<M> {
@@ -39,17 +39,17 @@ impl<M: CompletionModel + 'static> OjAgent for SimpleAgent<M> {
         input: &str,
         context: Option<&AgentContext>,
     ) -> Result<AgentResult, OpenJarvisError> {
-        let history: Vec<rig::completion::message::Message> = context
+        let history: Vec<rig_core::completion::message::Message> = context
             .map(|ctx| {
                 ctx.conversation
                     .messages
                     .iter()
                     .filter_map(|m| match m.role {
                         openjarvis_core::Role::User => {
-                            Some(rig::completion::message::Message::user(&m.content))
+                            Some(rig_core::completion::message::Message::user(&m.content))
                         }
                         openjarvis_core::Role::Assistant => {
-                            Some(rig::completion::message::Message::assistant(&m.content))
+                            Some(rig_core::completion::message::Message::assistant(&m.content))
                         }
                         _ => None,
                     })
@@ -57,7 +57,7 @@ impl<M: CompletionModel + 'static> OjAgent for SimpleAgent<M> {
             })
             .unwrap_or_default();
 
-        let response = self.agent.chat(input, history).await.map_err(|e| {
+        let response = self.agent.chat(input, &mut history.clone()).await.map_err(|e| {
             OpenJarvisError::Agent(openjarvis_core::error::AgentError::Execution(e.to_string()))
         })?;
 

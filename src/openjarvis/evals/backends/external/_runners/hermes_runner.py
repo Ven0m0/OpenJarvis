@@ -55,7 +55,7 @@ def main() -> int:
         os.chdir(args.workspace)
 
     try:
-        from run_agent import AIAgent  # type: ignore[import-not-found]
+        from run_agent import AIAgent  # type: ignore
     except ImportError as e:
         output["error"] = f"hermes_import_failed: {e}"
         args.output_json.write_text(json.dumps(output))
@@ -106,7 +106,7 @@ def main() -> int:
 
         def _safe_int(v: object) -> int:
             try:
-                return int(v or 0)
+                return int(v or 0)  # type: ignore
             except (TypeError, ValueError):
                 return 0
 

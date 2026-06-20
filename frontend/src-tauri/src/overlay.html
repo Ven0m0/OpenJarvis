@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body,:root{
-  background:transparent !important;
-  background-color:transparent !important;
+  background:transparent;
+  background-color:transparent;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;
   color:#fff;height:100%;overflow:hidden;
 }
@@ -141,16 +141,16 @@ html,body,:root{
 <div id="container">
   <div id="messages"></div>
   <div id="input-bar">
-    <button id="new-btn" class="btn" title="New conversation">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <button type="button" id="new-btn" class="btn" title="New conversation">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><title>New conversation</title><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </button>
     <div id="model-wrap">
       <select id="model-select"><option>loading...</option></select>
-      <svg class="arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><title>Expand</title><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <input id="input" type="text" placeholder="Ask Jarvis anything..." autofocus>
-    <button id="send-btn" class="btn" disabled title="Send">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+    <input id="input" type="text" placeholder="Ask Jarvis anything..." >
+    <button type="button" id="send-btn" class="btn" disabled title="Send">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Send</title><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
     </button>
   </div>
 </div>
@@ -201,7 +201,7 @@ fetch('/v1/models').then(r=>r.json()).then(d=>{
   }
   // Restore saved model or pick first available
   const saved=messages.length&&messages[0].model;
-  if(saved&&modelSelect.querySelector('option[value="'+CSS.escape(saved)+'"]')){modelSelect.value=saved}
+  if(saved&&modelSelect.querySelector(`option[value="${CSS.escape(saved)}"]`)){modelSelect.value=saved}
   model=modelSelect.value||model;
 }).catch(()=>{});
 modelSelect.addEventListener('change',()=>{model=modelSelect.value});
@@ -216,7 +216,7 @@ function renderAll(){
 }
 function bubble(role,text){
   const d=document.createElement('div');
-  d.className='msg '+(role==='user'?'user':'assistant');
+  d.className=`msg ${role==='user'?'user':'assistant'}`;
   if(role==='assistant') setHtml(d, md(text||''));
   else d.textContent=text;
   messagesEl.appendChild(d);
@@ -249,12 +249,12 @@ function md(src){
   // 1. Extract fenced code blocks first so their contents aren't touched.
   src=src.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,lang,code)=>{
     blocks.push({lang,code});
-    return '\u0000CB'+(blocks.length-1)+'\u0000';
+    return `\u0000CB${blocks.length-1}\u0000`;
   });
   // 2. Extract inline code (single-line backticks).
   src=src.replace(/`([^`\n]+)`/g,(_,c)=>{
     inlines.push(c);
-    return '\u0000IC'+(inlines.length-1)+'\u0000';
+    return `\u0000IC${inlines.length-1}\u0000`;
   });
   // 3. Escape everything else.
   src=escHtml(src);
@@ -273,13 +273,13 @@ function md(src){
   // 7. Unordered + ordered lists.
   src=src.replace(/(?:^[-*]\s+.+(?:\n|$))+/gm,block=>{
     const items=block.trim().split('\n')
-      .map(l=>'<li>'+l.replace(/^[-*]\s+/,'')+'</li>').join('');
-    return '<ul>'+items+'</ul>';
+      .map(l=>`<li>${l.replace(/^[-*]\s+/,'')}</li>`).join('');
+    return `<ul>${items}</ul>`;
   });
   src=src.replace(/(?:^\d+\.\s+.+(?:\n|$))+/gm,block=>{
     const items=block.trim().split('\n')
-      .map(l=>'<li>'+l.replace(/^\d+\.\s+/,'')+'</li>').join('');
-    return '<ol>'+items+'</ol>';
+      .map(l=>`<li>${l.replace(/^\d+\.\s+/,'')}</li>`).join('');
+    return `<ol>${items}</ol>`;
   });
   // 8. Paragraphs: split on blank lines, wrap non-block chunks in <p>.
   src=src.split(/\n{2,}/).map(chunk=>{
@@ -287,15 +287,17 @@ function md(src){
     if(!t)return '';
     if(/^<(h\d|ul|ol|pre|blockquote)/.test(t))return t;
     if(t.startsWith('\u0000CB'))return t;
-    return '<p>'+t.replace(/\n/g,'<br>')+'</p>';
+    return `<p>${t.replace(/\n/g,'<br>')}</p>`;
   }).join('');
   // 9. Restore inline code.
-  src=src.replace(/\u0000IC(\d+)\u0000/g,(_,i)=>'<code>'+escHtml(inlines[+i])+'</code>');
+  // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional null-byte sentinel
+  src=src.replace(/\u0000IC(\d+)\u0000/g,(_,i)=>`<code>${escHtml(inlines[+i])}</code>`);
   // 10. Restore fenced code blocks.
+  // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional null-byte sentinel
   src=src.replace(/\u0000CB(\d+)\u0000/g,(_,i)=>{
     const b=blocks[+i];
-    const cls=b.lang?' class="lang-'+escHtml(b.lang)+'"':'';
-    return '<pre><code'+cls+'>'+escHtml(b.code)+'</code></pre>';
+    const cls=b.lang?` class="lang-${escHtml(b.lang)}"`:'';
+    return `<pre><code${cls}>${escHtml(b.code)}</code></pre>`;
   });
   return src;
 }
@@ -305,12 +307,12 @@ const CLOUD_PFX=['gpt-','o1-','o3-','o4-','claude-','gemini-','openrouter/','cha
 function save(){
   const conv={id:convId,title:convTitle,createdAt:convCreated,updatedAt:Date.now(),model,
     messages:messages.map((m,i)=>{
-      const o={id:convId+'_'+i,role:m.role,content:m.content,timestamp:m.timestamp||Date.now()};
+      const o={id:`${convId}_${i}`,role:m.role,content:m.content,timestamp:m.timestamp||Date.now()};
       if(m.usage)o.usage=m.usage;
       if(m.telemetry)o.telemetry=m.telemetry;
       return o;
     })};
-  try{window.webkit.messageHandlers.overlay.postMessage('save:'+JSON.stringify(conv))}catch{}
+  try{window.webkit.messageHandlers.overlay.postMessage(`save:${JSON.stringify(conv)}`)}catch{}
 }
 
 input.addEventListener('input',()=>{sendBtn.disabled=!input.value.trim()||streaming});
@@ -319,11 +321,11 @@ input.addEventListener('keydown',e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    if(streaming){abort&&abort.abort()}
+    if(streaming){abort?.abort()}
     else{try{window.webkit.messageHandlers.overlay.postMessage('hide')}catch{}}
   }
 });
-sendBtn.addEventListener('click',()=>{if(streaming){abort&&abort.abort()}else send()});
+sendBtn.addEventListener('click',()=>{if(streaming){abort?.abort()}else send()});
 document.getElementById('new-btn').addEventListener('click',()=>{
   convId=genId();convTitle='Overlay chat';convCreated=Date.now();
   messages=[];
@@ -416,10 +418,10 @@ window.addEventListener('focus',()=>input.focus());
 
 // --- Drag-to-move: click anywhere to drag, with threshold so
 //     clicks on inputs/buttons still work normally ---
-(function(){
+(()=> {
   let down=false,dragging=false,sx=0,sy=0;
   const THRESH=3;
-  const INTERACTIVE='input,select,button,textarea,a,label,[contenteditable="true"],[role="button"]';
+  const _INTERACTIVE='input,select,button,textarea,a,label,[contenteditable="true"],[role="button"]';
   document.addEventListener('mousedown',e=>{
     if(e.target.closest('select'))return;
     down=true;dragging=false;sx=e.screenX;sy=e.screenY;
@@ -438,7 +440,7 @@ window.addEventListener('focus',()=>input.focus());
       dragging=true;
     }
     sx=e.screenX;sy=e.screenY;
-    try{window.webkit.messageHandlers.overlay.postMessage('drag:'+dx+','+dy)}catch{}
+    try{window.webkit.messageHandlers.overlay.postMessage(`drag:${dx},${dy}`)}catch{}
   });
   const reset=()=>{down=false;dragging=false};
   document.addEventListener('mouseup',reset);

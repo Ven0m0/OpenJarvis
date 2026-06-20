@@ -10,7 +10,7 @@ from openjarvis.learning.optimize.types import ObjectiveSpec
 try:
     import tomllib
 except ModuleNotFoundError:  # pragma: no cover
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 
 def load_optimize_config(path: Union[str, Path]) -> Dict[str, Any]:

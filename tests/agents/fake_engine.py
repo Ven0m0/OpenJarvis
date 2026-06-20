@@ -25,7 +25,7 @@ class FakeEngine(InferenceEngine):
     def last_messages(self) -> list | None:
         return self._last_messages
 
-    def generate(
+    def generate(  # type: ignore
         self,
         messages: list,
         *,
@@ -60,7 +60,7 @@ class FakeEngine(InferenceEngine):
             result["tool_calls"] = resp["tool_calls"]
         return result
 
-    async def stream(
+    async def stream(  # type: ignore
         self,
         messages: list,
         *,

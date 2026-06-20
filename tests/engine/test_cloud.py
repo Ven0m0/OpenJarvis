@@ -81,7 +81,7 @@ class TestCloudEngineGenerate:
 
         EngineRegistry.register_value("cloud", CloudEngine)
         engine = CloudEngine()
-        engine._openai_client = fake_client
+        engine._openai_client = fake_client  # type: ignore
 
         result = engine.generate(
             [Message(role=Role.USER, content="Hi")], model="gpt-4o"
@@ -107,7 +107,7 @@ class TestCloudEngineGenerate:
 
         EngineRegistry.register_value("cloud", CloudEngine)
         engine = CloudEngine()
-        engine._anthropic_client = fake_client
+        engine._anthropic_client = fake_client  # type: ignore
 
         result = engine.generate(
             [Message(role=Role.USER, content="Hi")],
@@ -165,7 +165,7 @@ class TestOpenAIUnsupportedTemperatureRetry:
 
         EngineRegistry.register_value("cloud", CloudEngine)
         engine = CloudEngine()
-        engine._openai_client = fake_client
+        engine._openai_client = fake_client  # type: ignore
 
         result = engine.generate(
             [Message(role=Role.USER, content="Hi")],
@@ -197,7 +197,7 @@ class TestOpenAIUnsupportedTemperatureRetry:
 
         EngineRegistry.register_value("cloud", CloudEngine)
         engine = CloudEngine()
-        engine._openai_client = fake_client
+        engine._openai_client = fake_client  # type: ignore
 
         with pytest.raises(Exception):  # noqa: B017 - re-raised unchanged
             engine.generate(
@@ -232,9 +232,9 @@ class TestCodexClientInit:
         monkeypatch.setenv("OPENAI_CODEX_API_KEY", "test-token")
         engine = CloudEngine()
         assert engine.health() is True
-        assert engine._codex_client is not None
-        assert engine._codex_client["token"] == "test-token"
-        assert "responses" in engine._codex_client["url"]
+        assert engine._codex_client is not None  # type: ignore
+        assert engine._codex_client["token"] == "test-token"  # type: ignore
+        assert "responses" in engine._codex_client["url"]  # type: ignore
 
     def test_custom_codex_base_url(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
@@ -242,7 +242,7 @@ class TestCodexClientInit:
         monkeypatch.setenv("OPENAI_CODEX_API_KEY", "test-token")
         monkeypatch.setenv("OPENAI_CODEX_BASE_URL", "http://localhost:9999")
         engine = CloudEngine()
-        assert engine._codex_client["url"] == "http://localhost:9999/responses"
+        assert engine._codex_client["url"] == "http://localhost:9999/responses"  # type: ignore
 
     def test_list_models_includes_codex(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
@@ -259,7 +259,7 @@ class TestCodexClientInit:
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
         monkeypatch.delenv("OPENAI_CODEX_API_KEY", raising=False)
         engine = CloudEngine()
-        assert engine._codex_client is None
+        assert engine._codex_client is None  # type: ignore
         assert "codex/gpt-4o" not in engine.list_models()
 
 
@@ -279,7 +279,7 @@ class TestCodexGenerate:
         fake_response.raise_for_status = mock.MagicMock()
 
         engine = CloudEngine()
-        engine._codex_client = {
+        engine._codex_client = {  # type: ignore
             "token": "test-token",
             "url": "https://api.openai.com/v1/responses",
         }
@@ -326,7 +326,7 @@ class TestCodexGenerate:
         fake_response.raise_for_status = mock.MagicMock()
 
         engine = CloudEngine()
-        engine._codex_client = {
+        engine._codex_client = {  # type: ignore
             "token": "t",
             "url": "https://api.openai.com/v1/responses",
         }
@@ -355,7 +355,7 @@ class TestCodexGenerate:
         fake_response.raise_for_status = mock.MagicMock()
 
         engine = CloudEngine()
-        engine._codex_client = {
+        engine._codex_client = {  # type: ignore
             "token": "t",
             "url": "https://api.openai.com/v1/responses",
         }
@@ -382,9 +382,9 @@ class TestCodexGenerate:
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
         engine = CloudEngine()
-        engine._codex_client = {"token": "t", "url": "http://test"}
+        engine._codex_client = {"token": "t", "url": "http://test"}  # type: ignore
         engine.close()
-        assert engine._codex_client is None
+        assert engine._codex_client is None  # type: ignore
 
 
 class TestOpenRouterToolForwarding:

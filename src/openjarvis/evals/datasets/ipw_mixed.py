@@ -152,8 +152,8 @@ class IPWDataset(DatasetProvider):
 
         dataset = load_from_disk(str(path))
         if hasattr(dataset, "to_list"):
-            return dataset.to_list()
-        return list(dataset)
+            return dataset.to_list()  # type: ignore
+        return list(dataset)  # type: ignore
 
     @staticmethod
     def _load_jsonl(path: Path) -> List[MutableMapping[str, Any]]:

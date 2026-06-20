@@ -47,7 +47,7 @@ def _make_channel(**overrides):
         "from_number": "+15551234567",
     }
     defaults.update(overrides)
-    return SendBlueChannel(**defaults)
+    return SendBlueChannel(**defaults)  # type: ignore
 
 
 def _mock_httpx_post(status=200, body=None):

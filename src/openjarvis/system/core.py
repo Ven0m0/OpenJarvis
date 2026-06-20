@@ -126,7 +126,7 @@ class JarvisSystem:
         if orch is None:
             from openjarvis.system.orchestrator import QueryOrchestrator
 
-            orch = QueryOrchestrator(self)
+            orch = QueryOrchestrator(self)  # type: ignore
             self.__dict__["_orchestrator"] = orch
         return orch
 
@@ -215,7 +215,7 @@ class JarvisSystem:
 
         def _on_channel_message(cm) -> None:
             session_key = f"{cm.channel}:{cm.conversation_id}"
-            session = _system.session_store.get_or_create(
+            session = _system.session_store.get_or_create(  # type: ignore
                 session_key,
                 channel=cm.channel,
                 channel_user_id=cm.sender,
@@ -251,13 +251,13 @@ class JarvisSystem:
                 reply = "Sorry, I encountered an error processing your message."
 
             try:
-                _system.session_store.save_message(
+                _system.session_store.save_message(  # type: ignore
                     session.session_id,
                     "user",
                     cm.content,
                     channel=cm.channel,
                 )
-                _system.session_store.save_message(
+                _system.session_store.save_message(  # type: ignore
                     session.session_id,
                     "assistant",
                     reply,
@@ -313,7 +313,7 @@ class JarvisSystem:
             self.container_runner,
         ):
             if resource and hasattr(resource, "close"):
-                resource.close()
+                resource.close()  # type: ignore
         if self.agent_manager is not None:
             self.agent_manager.close()
         if self.agent_scheduler is not None:

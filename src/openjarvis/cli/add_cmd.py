@@ -100,7 +100,7 @@ def add(server_name: str, key: str | None, extra_args: str | None) -> None:
     # Build server config
     config = {
         "command": template["command"],
-        "args": list(template["args"]),
+        "args": list(template["args"]),  # type: ignore
     }
 
     # Add extra args

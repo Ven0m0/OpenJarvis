@@ -47,7 +47,7 @@ def _split_string(s: str, char_list: list[str] | None = None) -> list[str]:
 
 def _is_float(element: object) -> bool:
     try:
-        float(element)  # type: ignore[arg-type]
+        float(element)  # type: ignore
         return True
     except (ValueError, TypeError):
         return False

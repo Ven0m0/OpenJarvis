@@ -24,7 +24,7 @@ class _FakeBackend(MemoryBackend):
     def __init__(self) -> None:
         self._docs: Dict[str, tuple] = {}
 
-    def store(
+    def store(  # type: ignore
         self,
         content: str,
         *,
@@ -197,7 +197,7 @@ def test_event_bus_store():
     import openjarvis.tools.storage.hybrid as mod
 
     original = mod.get_event_bus
-    mod.get_event_bus = lambda: bus
+    mod.get_event_bus = lambda *, record_history=False: bus  # type: ignore
     try:
         hybrid.store("event test content")
         events = [e for e in bus.history if e.event_type == EventType.MEMORY_STORE]
@@ -214,7 +214,7 @@ def test_event_bus_retrieve():
     import openjarvis.tools.storage.hybrid as mod
 
     original = mod.get_event_bus
-    mod.get_event_bus = lambda: bus
+    mod.get_event_bus = lambda *, record_history=False: bus  # type: ignore
     try:
         hybrid.retrieve("retrievable")
         events = [e for e in bus.history if e.event_type == EventType.MEMORY_RETRIEVE]

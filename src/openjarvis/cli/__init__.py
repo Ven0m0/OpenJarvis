@@ -169,7 +169,7 @@ def main() -> None:
         for _stream in (sys.stdout, sys.stderr):
             if hasattr(_stream, "reconfigure"):
                 try:
-                    _stream.reconfigure(encoding="utf-8", errors="replace")
+                    _stream.reconfigure(encoding="utf-8", errors="replace")  # type: ignore
                 except (AttributeError, OSError):
                     pass
     cli()

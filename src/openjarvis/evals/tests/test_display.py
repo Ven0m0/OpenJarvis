@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from io import StringIO
+from typing import cast
 
 from rich.console import Console
 
@@ -37,7 +38,7 @@ def _make_summary(**overrides) -> RunSummary:
         per_subject={"level_1": {"accuracy": 0.58, "correct": 40, "scored": 68}},
     )
     defaults.update(overrides)
-    return RunSummary(**defaults)
+    return RunSummary(**defaults)  # type: ignore
 
 
 def _make_stats(mean=10.0) -> MetricStats:
@@ -58,14 +59,14 @@ class TestAccuracyPanel:
         console = Console(file=StringIO(), force_terminal=True)
         summary = _make_summary()
         print_accuracy_panel(console, summary)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "42.0%" in output or "0.42" in output
 
     def test_shows_per_subject(self):
         console = Console(file=StringIO(), force_terminal=True)
         summary = _make_summary()
         print_accuracy_panel(console, summary)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "level_1" in output
 
 
@@ -79,7 +80,7 @@ class TestLatencyTable:
             output_token_stats=_make_stats(256.0),
         )
         print_latency_table(console, summary)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "Latency" in output
         assert "Avg" in output
 
@@ -94,7 +95,7 @@ class TestEnergyTable:
             ipj_stats=_make_stats(9.0e-6),
         )
         print_energy_table(console, summary)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "IPW" in output
         assert "IPJ" in output
 
@@ -121,7 +122,7 @@ class TestTraceSummary:
             },
         )
         print_trace_summary(console, summary)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "generate" in output
         assert "tool_call" in output
 
@@ -134,7 +135,7 @@ class TestCompactTable:
             energy_stats=_make_stats(46000.0),
         )
         print_compact_table(console, summary)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "Latency" in output
         assert "Energy" in output
 
@@ -148,5 +149,5 @@ class TestFullResults:
             power_stats=_make_stats(880.0),
         )
         print_full_results(console, summary)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "Accuracy" in output

@@ -14,7 +14,7 @@ from openjarvis.connectors.store import KnowledgeStore
 # ---------------------------------------------------------------------------
 
 
-def _store(ks: KnowledgeStore, **kwargs) -> str:  # type: ignore[type-arg]
+def _store(ks: KnowledgeStore, **kwargs) -> str:  # type: ignore
     """Convenience wrapper with sensible defaults."""
     defaults = {
         "content": "default content",
@@ -31,7 +31,7 @@ def _store(ks: KnowledgeStore, **kwargs) -> str:  # type: ignore[type-arg]
         "chunk_index": 0,
     }
     defaults.update(kwargs)
-    return ks.store(**defaults)  # type: ignore[call-arg]
+    return ks.store(**defaults)  # type: ignore
 
 
 # ---------------------------------------------------------------------------

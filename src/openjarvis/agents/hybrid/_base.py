@@ -1029,7 +1029,7 @@ class LocalCloudAgent(BaseAgent):
         t0 = time.time()
         for tool_name in search_tool_names:
             try:
-                resp = client.responses.create(
+                resp = client.responses.create(  # type: ignore
                     **kwargs_base,
                     tools=[{"type": tool_name}],
                 )
@@ -1288,7 +1288,7 @@ class LocalCloudAgent(BaseAgent):
         t0 = time.time()
         events = _open_trace()
         counts = _open_call_counts()
-        meta: Dict[str, Any]
+        meta: Dict[str, Any] = {}
         answer: str = ""
         soft_reason: Optional[str] = None
         exc_obj: Optional[BaseException] = None

@@ -90,7 +90,7 @@ class TestPercentile:
 
     def test_p90(self):
         data = list(range(1, 101))  # 1..100
-        assert _percentile(data, 0.90) == pytest.approx(90.1)
+        assert _percentile(data, 0.90) == pytest.approx(90.1)  # type: ignore
 
     def test_single_value(self):
         assert _percentile([42.0], 0.99) == pytest.approx(42.0)

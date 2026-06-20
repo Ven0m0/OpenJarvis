@@ -7,15 +7,15 @@ use crate::traits::OjAgent;
 use crate::utils::strip_think_tags;
 use openjarvis_core::{AgentContext, AgentResult, OpenJarvisError, Role, ToolResult};
 use openjarvis_tools::executor::ToolExecutor;
-use rig::agent::AgentBuilder;
-use rig::completion::request::{Chat, CompletionModel};
+use rig_core::agent::AgentBuilder;
+use rig_core::completion::request::{Chat, CompletionModel};
 use std::collections::HashMap;
 use std::sync::Arc;
 
 /// Multi-turn agent with function calling and loop detection.
 #[allow(dead_code)]
 pub struct OrchestratorAgent<M: CompletionModel> {
-    agent: rig::agent::Agent<M>,
+    agent: rig_core::agent::Agent<M>,
     executor: Arc<ToolExecutor>,
     max_turns: usize,
 }
@@ -55,15 +55,15 @@ impl<M: CompletionModel + 'static> OjAgent for OrchestratorAgent<M> {
         input: &str,
         context: Option<&AgentContext>,
     ) -> Result<AgentResult, OpenJarvisError> {
-        let history: Vec<rig::completion::message::Message> = context
+        let history: Vec<rig_core::completion::message::Message> = context
             .map(|ctx| {
                 ctx.conversation
                     .messages
                     .iter()
                     .filter_map(|m| match m.role {
-                        Role::User => Some(rig::completion::message::Message::user(&m.content)),
+                        Role::User => Some(rig_core::completion::message::Message::user(&m.content)),
                         Role::Assistant => {
-                            Some(rig::completion::message::Message::assistant(&m.content))
+                            Some(rig_core::completion::message::Message::assistant(&m.content))
                         }
                         _ => None,
                     })
@@ -76,7 +76,7 @@ impl<M: CompletionModel + 'static> OjAgent for OrchestratorAgent<M> {
 
         // Use rig agent for generation. Multi-turn tool dispatch requires
         // direct CompletionModel access which we handle in future iterations.
-        let response = self.agent.chat(input, history).await.map_err(|e| {
+        let response = self.agent.chat(input, &mut history.clone()).await.map_err(|e| {
             OpenJarvisError::Agent(openjarvis_core::error::AgentError::Execution(e.to_string()))
         })?;
 

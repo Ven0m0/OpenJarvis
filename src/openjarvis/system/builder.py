@@ -311,7 +311,7 @@ class SystemBuilder:
             skill_manager=skill_manager,
         )
         system._learning_orchestrator = learning_orchestrator
-        system._skill_few_shot_examples = skill_few_shot_examples
+        system._skill_few_shot_examples = skill_few_shot_examples  # type: ignore
         system._mcp_clients = list(getattr(self, "_mcp_clients", []))
         if system.agent_executor is not None:
             system.agent_executor.set_system(system)

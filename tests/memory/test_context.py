@@ -35,6 +35,7 @@ class _FakeMemory(MemoryBackend):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         return uuid.uuid4().hex
 
@@ -178,7 +179,7 @@ def test_inject_context_publishes_event():
     import openjarvis.tools.storage.context as mod
 
     original = mod.get_event_bus
-    mod.get_event_bus = lambda: bus
+    mod.get_event_bus = lambda *, record_history=False: bus  # type: ignore
     try:
         inject_context("query", messages, backend)
         events = [e for e in bus.history if e.event_type == EventType.MEMORY_RETRIEVE]

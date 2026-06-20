@@ -31,8 +31,8 @@ function getTextContent(node: unknown): string {
 	if (Array.isArray(node)) {
 		return node.map(getTextContent).join("");
 	}
-	if (node?.props?.children) {
-		return getTextContent(node.props.children);
+	if ((node as any)?.props?.children) {
+		return getTextContent((node as any).props.children);
 	}
 	return "";
 }

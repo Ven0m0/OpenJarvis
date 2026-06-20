@@ -136,6 +136,7 @@ class TestBuildRunConfig:
         recipe = trial.to_recipe()
         cfg = runner._build_run_config(trial, recipe)
 
+        assert cfg.output_path is not None
         assert "trial-abc" in cfg.output_path
         assert cfg.output_path.startswith("out/")
 
@@ -177,7 +178,7 @@ class TestRunTrial:
             total_output_tokens=5000,
         )
         defaults.update(overrides)
-        return RunSummary(**defaults)
+        return RunSummary(**defaults)  # type: ignore
 
     @patch("openjarvis.evals.cli._build_scorer")
     @patch("openjarvis.evals.cli._build_judge_backend")

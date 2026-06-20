@@ -22,7 +22,7 @@ try:
     HAS_TORCH = True
 except ImportError:
     HAS_TORCH = False
-    torch = None  # type: ignore[assignment]
+    torch = None  # type: ignore
 
 try:
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -30,8 +30,8 @@ try:
     HAS_TRANSFORMERS = True
 except ImportError:
     HAS_TRANSFORMERS = False
-    AutoModelForCausalLM = None  # type: ignore[assignment,misc]
-    AutoTokenizer = None  # type: ignore[assignment,misc]
+    AutoModelForCausalLM = None  # type: ignore
+    AutoTokenizer = None  # type: ignore
 
 try:
     from peft import LoraConfig, TaskType, get_peft_model
@@ -39,9 +39,9 @@ try:
     HAS_PEFT = True
 except ImportError:
     HAS_PEFT = False
-    LoraConfig = None  # type: ignore[assignment,misc]
-    TaskType = None  # type: ignore[assignment,misc]
-    get_peft_model = None  # type: ignore[assignment,misc]
+    LoraConfig = None  # type: ignore
+    TaskType = None  # type: ignore
+    get_peft_model = None  # type: ignore
 
 
 # ---------------------------------------------------------------------------
@@ -206,7 +206,7 @@ class LoRATrainer:
         self._load_model()
         self._apply_lora()
 
-        optimizer = torch.optim.AdamW(
+        optimizer = torch.optim.AdamW(  # type: ignore
             self.model.parameters(),
             lr=self.config.learning_rate,
             weight_decay=self.config.weight_decay,
@@ -263,7 +263,7 @@ class LoRATrainer:
                 "Install with: pip install transformers"
             )
 
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)  # type: ignore
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
@@ -280,7 +280,7 @@ class LoRATrainer:
 
         self._ensure_tokenizer()
 
-        model_kwargs: Dict[str, Any] = {"torch_dtype": torch.bfloat16}
+        model_kwargs: Dict[str, Any] = {"torch_dtype": torch.bfloat16}  # type: ignore
 
         if self.config.use_4bit:
             try:
@@ -288,7 +288,7 @@ class LoRATrainer:
 
                 model_kwargs["quantization_config"] = BitsAndBytesConfig(
                     load_in_4bit=True,
-                    bnb_4bit_compute_dtype=torch.bfloat16,
+                    bnb_4bit_compute_dtype=torch.bfloat16,  # type: ignore
                     bnb_4bit_use_double_quant=True,
                     bnb_4bit_quant_type="nf4",
                 )
@@ -302,7 +302,7 @@ class LoRATrainer:
         else:
             model_kwargs["device_map"] = {"": self.device}
 
-        self.model = AutoModelForCausalLM.from_pretrained(
+        self.model = AutoModelForCausalLM.from_pretrained(  # type: ignore
             self.model_name, **model_kwargs
         )
 
@@ -320,14 +320,14 @@ class LoRATrainer:
                 "peft is required for LoRA training. Install with: pip install peft"
             )
 
-        lora_config = LoraConfig(
-            task_type=TaskType.CAUSAL_LM,
+        lora_config = LoraConfig(  # type: ignore
+            task_type=TaskType.CAUSAL_LM,  # type: ignore
             r=self.config.lora_rank,
             lora_alpha=self.config.lora_alpha,
             lora_dropout=self.config.lora_dropout,
             target_modules=self.config.target_modules,
         )
-        self.model = get_peft_model(self.model, lora_config)
+        self.model = get_peft_model(self.model, lora_config)  # type: ignore
         logger.info(
             "LoRA applied: rank=%d, alpha=%d, targets=%s",
             self.config.lora_rank,
@@ -382,10 +382,10 @@ class LoRATrainer:
         optimizer: Any,
     ) -> float:
         """Execute a single training step on a micro-batch."""
-        input_ids = torch.stack([item["input_ids"] for item in batch_items]).to(
+        input_ids = torch.stack([item["input_ids"] for item in batch_items]).to(  # type: ignore
             self.device
         )
-        attention_mask = torch.stack(
+        attention_mask = torch.stack(  # type: ignore
             [item["attention_mask"] for item in batch_items]
         ).to(self.device)
 
@@ -403,7 +403,7 @@ class LoRATrainer:
 
         optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(
+        torch.nn.utils.clip_grad_norm_(  # type: ignore
             self.model.parameters(), self.config.max_grad_norm
         )
         optimizer.step()

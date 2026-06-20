@@ -63,7 +63,7 @@ class TestSkillManifest:
 class TestSkillExecutor:
     def _make_executor(self):
         tools = [EchoTool(), UpperTool()]
-        tool_executor = ToolExecutor(tools)
+        tool_executor = ToolExecutor(tools)  # type: ignore
         return SkillExecutor(tool_executor)
 
     def test_single_step(self):
@@ -135,7 +135,7 @@ class TestSkillExecutor:
     def test_events_emitted(self):
         bus = EventBus(record_history=True)
         tools = [EchoTool()]
-        tool_executor = ToolExecutor(tools)
+        tool_executor = ToolExecutor(tools)  # type: ignore
         executor = SkillExecutor(tool_executor, bus=bus)
 
         manifest = SkillManifest(
@@ -205,7 +205,7 @@ class TestSkillExecutorSubSkills:
     def test_sub_skill_delegation(self):
         """Executor delegates skill_name steps to a skill resolver."""
         tools = [EchoTool(), UpperTool()]
-        tool_executor = ToolExecutor(tools)
+        tool_executor = ToolExecutor(tools)  # type: ignore
         executor = SkillExecutor(tool_executor)
 
         child_manifest = SkillManifest(
@@ -249,7 +249,7 @@ class TestSkillExecutorSubSkills:
 
     def test_sub_skill_failure_stops_pipeline(self):
         tools = [EchoTool()]
-        tool_executor = ToolExecutor(tools)
+        tool_executor = ToolExecutor(tools)  # type: ignore
         executor = SkillExecutor(tool_executor)
 
         def resolve_skill(name, context):
@@ -276,7 +276,7 @@ class TestSkillTool:
         from openjarvis.skills.tool_adapter import SkillTool
 
         tools = [EchoTool()]
-        tool_executor = ToolExecutor(tools)
+        tool_executor = ToolExecutor(tools)  # type: ignore
         executor = SkillExecutor(tool_executor)
         manifest = SkillManifest(
             name="tool_skill",

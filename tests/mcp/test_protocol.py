@@ -84,6 +84,7 @@ class TestMCPResponse:
 
     def test_error_response_factory(self):
         resp = MCPResponse.error_response(42, INVALID_PARAMS, "Bad params")
+        assert resp.error is not None
         assert resp.error["code"] == INVALID_PARAMS
         assert resp.error["message"] == "Bad params"
         assert resp.id == 42
@@ -96,6 +97,7 @@ class TestMCPResponse:
             "Oops",
             data={"detail": "stack"},
         )
+        assert resp.error is not None
         assert resp.error["data"] == {"detail": "stack"}
 
     def test_success_response(self):

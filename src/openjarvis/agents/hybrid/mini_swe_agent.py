@@ -248,9 +248,9 @@ def _run_bash(
     except subprocess.TimeoutExpired:
         # Kill the whole process group so backgrounded grandchildren can't
         # keep the stdout/stderr pipe open and deadlock the drain below.
-        for sig in (signal.SIGTERM, signal.SIGKILL):
+        for sig in (signal.SIGTERM, signal.SIGKILL):  # type: ignore
             try:
-                os.killpg(proc.pid, sig)
+                os.killpg(proc.pid, sig)  # type: ignore
             except (ProcessLookupError, PermissionError):
                 break
             try:
@@ -1388,10 +1388,10 @@ def _loop_local(
         try:
             resp = client.chat.completions.create(
                 model=model,
-                messages=messages,
+                messages=messages,  # type: ignore
                 temperature=0.0,
                 max_tokens=turn_max_tokens,
-                tools=[BASH_TOOL_OPENAI],
+                tools=[BASH_TOOL_OPENAI],  # type: ignore
                 tool_choice="auto",
                 extra_body={"chat_template_kwargs": {"enable_thinking": False}},
             )
@@ -1430,10 +1430,10 @@ def _loop_local(
             )
             resp = client.chat.completions.create(
                 model=model,
-                messages=messages,
+                messages=messages,  # type: ignore
                 temperature=0.0,
                 max_tokens=turn_max_tokens,
-                tools=[BASH_TOOL_OPENAI],
+                tools=[BASH_TOOL_OPENAI],  # type: ignore
                 tool_choice="auto",
                 extra_body={"chat_template_kwargs": {"enable_thinking": False}},
             )

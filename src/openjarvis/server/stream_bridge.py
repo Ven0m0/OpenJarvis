@@ -104,7 +104,7 @@ class AgentStreamBridge:
     def _unsubscribe_all(self) -> None:
         """Remove all registered subscriptions."""
         for et, cb in self._callbacks.items():
-            self._bus.unsubscribe(et, cb)
+            self._bus.unsubscribe(et, cb)  # type: ignore
         self._callbacks.clear()
 
     def _format_named_event(self, name: str, data: dict) -> str:
@@ -221,7 +221,7 @@ class AgentStreamBridge:
 
             # Emit tool results metadata if any
             tool_results_data = []
-            for tr in agent_result.tool_results:
+            for tr in agent_result.tool_results:  # type: ignore
                 tool_results_data.append(
                     {
                         "tool_name": tr.tool_name,
@@ -239,7 +239,7 @@ class AgentStreamBridge:
 
             # Stream content using real LLM token streaming via
             # engine.stream_full() when the engine is available.
-            content = agent_result.content or ""
+            content = agent_result.content or ""  # type: ignore
             engine = getattr(self._agent, "_engine", None)
             used_real_streaming = False
 
@@ -309,12 +309,12 @@ class AgentStreamBridge:
                     await asyncio.sleep(0.012)
 
             # Final chunk: finish_reason + usage
-            prompt_tokens = agent_result.metadata.get("prompt_tokens", 0)
-            completion_tokens = agent_result.metadata.get(
+            prompt_tokens = agent_result.metadata.get("prompt_tokens", 0)  # type: ignore
+            completion_tokens = agent_result.metadata.get(  # type: ignore
                 "completion_tokens",
                 0,
             )
-            total_tokens = agent_result.metadata.get("total_tokens", 0)
+            total_tokens = agent_result.metadata.get("total_tokens", 0)  # type: ignore
             if total_tokens == 0:
                 # Fallback: estimate from request messages (incl. system) + content
                 completion_tokens = max(len(content) // 4, 1)

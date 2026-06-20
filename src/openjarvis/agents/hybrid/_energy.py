@@ -95,7 +95,7 @@ class EnergyCollector:
         if not self._enabled:
             return self
         try:
-            import pynvml  # type: ignore[import-not-found]
+            import pynvml  # type: ignore
 
             pynvml.nvmlInit()
             total = pynvml.nvmlDeviceGetCount()

@@ -314,7 +314,7 @@ class TauBenchTaskEnv:
                 agent = JarvisHalfDuplexAgent(
                     tools=environment.get_tools(),
                     domain_policy=environment.get_policy(),
-                    engine=self._system.engine,
+                    engine=self._system.engine,  # type: ignore
                     model=self._model,
                     temperature=self._temperature,
                     max_tokens=self._max_tokens,

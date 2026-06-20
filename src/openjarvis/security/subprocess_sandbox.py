@@ -62,11 +62,11 @@ def build_safe_env(
 def kill_process_tree(pid: int) -> None:
     """Kill a process and all its children (best effort)."""
     try:
-        os.killpg(os.getpgid(pid), signal.SIGTERM)
+        os.killpg(os.getpgid(pid), signal.SIGTERM)  # type: ignore
     except (OSError, ProcessLookupError) as exc:
         logger.debug("Failed to terminate process %d: %s", pid, exc)
     try:
-        os.kill(pid, signal.SIGKILL)
+        os.kill(pid, signal.SIGKILL)  # type: ignore
     except (OSError, ProcessLookupError) as exc:
         logger.debug("Failed to kill process %d: %s", pid, exc)
 
@@ -101,7 +101,7 @@ def run_sandboxed(
             text=True,
             env=env,
             cwd=cwd,
-            preexec_fn=os.setsid,  # New process group
+            preexec_fn=os.setsid,  # New process group  # type: ignore
         )
         try:
             stdout, stderr = proc.communicate(timeout=timeout)

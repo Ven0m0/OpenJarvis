@@ -87,7 +87,7 @@ class TestJarvisAsk:
             def run(self, input, context=None, **kwargs):
                 return AgentResult(content="Agent response", turns=1)
 
-        AgentRegistry.register_value("mock-agent", MockAgent)
+        AgentRegistry.register_value("mock-agent", MockAgent)  # type: ignore
 
         with patch("openjarvis.sdk.get_engine", return_value=("mock", engine)):
             j = Jarvis(config=JarvisConfig(), model="test-model")
@@ -126,7 +126,7 @@ class TestJarvisModels:
     def test_list_engines(self):
         from openjarvis.core.registry import EngineRegistry
 
-        EngineRegistry.register_value("test-eng", object)
+        EngineRegistry.register_value("test-eng", object)  # type: ignore
         j = Jarvis(config=JarvisConfig())
         engines = j.list_engines()
         assert "test-eng" in engines

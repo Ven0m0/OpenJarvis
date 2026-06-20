@@ -38,7 +38,7 @@ def _normalize_str(input_str: str) -> str:
 
 def _is_float(element: object) -> bool:
     try:
-        float(element)  # type: ignore[arg-type]
+        float(element)  # type: ignore
         return True
     except (ValueError, TypeError):
         return False

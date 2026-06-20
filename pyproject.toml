@@ -204,6 +204,11 @@ markers = [
     "modal: requires Modal token + network; runs real swebench harness on Modal",
 ]
 
+[tool.ty.rules]
+# Optional and dev dependencies (pytest, fastapi, torch, tomllib/tomli, etc.)
+# are not installed in the type-checking environment; suppress these.
+unresolved-import = "ignore"
+
 [tool.ruff]
 target-version = "py310"
 src = ["src", "tests"]

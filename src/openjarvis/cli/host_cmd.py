@@ -91,14 +91,14 @@ def _is_package_available(backend: str) -> bool:
 
     if info.get("import_check"):
         try:
-            __import__(info["import_check"])
+            __import__(info["import_check"])  # type: ignore
             return True
         except ImportError:
             return False
 
     binary = info.get("binary")
     if binary:
-        return shutil.which(binary) is not None
+        return shutil.which(binary) is not None  # type: ignore
 
     return False
 
@@ -146,7 +146,7 @@ def _install_backend(backend: str, console: Console) -> bool:
 
     pip_spec = info["pip_spec"]
     uv_extra = info.get("uv_extra")
-    packages = pip_spec.split()
+    packages = pip_spec.split()  # type: ignore
 
     if uv_available and in_uv_project and uv_extra:
         install_cmd = ["uv", "pip", "install"] + packages
@@ -349,7 +349,7 @@ def host(
             raise SystemExit(1)
 
     serve_port = port or info["default_port"]
-    cmd = _build_serve_command(backend, model, serve_port)
+    cmd = _build_serve_command(backend, model, serve_port)  # type: ignore
 
     if trust_remote_code:
         if backend in ("vllm", "sglang"):
@@ -360,7 +360,7 @@ def host(
     host_url = f"http://localhost:{serve_port}"
 
     table = Table.grid(padding=(0, 2))
-    table.add_row("[bold]Backend:[/bold]", info["display"])
+    table.add_row("[bold]Backend:[/bold]", info["display"])  # type: ignore
     table.add_row("[bold]Model:[/bold]", model)
     table.add_row("[bold]Endpoint:[/bold]", host_url)
     table.add_row("[bold]Command:[/bold]", " ".join(cmd))
@@ -375,16 +375,18 @@ def host(
             "[dim]OpenJarvis will auto-discover it. Press Ctrl+C to stop.[/dim]\n"
         )
 
+    proc: Optional[subprocess.Popen[bytes]] = None
     try:
         proc = subprocess.Popen(cmd)
         proc.wait()
     except KeyboardInterrupt:
         console.print("\n[yellow]Shutting down model server...[/yellow]")
-        proc.send_signal(signal.SIGTERM)
-        try:
-            proc.wait(timeout=10)
-        except subprocess.TimeoutExpired:
-            proc.kill()
+        if proc is not None:
+            proc.send_signal(signal.SIGTERM)
+            try:
+                proc.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                proc.kill()
         console.print("[green]Server stopped.[/green]")
     except FileNotFoundError:
         console.print(f"[red]Command not found:[/red] {cmd[0]}")

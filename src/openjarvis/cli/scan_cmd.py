@@ -66,7 +66,7 @@ class PrivacyScanner:
 
     # -- Subprocess helper ---------------------------------------------------
 
-    def _run(self, cmd: list[str]) -> subprocess.CompletedProcess:  # type: ignore[type-arg]
+    def _run(self, cmd: list[str]) -> subprocess.CompletedProcess:  # type: ignore
         return subprocess.run(cmd, capture_output=True, text=True, timeout=10)
 
     # -- Individual checks ---------------------------------------------------
@@ -185,7 +185,7 @@ class PrivacyScanner:
                 platform="linux",
             )
 
-        def _has_luks(devices: list) -> bool:  # type: ignore[type-arg]
+        def _has_luks(devices: list) -> bool:  # type: ignore
             for dev in devices:
                 if dev.get("fstype") == "crypto_LUKS":
                     return True

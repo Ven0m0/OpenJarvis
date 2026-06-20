@@ -283,7 +283,7 @@ class DeepResearchAgent(ToolUsingAgent):
 
                 self._emit_turn_end(turns=turns)
                 sources = self._extract_sources(all_tool_results)
-                total_usage["sources"] = sources
+                total_usage["sources"] = sources  # type: ignore
                 return AgentResult(
                     content=content,
                     tool_results=all_tool_results,
@@ -367,7 +367,7 @@ class DeepResearchAgent(ToolUsingAgent):
 
         if final_content:
             sources = self._extract_sources(all_tool_results)
-            total_usage["sources"] = sources
+            total_usage["sources"] = sources  # type: ignore
             return AgentResult(
                 content=final_content,
                 tool_results=all_tool_results,

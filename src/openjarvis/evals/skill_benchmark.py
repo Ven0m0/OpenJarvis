@@ -215,7 +215,7 @@ class SkillBenchmarkRunner:
                 exc,
             )
             judge_backend = None
-        scorer = PinchBenchScorer(judge_backend, self._config.model)
+        scorer = PinchBenchScorer(judge_backend, self._config.model)  # type: ignore
 
         runner_cfg = RunConfig(
             benchmark=self._config.benchmark,

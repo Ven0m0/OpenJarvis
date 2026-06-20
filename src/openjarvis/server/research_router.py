@@ -179,7 +179,7 @@ class _LiveGPUSampler:
         total = 0.0
         for h in self._handles:
             try:
-                total += self._pynvml.nvmlDeviceGetPowerUsage(h) / 1000.0
+                total += self._pynvml.nvmlDeviceGetPowerUsage(h) / 1000.0  # type: ignore
             except Exception:  # noqa: BLE001
                 pass
         return total
@@ -225,7 +225,7 @@ class _LiveGPUSampler:
         duration = time.monotonic() - self._t_start
         mean = self._power_sum / self._sample_count if self._sample_count else 0.0
         try:
-            self._pynvml.nvmlShutdown()
+            self._pynvml.nvmlShutdown()  # type: ignore
         except Exception:  # noqa: BLE001
             pass
         return {

@@ -384,7 +384,7 @@ _HARD_TASKS: List[Dict[str, Any]] = [
 class BrowserAssistantDataset(DatasetProvider):
     """30 web research tasks with verifiable facts."""
 
-    def load(
+    def load(  # type: ignore
         self,
         *,
         max_samples: Optional[int] = None,

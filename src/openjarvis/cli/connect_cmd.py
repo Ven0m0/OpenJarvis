@@ -10,7 +10,7 @@ from rich.table import Table
 def _list_sources(registry: object) -> None:
     """Print a Rich table of registered connectors and their sync status."""
     console = Console()
-    items = registry.items()  # type: ignore[attr-defined]
+    items = registry.items()  # type: ignore
 
     if not items:
         console.print("[yellow]No connectors registered.[/yellow]")
@@ -41,11 +41,11 @@ def _disconnect_source(registry: object, source: str) -> None:
     """Find and disconnect a registered source connector."""
     console = Console()
 
-    if not registry.contains(source):  # type: ignore[attr-defined]
+    if not registry.contains(source):  # type: ignore
         console.print(f"[red]Unknown source: {source}[/red]")
         return
 
-    connector_cls = registry.get(source)  # type: ignore[attr-defined]
+    connector_cls = registry.get(source)  # type: ignore
     try:
         instance = connector_cls()
         instance.disconnect()
@@ -58,16 +58,16 @@ def _connect_source(registry: object, source: str, path: str = "") -> None:
     """Route connector setup by auth_type."""
     console = Console()
 
-    if not registry.contains(source):  # type: ignore[attr-defined]
+    if not registry.contains(source):  # type: ignore
         console.print(f"[red]Unknown source: {source}[/red]")
         console.print(
             "[yellow]Available sources: "
-            + ", ".join(registry.keys())  # type: ignore[attr-defined]
+            + ", ".join(registry.keys())  # type: ignore
             + "[/yellow]"
         )
         return
 
-    connector_cls = registry.get(source)  # type: ignore[attr-defined]
+    connector_cls = registry.get(source)  # type: ignore
     auth_type = getattr(connector_cls, "auth_type", "")
 
     if auth_type == "filesystem":

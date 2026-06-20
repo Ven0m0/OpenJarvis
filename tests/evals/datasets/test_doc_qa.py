@@ -18,7 +18,7 @@ def test_dataset_full_size():
 def test_record_structure():
     ds = DocQADataset()
     ds.load(max_samples=1, seed=42)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     assert record.record_id.startswith("doc-qa-")
     assert record.category == "agentic"
     assert record.metadata.get("question")
@@ -31,7 +31,7 @@ def test_record_structure():
 def test_document_structure():
     ds = DocQADataset()
     ds.load(max_samples=1, seed=0)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     doc = record.metadata["documents"][0]
     assert "title" in doc
     assert "content" in doc
@@ -40,7 +40,7 @@ def test_document_structure():
 def test_required_fact_structure():
     ds = DocQADataset()
     ds.load(max_samples=1, seed=0)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     fact = record.metadata["required_facts"][0]
     assert "fact" in fact
     assert "source_doc_index" in fact

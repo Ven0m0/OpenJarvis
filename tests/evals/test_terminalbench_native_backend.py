@@ -90,9 +90,9 @@ def fake_tb_backend(monkeypatch):
     mod_tb = types.ModuleType("terminal_bench")
     mod_agents = types.ModuleType("terminal_bench.agents")
     mod_agent_name = types.ModuleType("terminal_bench.agents.agent_name")
-    mod_agent_name.AgentName = lambda name: name
-    mod_tb.agents = mod_agents
-    mod_agents.agent_name = mod_agent_name
+    mod_agent_name.AgentName = lambda name: name  # type: ignore
+    mod_tb.agents = mod_agents  # type: ignore
+    mod_agents.agent_name = mod_agent_name  # type: ignore
     monkeypatch.setitem(sys.modules, "terminal_bench", mod_tb)
     monkeypatch.setitem(sys.modules, "terminal_bench.agents", mod_agents)
     monkeypatch.setitem(sys.modules, "terminal_bench.agents.agent_name", mod_agent_name)

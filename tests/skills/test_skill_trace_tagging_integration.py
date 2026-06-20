@@ -93,7 +93,7 @@ class TestSkillTraceTaggingEndToEnd:
                 return AgentResult(content="done", turns=1)
 
         collector = TraceCollector(
-            agent=_StubAgent(),
+            agent=_StubAgent(),  # type: ignore
             store=None,  # in-memory only
             bus=bus,
         )

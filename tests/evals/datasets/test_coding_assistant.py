@@ -18,7 +18,7 @@ def test_dataset_full_size():
 def test_record_structure():
     ds = CodingAssistantDataset()
     ds.load(max_samples=1, seed=42)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     assert record.record_id.startswith("coding-assistant-")
     assert record.category == "agentic"
     assert "Bug Report" in record.problem

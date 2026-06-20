@@ -50,7 +50,7 @@ class TestBaseBenchmark:
             def description(self):
                 return "A dummy benchmark"
 
-            def run(self, engine, model, *, num_samples=10):
+            def run(self, engine, model, *, num_samples=10):  # type: ignore
                 return BenchmarkResult(
                     benchmark_name=self.name,
                     model=model,
@@ -74,7 +74,7 @@ class TestBenchmarkSuite:
             def description(self_inner):
                 return f"{name} benchmark"
 
-            def run(self_inner, engine, model, *, num_samples=10):
+            def run(self_inner, engine, model, *, num_samples=10):  # type: ignore
                 return BenchmarkResult(
                     benchmark_name=name,
                     model=model,
@@ -87,19 +87,19 @@ class TestBenchmarkSuite:
 
     def test_run_all(self):
         suite = BenchmarkSuite([self._make_bench("a"), self._make_bench("b")])
-        results = suite.run_all(None, "m1", num_samples=5)
+        results = suite.run_all(None, "m1", num_samples=5)  # type: ignore
         assert len(results) == 2
         assert results[0].benchmark_name == "a"
         assert results[1].benchmark_name == "b"
 
     def test_run_all_empty(self):
         suite = BenchmarkSuite([])
-        results = suite.run_all(None, "m1")
+        results = suite.run_all(None, "m1")  # type: ignore
         assert results == []
 
     def test_to_jsonl(self):
         suite = BenchmarkSuite([self._make_bench()])
-        results = suite.run_all(None, "m1")
+        results = suite.run_all(None, "m1")  # type: ignore
         jsonl = suite.to_jsonl(results)
         lines = jsonl.strip().split("\n")
         assert len(lines) == 1
@@ -108,7 +108,7 @@ class TestBenchmarkSuite:
 
     def test_to_jsonl_valid_json(self):
         suite = BenchmarkSuite([self._make_bench("a"), self._make_bench("b")])
-        results = suite.run_all(None, "m1")
+        results = suite.run_all(None, "m1")  # type: ignore
         jsonl = suite.to_jsonl(results)
         for line in jsonl.strip().split("\n"):
             obj = json.loads(line)
@@ -116,14 +116,14 @@ class TestBenchmarkSuite:
 
     def test_summary_format(self):
         suite = BenchmarkSuite([self._make_bench()])
-        results = suite.run_all(None, "m1")
+        results = suite.run_all(None, "m1")  # type: ignore
         summary = suite.summary(results)
         assert "benchmark_count" in summary
         assert "benchmarks" in summary
 
     def test_summary_count(self):
         suite = BenchmarkSuite([self._make_bench("a"), self._make_bench("b")])
-        results = suite.run_all(None, "m1")
+        results = suite.run_all(None, "m1")  # type: ignore
         summary = suite.summary(results)
         assert summary["benchmark_count"] == 2
         assert len(summary["benchmarks"]) == 2

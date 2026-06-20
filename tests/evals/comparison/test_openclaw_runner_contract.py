@@ -39,7 +39,7 @@ def test_openclaw_runner_parses_real_agent_json_shape(tmp_path: Path) -> None:
         "OPENCLAW_PATH": str(tmp_path),
         "HOME": str(tmp_path / "home"),
     }
-    result = subprocess.run(
+    result = subprocess.run(  # type: ignore
         [
             node,
             str(runner),

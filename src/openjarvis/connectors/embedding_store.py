@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    import torch  # type: ignore[import]
+    import torch  # type: ignore
 
 logger = logging.getLogger(__name__)
 

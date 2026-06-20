@@ -193,7 +193,7 @@ def build_channel_kwargs(channel_config: Any, key: str) -> Dict[str, Any]:
     if entry is None:
         return {}
     attr, mapper = entry
-    sub_cfg: Callable[[Any], Dict[str, Any]] = getattr(channel_config, attr, None)
+    sub_cfg: Callable[[Any], Dict[str, Any]] = getattr(channel_config, attr, None)  # type: ignore
     if sub_cfg is None:
         return {}
     return mapper(sub_cfg)

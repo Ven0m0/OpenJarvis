@@ -66,7 +66,7 @@ class GuardrailsEngine(InferenceEngine):
     # -- properties ----------------------------------------------------------
 
     @property
-    def engine_id(self) -> str:  # type: ignore[override]
+    def engine_id(self) -> str:  # type: ignore
         """Delegate to the wrapped engine."""
         return self._engine.engine_id
 

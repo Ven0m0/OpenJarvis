@@ -312,7 +312,7 @@ class TaskScheduler:
         minute-granularity parser for simple expressions.
         """
         try:
-            from croniter import croniter  # type: ignore[import-untyped]
+            from croniter import croniter  # type: ignore
 
             it = croniter(cron_expr, now)
             return it.get_next(datetime).isoformat()

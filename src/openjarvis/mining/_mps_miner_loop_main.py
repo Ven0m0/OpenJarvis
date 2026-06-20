@@ -53,15 +53,15 @@ class MpsNoisyGemmAdapter:
         import torch
         from miner_base.noisy_gemm import Transcript
 
-        class _MpsNoisyGemm(noisy_gemm_cls):  # type: ignore[misc, valid-type]
-            def _accumulate_transcripts(self, transcripts, reduction_count, C_block):  # type: ignore[no-untyped-def]
+        class _MpsNoisyGemm(noisy_gemm_cls):  # type: ignore
+            def _accumulate_transcripts(self, transcripts, reduction_count, C_block):  # type: ignore
                 return super()._accumulate_transcripts(
                     transcripts,
                     reduction_count,
                     C_block.detach().cpu(),
                 )
 
-            def _process_output_tile(self, A, B, k, i, i_max, j, j_max):  # type: ignore[no-untyped-def]
+            def _process_output_tile(self, A, B, k, i, i_max, j, j_max):  # type: ignore
                 block_h = i_max - i
                 block_w = j_max - j
                 hash_tile_h = self.inner_hash.tile_h
@@ -103,7 +103,7 @@ class MpsNoisyGemmAdapter:
                         has_full_tiles = True
                 return C_block, has_full_tiles, transcripts
 
-            def _tiled_matmul(self, A, B, pow_key, pow_target):  # type: ignore[no-untyped-def]
+            def _tiled_matmul(self, A, B, pow_key, pow_target):  # type: ignore
                 assert A.shape[1] == B.shape[0]
                 m, k = A.shape
                 n = B.shape[1]

@@ -896,7 +896,7 @@ def _run_live(
                 ),
             )
 
-        HttpRequestTool.execute = _dry_http_execute
+        HttpRequestTool.execute = _dry_http_execute  # type: ignore
         http_restore = (HttpRequestTool, _orig_execute)
 
     mode_hint = (

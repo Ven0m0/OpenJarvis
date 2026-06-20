@@ -97,7 +97,7 @@ class TestInstrumentedGenerate:
 
     def test_passes_kwargs(self) -> None:
         engine = _StubEngine()
-        engine.generate = mock.MagicMock(return_value={"content": "ok", "usage": {}})
+        engine.generate = mock.MagicMock(return_value={"content": "ok", "usage": {}})  # type: ignore
         bus = EventBus()
         instrumented_generate(
             engine,
@@ -107,6 +107,6 @@ class TestInstrumentedGenerate:
             temperature=0.1,
             max_tokens=512,
         )
-        _, kwargs = engine.generate.call_args
+        _, kwargs = engine.generate.call_args  # type: ignore
         assert kwargs["temperature"] == 0.1
         assert kwargs["max_tokens"] == 512

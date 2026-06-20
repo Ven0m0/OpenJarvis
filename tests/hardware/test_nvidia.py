@@ -176,4 +176,4 @@ class TestNVIDIAEngineRecommendation:
             gpu=GpuInfo(vendor="nvidia", name="NVIDIA H100", vram_gb=80.0, count=8),
         )
         assert recommend_engine(hw) == "vllm"
-        assert hw.gpu.count == 8
+        assert hw.gpu.count == 8  # type: ignore

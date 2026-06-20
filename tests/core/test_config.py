@@ -605,5 +605,5 @@ def test_mining_config_pool_parsed_as_pool_target(tmp_path):
     target = tmp_path / "config.toml"
     target.write_text(src.read_text())
     cfg = load_config(target)
-    assert isinstance(cfg.mining.submit_target, PoolTarget)
-    assert cfg.mining.submit_target.url == "https://pool.openjarvis.ai/submit"
+    assert isinstance(cfg.mining.submit_target, PoolTarget)  # type: ignore
+    assert cfg.mining.submit_target.url == "https://pool.openjarvis.ai/submit"  # type: ignore

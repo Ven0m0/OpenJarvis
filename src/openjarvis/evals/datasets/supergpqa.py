@@ -77,7 +77,7 @@ class SuperGPQADataset(DatasetProvider):
     ) -> Optional[EvalRecord]:
         question = str(raw.get("question") or "").strip()
         options_raw = raw.get("options") or []
-        options = [str(o).strip() for o in options_raw if str(o).strip()]
+        options = [str(o).strip() for o in options_raw if str(o).strip()]  # type: ignore
         answer_letter = str(raw.get("answer_letter") or "").strip().upper()
         answer_text = str(raw.get("answer") or "").strip()
 

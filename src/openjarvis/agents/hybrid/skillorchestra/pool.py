@@ -98,9 +98,9 @@ def build_pool(
         else:
             pool[alias] = ModelSpec(
                 alias,
-                local_model,
-                local_endpoint,
-                "local",  # type: ignore[arg-type]
+                local_model,  # type: ignore
+                local_endpoint,  # type: ignore
+                "local",  # type: ignore
             )
 
     for alias, spec in (overrides or {}).items():

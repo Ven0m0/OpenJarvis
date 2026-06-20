@@ -86,7 +86,7 @@ def list_registries() -> None:
     module_path = "openjarvis.core.registry"
     for reg_name, registry_cls in by_name.items():
         try:
-            count = len(registry_cls.keys())
+            count = len(registry_cls.keys())  # type: ignore
             table.add_row(reg_name, module_path, str(count))
         except Exception as exc:
             table.add_row(reg_name, module_path, f"[red]Error: {exc}[/red]")
@@ -114,7 +114,7 @@ def show(registry_name: str, verbose: bool) -> None:
             )
             return
 
-        keys = registry_cls.keys()
+        keys = registry_cls.keys()  # type: ignore
         if not keys:
             console.print(f"[dim]{registry_name} is empty.[/dim]")
             return
@@ -123,7 +123,7 @@ def show(registry_name: str, verbose: bool) -> None:
 
         if verbose:
             for key in keys:
-                entry = registry_cls.get(key)
+                entry = registry_cls.get(key)  # type: ignore
                 console.print(f"\n  [cyan]{key}[/cyan]")
                 console.print(f"    Type: {type(entry).__name__}")
                 console.print(f"    Value: {entry}")
@@ -133,7 +133,7 @@ def show(registry_name: str, verbose: bool) -> None:
             table.add_column("Type", style="green")
             table.add_column("Value", style="white", max_width=80)
             for key in keys:
-                entry = registry_cls.get(key)
+                entry = registry_cls.get(key)  # type: ignore
                 entry_type = type(entry).__name__
                 entry_value = str(entry)
                 table.add_row(key, entry_type, entry_value)

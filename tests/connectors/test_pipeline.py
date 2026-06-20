@@ -16,7 +16,7 @@ from openjarvis.connectors.store import KnowledgeStore
 # ---------------------------------------------------------------------------
 
 
-def _make_doc(**kwargs) -> Document:  # type: ignore[type-arg]
+def _make_doc(**kwargs) -> Document:  # type: ignore
     """Build a Document with sensible defaults."""
     defaults = dict(
         doc_id="doc:001",
@@ -32,7 +32,7 @@ def _make_doc(**kwargs) -> Document:  # type: ignore[type-arg]
         metadata={},
     )
     defaults.update(kwargs)
-    return Document(**defaults)  # type: ignore[arg-type]
+    return Document(**defaults)  # type: ignore
 
 
 # ---------------------------------------------------------------------------
@@ -409,7 +409,7 @@ class _StubEmbedder:
     def __init__(self) -> None:
         self.calls = 0
 
-    def embed(self, text: str):  # type: ignore[no-untyped-def]
+    def embed(self, text: str):  # type: ignore
         import numpy as _np
 
         self.calls += 1
@@ -425,7 +425,7 @@ def test_pipeline_populates_embedding_when_embedder_provided(
     import numpy as _np
 
     embedder = _StubEmbedder()
-    pipeline = IngestionPipeline(store, embedder=embedder)
+    pipeline = IngestionPipeline(store, embedder=embedder)  # type: ignore
     pipeline.ingest([_make_doc(doc_id="doc:emb:1", content="Short embeddable text.")])
 
     rows = store._conn.execute(

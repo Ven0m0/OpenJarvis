@@ -160,7 +160,7 @@ def create_energy_monitor(
     for cls in candidates:
         try:
             if cls.available():
-                return cls(poll_interval_ms=poll_interval_ms)
+                return cls(poll_interval_ms=poll_interval_ms)  # type: ignore
         except Exception as exc:
             logger.debug("Energy monitor candidate failed: %s", exc)
             continue

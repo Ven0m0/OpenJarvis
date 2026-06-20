@@ -82,8 +82,8 @@ def test_guardrails_preserves_images_when_sanitizing() -> None:
 
     engine = _RecordingEngine()
     guarded = GuardrailsEngine(
-        engine,
-        scanners=[_AlwaysFlag()],
+        engine,  # type: ignore
+        scanners=[_AlwaysFlag()],  # type: ignore
         scan_input=True,
         scan_output=False,
     )

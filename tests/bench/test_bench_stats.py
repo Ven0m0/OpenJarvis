@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from io import StringIO
+from typing import cast
 from unittest.mock import MagicMock
 
 from rich.console import Console
@@ -44,7 +45,7 @@ class TestRenderStatsTable:
         )
         console = Console(file=StringIO(), force_terminal=True)
         _render_stats_table(console, result)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "Avg" in output
         assert "Median" in output
         assert "Min" in output
@@ -65,5 +66,5 @@ class TestRenderStatsTable:
         )
         console = Console(file=StringIO(), force_terminal=True)
         _render_stats_table(console, result)
-        output = console.file.getvalue()
+        output = cast(StringIO, console.file).getvalue()
         assert "tokens_per_second" in output or "42.5" in output

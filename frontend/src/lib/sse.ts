@@ -26,6 +26,7 @@ export async function* streamChat(
 	}
 
 	const reader = response.body?.getReader();
+	if (!reader) throw new Error("Response body is null");
 	const decoder = new TextDecoder();
 	let buffer = "";
 
@@ -77,6 +78,7 @@ export async function* streamResearch(
 	}
 
 	const reader = response.body?.getReader();
+	if (!reader) throw new Error("Response body is null");
 	const decoder = new TextDecoder();
 	let buffer = "";
 

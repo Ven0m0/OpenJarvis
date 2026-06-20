@@ -55,7 +55,7 @@ class TestWildChatScorer:
             else:
                 return '```json\n{"verdict": "[[A>>B]]"}\n```'
 
-        backend.generate = mock_generate
+        backend.generate = mock_generate  # type: ignore
         scorer = WildChatScorer(backend, "gpt-4o")
 
         record = self._make_record()
@@ -77,7 +77,7 @@ class TestWildChatScorer:
                 # reference as A, model as B → A wins (reference better)
                 return '```json\n{"verdict": "[[A>>B]]"}\n```'
 
-        backend.generate = mock_generate
+        backend.generate = mock_generate  # type: ignore
         scorer = WildChatScorer(backend, "gpt-4o")
 
         record = self._make_record()

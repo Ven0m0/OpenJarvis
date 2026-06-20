@@ -61,7 +61,7 @@ def _queue(store: ApprovalStore, **kwargs) -> str:
         tier=TIER_MEDIUM,
     )
     defaults.update(kwargs)
-    action = store.queue_action(**defaults)
+    action = store.queue_action(**defaults)  # type: ignore
     return action.id
 
 

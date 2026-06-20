@@ -21,7 +21,7 @@ import time
 import uuid
 
 try:
-    import nexaai  # type: ignore[import-untyped]
+    import nexaai  # type: ignore
 except ImportError:
     print(
         "nexa_shim: pip install nexaai",

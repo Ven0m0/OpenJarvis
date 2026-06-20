@@ -580,6 +580,7 @@ class DenseMemory(MemoryBackend):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         """Embed and store one document. Returns its id."""
         return self.store_many(
@@ -693,7 +694,7 @@ class DenseMemory(MemoryBackend):
             if idx is None:
                 return False
             # Remove row from matrix
-            self._matrix = np.delete(self._matrix, idx, axis=0)
+            self._matrix = np.delete(self._matrix, idx, axis=0)  # type: ignore
             self._contents.pop(idx)
             self._sources.pop(idx)
             self._metadatas.pop(idx)

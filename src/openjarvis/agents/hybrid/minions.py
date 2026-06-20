@@ -173,11 +173,11 @@ def _stub_missing_imports() -> None:
         import mistralai
 
         if not hasattr(mistralai, "Mistral"):
-            mistralai.Mistral = type("Mistral", (), {})  # type: ignore[attr-defined]
+            mistralai.Mistral = type("Mistral", (), {})  # type: ignore
     except ImportError:
         sys.modules["mistralai"] = types.ModuleType("mistralai")
-        sys.modules["mistralai"].Mistral = type("Mistral", (), {})  # type: ignore[attr-defined]
-    sys.modules.setdefault("nv_attestation_sdk", None)  # type: ignore[arg-type]
+        sys.modules["mistralai"].Mistral = type("Mistral", (), {})  # type: ignore
+    sys.modules.setdefault("nv_attestation_sdk", None)  # type: ignore
 
 
 def _patch_anthropic_globally() -> None:
@@ -191,21 +191,21 @@ def _patch_anthropic_globally() -> None:
     if not getattr(_anth_mod.Anthropic.__init__, "_hybrid_patched", False):
         _orig_init = _anth_mod.Anthropic.__init__
 
-        def _patched_init(self, *args, **kwargs):  # type: ignore[no-untyped-def]
+        def _patched_init(self, *args, **kwargs):  # type: ignore
             kwargs.setdefault("timeout", 600.0)
             kwargs.setdefault("max_retries", 5)
             return _orig_init(self, *args, **kwargs)
 
-        _patched_init._hybrid_patched = True  # type: ignore[attr-defined]
-        _anth_mod.Anthropic.__init__ = _patched_init  # type: ignore[assignment]
+        _patched_init._hybrid_patched = True  # type: ignore
+        _anth_mod.Anthropic.__init__ = _patched_init  # type: ignore
 
     for cls in (_msgs_mod.Messages, _beta_msgs_mod.Messages):
         if getattr(cls.create, "_hybrid_patched", False):
             continue
         orig = cls.create
 
-        def make_patched(orig):  # type: ignore[no-untyped-def]
-            def patched(self, **kwargs):  # type: ignore[no-untyped-def]
+        def make_patched(orig):  # type: ignore
+            def patched(self, **kwargs):  # type: ignore
                 # External Minions's AnthropicClient.chat passes
                 # `cache_control={"type":"ephemeral"}` as a top-level kwarg
                 # (clients/anthropic.py:207). Newer Anthropic SDKs reject that
@@ -222,10 +222,10 @@ def _patch_anthropic_globally() -> None:
                         kwargs["output_config"] = _minions_turn_schema(kwargs)
                 return orig(self, **kwargs)
 
-            patched._hybrid_patched = True  # type: ignore[attr-defined]
+            patched._hybrid_patched = True  # type: ignore
             return patched
 
-        cls.create = make_patched(orig)  # type: ignore[assignment]
+        cls.create = make_patched(orig)  # type: ignore
 
 
 def _patch_gemini_client_usage() -> None:
@@ -243,21 +243,21 @@ def _patch_gemini_client_usage() -> None:
     Both fixes are idempotent and bypass the original ``schat`` body only
     on the value-extraction lines — the API call itself is unchanged.
     """
-    from minions.clients.gemini import GeminiClient  # type: ignore[import-not-found]
-    from minions.usage import Usage  # type: ignore[import-not-found]
+    from minions.clients.gemini import GeminiClient  # type: ignore
+    from minions.usage import Usage  # type: ignore
 
     if getattr(GeminiClient.schat, "_hybrid_patched", False):
         return
 
     _orig_schat = GeminiClient.schat
 
-    def _safe_int(x):  # type: ignore[no-untyped-def]
+    def _safe_int(x):  # type: ignore
         try:
             return int(x) if x is not None else 0
         except (TypeError, ValueError):
             return 0
 
-    def patched_schat(self, messages, **kwargs):  # type: ignore[no-untyped-def]
+    def patched_schat(self, messages, **kwargs):  # type: ignore
         # Mirror the upstream "native" branch by hand, but defensively.
         # Skip the OpenAI-compat branch — Minions paradigm never sets that.
         if self.use_openai_api:
@@ -314,8 +314,8 @@ def _patch_gemini_client_usage() -> None:
             return [text], usage, ["stop"]
         return [text], usage
 
-    patched_schat._hybrid_patched = True  # type: ignore[attr-defined]
-    GeminiClient.schat = patched_schat  # type: ignore[assignment]
+    patched_schat._hybrid_patched = True  # type: ignore
+    GeminiClient.schat = patched_schat  # type: ignore
 
 
 def _patch_minions_extract_json() -> None:
@@ -323,13 +323,13 @@ def _patch_minions_extract_json() -> None:
     first short bracket pair and prefers ```json``` fences. With structured
     outputs the entire response IS valid JSON, so short-circuit on that.
     """
-    from minions import minion as _minion_mod  # type: ignore[import-not-found]
+    from minions import minion as _minion_mod  # type: ignore
 
     if getattr(_minion_mod._extract_json, "_hybrid_patched", False):
         return
     _orig = _minion_mod._extract_json
 
-    def patched(text):  # type: ignore[no-untyped-def]
+    def patched(text):  # type: ignore
         s = (text or "").strip()
         if s.startswith("{") and s.endswith("}"):
             try:
@@ -338,8 +338,8 @@ def _patch_minions_extract_json() -> None:
                 pass
         return _orig(text)
 
-    patched._hybrid_patched = True  # type: ignore[attr-defined]
-    _minion_mod._extract_json = patched  # type: ignore[assignment]
+    patched._hybrid_patched = True  # type: ignore
+    _minion_mod._extract_json = patched  # type: ignore
 
 
 def _apply_patches_once() -> None:
@@ -497,16 +497,16 @@ class MinionsAgent(LocalCloudAgent):
 
         _apply_patches_once()
         from minions.clients.anthropic import (
-            AnthropicClient,  # type: ignore[import-not-found]
+            AnthropicClient,  # type: ignore
         )
         from minions.clients.gemini import (
-            GeminiClient,  # type: ignore[import-not-found]
+            GeminiClient,  # type: ignore
         )
         from minions.clients.openai import (
-            OpenAIClient,  # type: ignore[import-not-found]
+            OpenAIClient,  # type: ignore
         )
-        from minions.minion import Minion  # type: ignore[import-not-found]
-        from minions.minions import Minions  # type: ignore[import-not-found]
+        from minions.minion import Minion  # type: ignore
+        from minions.minions import Minions  # type: ignore
 
         mode = cfg.get("mode", "minion")
 

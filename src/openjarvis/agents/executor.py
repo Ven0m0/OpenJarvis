@@ -97,6 +97,7 @@ class AgentExecutor:
         agent_cls = AgentRegistry.get(agent_type)
         agent = agent_cls(
             engine=getattr(self._manager, "_engine", None),
+            model=getattr(self._manager, "_model", ""),
             system_prompt=system_prompt,
             bus=self._bus,
         )
@@ -371,7 +372,7 @@ class AgentExecutor:
         # so non-interactive runs can auto-approve tool execution.
         if getattr(self, "_confirm_callback", None) is not None:
             agent_kwargs["interactive"] = True
-            agent_kwargs["confirm_callback"] = self._confirm_callback
+            agent_kwargs["confirm_callback"] = self._confirm_callback  # type: ignore
 
         # Wire cross-tick state plumbing into agent classes that accept it.
         # Without this, MonitorOperative/Operative agents have no working

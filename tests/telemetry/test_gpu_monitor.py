@@ -31,15 +31,15 @@ class _FakeMemInfo:
 def _make_fake_pynvml(device_count: int = 1, power_mw: int = 300_000):
     """Return a fake pynvml module object."""
     mod = types.ModuleType("pynvml")
-    mod.nvmlInit = MagicMock()
-    mod.nvmlShutdown = MagicMock()
-    mod.nvmlDeviceGetCount = MagicMock(return_value=device_count)
-    mod.nvmlDeviceGetHandleByIndex = MagicMock(side_effect=lambda i: f"handle-{i}")
-    mod.nvmlDeviceGetPowerUsage = MagicMock(return_value=power_mw)
-    mod.nvmlDeviceGetUtilizationRates = MagicMock(return_value=_FakeUtilization())
-    mod.nvmlDeviceGetMemoryInfo = MagicMock(return_value=_FakeMemInfo())
-    mod.nvmlDeviceGetTemperature = MagicMock(return_value=65)
-    mod.NVML_TEMPERATURE_GPU = 0
+    mod.nvmlInit = MagicMock()  # type: ignore
+    mod.nvmlShutdown = MagicMock()  # type: ignore
+    mod.nvmlDeviceGetCount = MagicMock(return_value=device_count)  # type: ignore
+    mod.nvmlDeviceGetHandleByIndex = MagicMock(side_effect=lambda i: f"handle-{i}")  # type: ignore
+    mod.nvmlDeviceGetPowerUsage = MagicMock(return_value=power_mw)  # type: ignore
+    mod.nvmlDeviceGetUtilizationRates = MagicMock(return_value=_FakeUtilization())  # type: ignore
+    mod.nvmlDeviceGetMemoryInfo = MagicMock(return_value=_FakeMemInfo())  # type: ignore
+    mod.nvmlDeviceGetTemperature = MagicMock(return_value=65)  # type: ignore
+    mod.NVML_TEMPERATURE_GPU = 0  # type: ignore
     return mod
 
 
@@ -122,7 +122,7 @@ class TestGpuHardwareSpec:
 
         spec = GPU_SPECS["A100-SXM"]
         with pytest.raises(AttributeError):
-            spec.tflops_fp16 = 999
+            spec.tflops_fp16 = 999  # type: ignore
 
 
 # ---------------------------------------------------------------------------

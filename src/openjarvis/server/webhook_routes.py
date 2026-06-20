@@ -405,7 +405,7 @@ def create_webhook_router(
 
             # Track queue depth for this sender
             with lock:
-                q = _sendblue_queues.setdefault(from_number, {"pending": 0})
+                q = _sendblue_queues.setdefault(from_number, {"pending": 0})  # type: ignore
                 q["pending"] += 1
                 position = q["pending"]
 

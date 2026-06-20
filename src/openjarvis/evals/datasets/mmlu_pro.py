@@ -77,7 +77,7 @@ class MMLUProDataset(DatasetProvider):
     ) -> Optional[EvalRecord]:
         question = str(raw.get("question") or "").strip()
         options_raw = raw.get("options") or []
-        options = [str(o).strip() for o in options_raw if str(o).strip()]
+        options = [str(o).strip() for o in options_raw if str(o).strip()]  # type: ignore
         answer_letter = str(raw.get("answer") or "").strip().upper()
 
         subject = str(raw.get("category") or "general").strip() or "general"

@@ -11,8 +11,8 @@ from openjarvis.speech._stubs import SpeechBackend, TranscriptionResult
 try:
     from deepgram import DeepgramClient, PrerecordedOptions
 except ImportError:
-    DeepgramClient = None  # type: ignore[assignment, misc]
-    PrerecordedOptions = None  # type: ignore[assignment, misc]
+    DeepgramClient = None  # type: ignore
+    PrerecordedOptions = None  # type: ignore
 
 
 @SpeechRegistry.register("deepgram")

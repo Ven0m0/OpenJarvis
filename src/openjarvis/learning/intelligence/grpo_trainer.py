@@ -23,7 +23,7 @@ try:
     HAS_TORCH = True
 except ImportError:
     HAS_TORCH = False
-    torch = None  # type: ignore[assignment]
+    torch = None  # type: ignore
 
 try:
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -178,7 +178,7 @@ class GRPOTrainer:
 
         policy_model = AutoModelForCausalLM.from_pretrained(
             self.config.model_name,
-            torch_dtype=torch.bfloat16,
+            torch_dtype=torch.bfloat16,  # type: ignore
             device_map="auto",
         )
 
@@ -191,7 +191,7 @@ class GRPOTrainer:
 
         # Frozen reference model
         ref_kwargs: Dict[str, Any] = {
-            "torch_dtype": torch.bfloat16,
+            "torch_dtype": torch.bfloat16,  # type: ignore
             "device_map": "auto",
         }
         if self.config.use_8bit_ref:
@@ -208,7 +208,7 @@ class GRPOTrainer:
         )
         ref_model.requires_grad_(False)
 
-        optimizer = torch.optim.AdamW(
+        optimizer = torch.optim.AdamW(  # type: ignore
             policy_model.parameters(),
             lr=self.config.learning_rate,
         )
@@ -284,7 +284,7 @@ class GRPOTrainer:
                     max_length=self.config.max_seq_length,
                 ).to(policy_model.device)
 
-                with torch.no_grad():
+                with torch.no_grad():  # type: ignore
                     gen_ids = policy_model.generate(
                         **inputs,
                         max_new_tokens=self.config.max_response_length,
@@ -303,16 +303,16 @@ class GRPOTrainer:
                 # Compute log probabilities
                 full_ids = gen_ids[0].unsqueeze(0)
                 policy_logits = policy_model(full_ids).logits
-                policy_lp = torch.nn.functional.log_softmax(policy_logits, dim=-1)
-                token_lps = torch.gather(
+                policy_lp = torch.nn.functional.log_softmax(policy_logits, dim=-1)  # type: ignore
+                token_lps = torch.gather(  # type: ignore
                     policy_lp[:, :-1, :], 2, full_ids[:, 1:].unsqueeze(-1)
                 ).squeeze(-1)
                 log_probs.append(token_lps.sum())
 
-                with torch.no_grad():
+                with torch.no_grad():  # type: ignore
                     ref_logits = ref_model(full_ids.to(ref_model.device)).logits
-                    ref_lp = torch.nn.functional.log_softmax(ref_logits, dim=-1)
-                    ref_token_lps = torch.gather(
+                    ref_lp = torch.nn.functional.log_softmax(ref_logits, dim=-1)  # type: ignore
+                    ref_token_lps = torch.gather(  # type: ignore
                         ref_lp[:, :-1, :],
                         2,
                         full_ids[:, 1:].to(ref_model.device).unsqueeze(-1),
@@ -324,30 +324,30 @@ class GRPOTrainer:
             all_ref_log_probs.append(ref_lps)
 
         # Compute group-relative advantages and loss
-        total_loss = torch.tensor(0.0, device=policy_model.device, requires_grad=True)
+        total_loss = torch.tensor(0.0, device=policy_model.device, requires_grad=True)  # type: ignore
 
         for rewards, log_probs, ref_lps in zip(
             all_rewards, all_log_probs, all_ref_log_probs
         ):
-            r_tensor = torch.tensor(rewards, device=policy_model.device)
+            r_tensor = torch.tensor(rewards, device=policy_model.device)  # type: ignore
             mean_r = r_tensor.mean()
             std_r = r_tensor.std() + 1e-8
             advantages = (r_tensor - mean_r) / std_r
 
             for adv, lp, ref_lp in zip(advantages, log_probs, ref_lps):
-                ratio = torch.exp(lp - lp.detach())  # importance ratio
-                clipped = torch.clamp(
+                ratio = torch.exp(lp - lp.detach())  # importance ratio  # type: ignore
+                clipped = torch.clamp(  # type: ignore
                     ratio,
                     1 - self.config.clip_ratio,
                     1 + self.config.clip_ratio,
                 )
-                policy_loss = -torch.min(ratio * adv, clipped * adv)
+                policy_loss = -torch.min(ratio * adv, clipped * adv)  # type: ignore
                 kl = lp - ref_lp.to(policy_model.device)
                 total_loss = total_loss + policy_loss + self.config.kl_coef * kl
 
         optimizer.zero_grad()
         total_loss.backward()
-        torch.nn.utils.clip_grad_norm_(
+        torch.nn.utils.clip_grad_norm_(  # type: ignore
             policy_model.parameters(), self.config.max_grad_norm
         )
         optimizer.step()

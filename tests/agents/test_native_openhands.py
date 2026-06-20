@@ -434,7 +434,7 @@ class TestNativeOpenHandsAgent:
                 success=True,
             )
 
-        long_calc.execute = _long_execute
+        long_calc.execute = _long_execute  # type: ignore
         agent = NativeOpenHandsAgent(engine, "test-model", tools=[long_calc])
         agent.run("Compute")
         # Check the observation message sent to the engine

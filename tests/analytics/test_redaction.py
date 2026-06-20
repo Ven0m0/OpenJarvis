@@ -263,6 +263,7 @@ def test_bool_is_not_int_for_int_validators() -> None:
         "install_stage_completed",
         {"stage": "uv", "elapsed_ms": True},
     )
+    assert cleaned is not None
     assert "elapsed_ms" not in cleaned
 
 
@@ -284,6 +285,7 @@ def test_chat_session_ended_properties_pass() -> None:
             "duration_ms": 60000,
         },
     )
+    assert cleaned is not None
     assert cleaned["turn_count"] == 5
     assert cleaned["model_hash"] == "8754b77c7eee26e4"
     assert cleaned["engine"] == "ollama"
@@ -297,6 +299,7 @@ def test_chat_session_ended_rejects_bad_hash() -> None:
             "model_hash": "not-a-hash-too-short",  # not 16 hex chars
         },
     )
+    assert cleaned is not None
     assert "turn_count" in cleaned
     assert "model_hash" not in cleaned
 

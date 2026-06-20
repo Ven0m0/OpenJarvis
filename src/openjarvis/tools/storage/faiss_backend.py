@@ -60,6 +60,7 @@ class FAISSMemory(MemoryBackend):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         """Embed and store *content*, returning a unique doc id."""
         doc_id = uuid.uuid4().hex

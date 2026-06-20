@@ -38,7 +38,7 @@ class TestTaintSet:
         ts = TaintSet.from_labels(TaintLabel.PII)
         # TaintSet is frozen dataclass
         with pytest.raises(AttributeError):
-            ts.labels = frozenset()
+            ts.labels = frozenset()  # type: ignore
 
     def test_bool_true_when_has_labels(self):
         ts = TaintSet.from_labels(TaintLabel.PII)

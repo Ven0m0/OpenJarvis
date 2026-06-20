@@ -12,11 +12,11 @@ import logging
 import os
 import subprocess
 import sys
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, cast
 
 from openjarvis.core.paths import get_cache_dir
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 LOGGER = logging.getLogger(__name__)
@@ -232,7 +232,7 @@ class TauBenchDataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             all_records = apply_split(
-                all_records, split=split, seed=effective_seed, train_frac=0.2
+                all_records, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2
             )
         elif seed is not None:
             import random

@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 from openjarvis.core.paths import get_config_dir
 

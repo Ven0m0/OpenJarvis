@@ -32,8 +32,8 @@ def _session(
         status=status,
         autonomy_mode=AutonomyMode.AUTO,
         started_at=datetime.now(timezone.utc),
-        diagnosis_path="/tmp/diag.md",
-        plan_path="/tmp/plan.json",
+        diagnosis_path="/tmp/diag.md",  # type: ignore
+        plan_path="/tmp/plan.json",  # type: ignore
         benchmark_before=BenchmarkSnapshot(
             benchmark_version="v1",
             overall_score=0.0,

@@ -199,7 +199,7 @@ def test_retrieve_recall_k_larger_than_top_k(
     call_log: List[int] = []
 
     class SpyStore(KnowledgeStore):
-        def retrieve(self, query, *, top_k=5, **kwargs):  # type: ignore[override]
+        def retrieve(self, query, *, top_k=5, **kwargs):  # type: ignore
             call_log.append(top_k)
             return super().retrieve(query, top_k=top_k, **kwargs)
 
@@ -235,7 +235,7 @@ def test_reranker_uses_cached_embeddings() -> None:
     When a cached embedding is found, docFromText() should NOT be called for
     that candidate.
     """
-    import torch  # type: ignore[import]
+    import torch  # type: ignore
 
     # Create a fake cached embedding (T=20 tokens, dim=128)
     cached_emb = torch.randn(20, 128)
@@ -286,7 +286,7 @@ def test_reranker_uses_cached_embeddings() -> None:
 def test_reranker_caches_new_embeddings() -> None:
     """When EmbeddingStore.get() returns None, docFromText() is called and
     the result is stored back via EmbeddingStore.store()."""
-    import torch  # type: ignore[import]
+    import torch  # type: ignore
 
     mock_store = MagicMock()
     mock_store.get.return_value = None  # cache miss

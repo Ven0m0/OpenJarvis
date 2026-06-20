@@ -63,7 +63,7 @@ class CrashingTracker(ResultTracker):
 def _make_config(**overrides) -> RunConfig:
     defaults = dict(benchmark="test", backend="jarvis-direct", model="test-model")
     defaults.update(overrides)
-    return RunConfig(**defaults)
+    return RunConfig(**defaults)  # type: ignore
 
 
 def _make_summary(**overrides) -> RunSummary:
@@ -81,13 +81,13 @@ def _make_summary(**overrides) -> RunSummary:
         total_cost_usd=0.01,
     )
     defaults.update(overrides)
-    return RunSummary(**defaults)
+    return RunSummary(**defaults)  # type: ignore
 
 
 def _make_result(**overrides) -> EvalResult:
     defaults = dict(record_id="r1", model_answer="answer", is_correct=True)
     defaults.update(overrides)
-    return EvalResult(**defaults)
+    return EvalResult(**defaults)  # type: ignore
 
 
 # ---------------------------------------------------------------------------

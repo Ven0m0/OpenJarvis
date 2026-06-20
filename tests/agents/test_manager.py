@@ -62,6 +62,7 @@ class TestAgentCRUD:
         created = manager.create_agent(name="doomed", agent_type="simple")
         manager.delete_agent(created["id"])
         agent = manager.get_agent(created["id"])
+        assert agent is not None
         assert agent["status"] == "archived"
 
     def test_pause_resume(self, manager):
@@ -143,6 +144,7 @@ class TestSummaryMemory:
         agent = manager.create_agent(name="test", agent_type="simple")
         manager.update_summary_memory(agent["id"], "Key finding: X is Y")
         updated = manager.get_agent(agent["id"])
+        assert updated is not None
         assert updated["summary_memory"] == "Key finding: X is Y"
 
     def test_summary_max_length(self, manager):
@@ -295,12 +297,14 @@ def test_update_agent_budget_fields(tmp_path):
     # Increment total_cost and total_tokens
     mgr.update_agent(agent["id"], total_cost_increment=1.50, total_tokens_increment=500)
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["total_cost"] == 1.50
     assert updated["total_tokens"] == 500
 
     # Accumulate
     mgr.update_agent(agent["id"], total_cost_increment=0.75, total_tokens_increment=200)
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["total_cost"] == 2.25
     assert updated["total_tokens"] == 700
 
@@ -308,11 +312,13 @@ def test_update_agent_budget_fields(tmp_path):
     now = time.time()
     mgr.update_agent(agent["id"], last_activity_at=now)
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["last_activity_at"] == now
 
     # Set stall_retries
     mgr.update_agent(agent["id"], stall_retries=3)
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["stall_retries"] == 3
 
     mgr.close()

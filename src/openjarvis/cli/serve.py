@@ -65,9 +65,9 @@ def _resolve_server_model(
         return requested_model
 
     candidates = [
-        getattr(config.server, "model", ""),
-        getattr(config.intelligence, "default_model", ""),
-        getattr(config.intelligence, "fallback_model", ""),
+        getattr(config.server, "model", ""),  # type: ignore
+        getattr(config.intelligence, "default_model", ""),  # type: ignore
+        getattr(config.intelligence, "fallback_model", ""),  # type: ignore
     ]
     available = _unique_model_ids(
         _safe_list_models(engine) + list(all_models.get(engine_name, []))
@@ -346,11 +346,11 @@ def serve(
                 if getattr(agent_cls, "accepts_tools", False):
                     agent_kwargs["max_turns"] = config.agent.max_turns
 
-                agent = agent_cls(engine, model_name, **agent_kwargs)
+                agent = agent_cls(engine, model_name, **agent_kwargs)  # type: ignore
                 # Pin MCP transports to the agent's lifetime so HTTP
                 # connections don't close mid-request (#461).
                 if mcp_clients:
-                    agent._mcp_clients = mcp_clients
+                    agent._mcp_clients = mcp_clients  # type: ignore
         except Exception as exc:
             import traceback
 

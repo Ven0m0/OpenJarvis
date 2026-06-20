@@ -48,17 +48,17 @@ def _extract_text_body(msg: email_lib.message.Message) -> str:
             if ct == "text/plain":
                 payload = part.get_payload(decode=True)
                 if payload:
-                    return payload.decode("utf-8", errors="replace")
+                    return payload.decode("utf-8", errors="replace")  # type: ignore
         # Fallback: try text/html
         for part in msg.walk():
             if part.get_content_type() == "text/html":
                 payload = part.get_payload(decode=True)
                 if payload:
-                    return payload.decode("utf-8", errors="replace")
+                    return payload.decode("utf-8", errors="replace")  # type: ignore
         return ""
     payload = msg.get_payload(decode=True)
     if payload:
-        return payload.decode("utf-8", errors="replace")
+        return payload.decode("utf-8", errors="replace")  # type: ignore
     return ""
 
 
@@ -181,6 +181,8 @@ class GmailIMAPConnector(BaseConnector):
         for mid in ordered:
             try:
                 _, msg_data = imap.fetch(mid, "(RFC822)")
+                if not msg_data or not isinstance(msg_data[0], tuple):
+                    continue
                 raw = msg_data[0][1]
                 msg = email_lib.message_from_bytes(raw)
             except Exception:

@@ -76,7 +76,7 @@ def main(
         if engine_key:
             kwargs["engine_key"] = engine_key
 
-        j = Jarvis(**kwargs)  # type: ignore[arg-type]
+        j = Jarvis(**kwargs)  # type: ignore
     except Exception as exc:
         click.echo(
             f"Error: Could not initialize Jarvis: {exc}\n\n"
@@ -112,7 +112,7 @@ def _register_task(gym: str) -> None:
         from openjarvis.scheduler import TaskScheduler
         from openjarvis.scheduler.store import SchedulerStore
 
-        store = SchedulerStore()
+        store = SchedulerStore()  # type: ignore
         scheduler = TaskScheduler(store)
         task = scheduler.create_task(
             prompt=f"Check gym schedule for '{gym}'",

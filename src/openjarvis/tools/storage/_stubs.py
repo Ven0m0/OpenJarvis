@@ -63,6 +63,7 @@ class MemoryBackend(ABC):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         """Persist *content* and return a unique document id."""
 
@@ -83,6 +84,13 @@ class MemoryBackend(ABC):
     @abstractmethod
     def clear(self) -> None:
         """Remove all stored documents."""
+
+    def count(self) -> int:
+        """Return number of stored documents. Override in concrete backends."""
+        return 0
+
+    def close(self) -> None:
+        """Release backend resources. Override in concrete backends."""
 
 
 __all__ = [

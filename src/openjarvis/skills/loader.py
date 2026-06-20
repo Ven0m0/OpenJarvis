@@ -12,7 +12,7 @@ from openjarvis.skills.types import SkillManifest, SkillStep
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 import logging
 

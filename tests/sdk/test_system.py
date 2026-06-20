@@ -99,7 +99,7 @@ class TestJarvisSystem:
 
         # Register (or re-register) the agent
         if not AgentRegistry.contains("test-system-agent"):
-            AgentRegistry.register_value("test-system-agent", TestAgent)
+            AgentRegistry.register_value("test-system-agent", TestAgent)  # type: ignore
 
         engine = MagicMock()
         system = JarvisSystem(

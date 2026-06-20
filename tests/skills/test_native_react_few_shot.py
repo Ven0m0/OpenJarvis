@@ -15,7 +15,7 @@ class _StubEngine:
 class TestToolUsingAgentAcceptsKwarg:
     def test_default_empty_list(self):
         agent = NativeReActAgent(
-            engine=_StubEngine(),
+            engine=_StubEngine(),  # type: ignore
             model="stub",
             tools=[],
         )
@@ -24,7 +24,7 @@ class TestToolUsingAgentAcceptsKwarg:
     def test_explicit_examples_stored(self):
         examples = ["### research-skill\nInput: q\nOutput: a"]
         agent = NativeReActAgent(
-            engine=_StubEngine(),
+            engine=_StubEngine(),  # type: ignore
             model="stub",
             tools=[],
             skill_few_shot_examples=examples,
@@ -33,7 +33,7 @@ class TestToolUsingAgentAcceptsKwarg:
 
     def test_none_resolves_to_empty_list(self):
         agent = NativeReActAgent(
-            engine=_StubEngine(),
+            engine=_StubEngine(),  # type: ignore
             model="stub",
             tools=[],
             skill_few_shot_examples=None,

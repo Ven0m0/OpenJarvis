@@ -23,7 +23,7 @@ try:
     HAS_DSPY = True
 except ImportError:
     HAS_DSPY = False
-    dspy = None  # type: ignore[assignment]
+    dspy = None  # type: ignore
 
 
 class DSPyAgentOptimizer:
@@ -92,7 +92,7 @@ class DSPyAgentOptimizer:
         # Convert traces to dspy.Example objects
         examples = []
         for t in traces:
-            ex = dspy.Example(
+            ex = dspy.Example(  # type: ignore
                 question=t.query,
                 answer=t.result,
             ).with_inputs("question")
@@ -106,10 +106,10 @@ class DSPyAgentOptimizer:
             return 0.5
 
         # Build a minimal DSPy program
-        class AgentModule(dspy.Module):
+        class AgentModule(dspy.Module):  # type: ignore
             def __init__(self_inner: Any) -> None:
                 super().__init__()
-                self_inner.generate = dspy.ChainOfThought("question -> answer")
+                self_inner.generate = dspy.ChainOfThought("question -> answer")  # type: ignore
 
             def forward(self_inner: Any, question: str) -> Any:
                 return self_inner.generate(question=question)
@@ -119,20 +119,20 @@ class DSPyAgentOptimizer:
         # Select optimizer
         optimizer_name = self.config.optimizer
         if optimizer_name == "BootstrapFewShotWithRandomSearch":
-            teleprompter = dspy.BootstrapFewShotWithRandomSearch(
+            teleprompter = dspy.BootstrapFewShotWithRandomSearch(  # type: ignore
                 metric=metric,
                 max_bootstrapped_demos=self.config.max_bootstrapped_demos,
                 max_labeled_demos=self.config.max_labeled_demos,
                 num_candidate_programs=self.config.num_candidate_programs,
             )
         elif optimizer_name == "BootstrapFewShot":
-            teleprompter = dspy.BootstrapFewShot(
+            teleprompter = dspy.BootstrapFewShot(  # type: ignore
                 metric=metric,
                 max_bootstrapped_demos=self.config.max_bootstrapped_demos,
                 max_labeled_demos=self.config.max_labeled_demos,
             )
         else:
-            teleprompter = dspy.BootstrapFewShot(
+            teleprompter = dspy.BootstrapFewShot(  # type: ignore
                 metric=metric,
                 max_bootstrapped_demos=self.config.max_bootstrapped_demos,
             )

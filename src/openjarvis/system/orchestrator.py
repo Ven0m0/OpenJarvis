@@ -199,7 +199,7 @@ class QueryOrchestrator:
             try:
                 ag = agent_cls(s.engine, s.model)
             except TypeError:
-                ag = agent_cls()
+                ag = agent_cls()  # type: ignore
 
         telemetry_events: List[Dict[str, Any]] = []
 

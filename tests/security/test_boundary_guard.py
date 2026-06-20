@@ -56,7 +56,7 @@ def _make_guard(mode: str = "redact", enabled: bool = True):
     return BoundaryGuard(
         mode=mode,
         enabled=enabled,
-        scanners=[_MockSecretScanner()],
+        scanners=[_MockSecretScanner()],  # type: ignore
     )
 
 

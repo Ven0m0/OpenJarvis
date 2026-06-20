@@ -259,7 +259,7 @@ class GDriveConnector(BaseConnector):
                 if export_mime is not None:
                     try:
                         content = call_with_refresh(
-                            _gdrive_api_export,
+                            _gdrive_api_export,  # type: ignore
                             self._credentials_path,
                             file_id,
                             export_mime,
@@ -273,7 +273,7 @@ class GDriveConnector(BaseConnector):
                     doc_id=f"gdrive:{file_id}",
                     source="gdrive",
                     doc_type="document",
-                    content=content,
+                    content=content,  # type: ignore
                     title=name,
                     author=author,
                     url=web_view_link,

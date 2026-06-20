@@ -127,7 +127,7 @@ class KnowledgeSearchTool(BaseTool):
                 until=until or "",
             )
         else:
-            results = self._store.retrieve(  # type: ignore[union-attr]
+            results = self._store.retrieve(  # type: ignore
                 query,
                 top_k=top_k,
                 source=source,

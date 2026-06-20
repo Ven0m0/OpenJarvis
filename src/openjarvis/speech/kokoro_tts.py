@@ -49,7 +49,7 @@ class KokoroTTSBackend(TTSBackend):
         import soundfile as sf
 
         samples = []
-        for _, _, audio in self._pipeline(text, voice=voice_id, speed=speed):
+        for _, _, audio in self._pipeline(text, voice=voice_id, speed=speed):  # type: ignore
             samples.append(audio)
 
         if not samples:

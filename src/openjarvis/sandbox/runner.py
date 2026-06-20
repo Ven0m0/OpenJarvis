@@ -303,7 +303,7 @@ class SandboxedAgent(BaseAgent):
         _engine = engine or getattr(agent, "_engine", None)
         _model = model or getattr(agent, "_model", "")
         super().__init__(
-            _engine,  # type: ignore[arg-type]
+            _engine,  # type: ignore
             _model,
             bus=bus,
         )

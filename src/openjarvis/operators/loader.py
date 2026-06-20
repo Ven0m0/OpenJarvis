@@ -9,7 +9,7 @@ from openjarvis.operators.types import OperatorManifest
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 
 def load_operator(path: str | Path) -> OperatorManifest:

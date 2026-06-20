@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.table import Table
 
 
-def _get_store() -> "SchedulerStore":  # noqa: F821
+def _get_store() -> "SchedulerStore":  # noqa: F821  # type: ignore
     """Build a SchedulerStore from user config."""
     from openjarvis.core.config import DEFAULT_CONFIG_DIR, load_config
     from openjarvis.scheduler.store import SchedulerStore
@@ -23,7 +23,7 @@ def _get_store() -> "SchedulerStore":  # noqa: F821
     return SchedulerStore(db_path)
 
 
-def _get_scheduler(store: "SchedulerStore") -> "TaskScheduler":  # noqa: F821
+def _get_scheduler(store: "SchedulerStore") -> "TaskScheduler":  # noqa: F821  # type: ignore
     """Build a TaskScheduler from a store."""
     from openjarvis.scheduler.scheduler import TaskScheduler
 
@@ -327,7 +327,7 @@ def scheduler_start(poll_interval: int) -> None:
 
     # Block main thread until the daemon thread dies
     try:
-        signal.pause()
+        signal.pause()  # type: ignore
     except AttributeError:
         # signal.pause() not available on Windows
         import time

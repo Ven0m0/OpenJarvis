@@ -136,7 +136,7 @@ class TestErrorPathFrameworkPropagation:
         runner = EvalRunner(
             config=cfg,
             dataset=_SingleRecordDataset(),
-            backend=_FailingBackend(),
+            backend=_FailingBackend(),  # type: ignore
             scorer=_NoopScorer(),
         )
         runner.run()
@@ -180,7 +180,7 @@ class TestErrorPathFrameworkPropagation:
         runner = EvalRunner(
             config=cfg,
             dataset=_SingleRecordDataset(),
-            backend=_BackendWithoutFrameworkName(),  # type: ignore[arg-type]
+            backend=_BackendWithoutFrameworkName(),  # type: ignore
             scorer=_NoopScorer(),
         )
         runner.run()
@@ -208,7 +208,7 @@ class TestExternalTelemetryPropagation:
         runner = EvalRunner(
             config=cfg,
             dataset=_SingleRecordDataset(),
-            backend=_PeakOnlyBackend(),  # type: ignore[arg-type]
+            backend=_PeakOnlyBackend(),  # type: ignore
             scorer=_NoopScorer(),
         )
         runner.run()
@@ -233,7 +233,7 @@ class TestBackendErrorPayloadPropagation:
         runner = EvalRunner(
             config=cfg,
             dataset=_SingleRecordDataset(),
-            backend=_BackendErrorPayload(),  # type: ignore[arg-type]
+            backend=_BackendErrorPayload(),  # type: ignore
             scorer=_NoopScorer(),
         )
         summary = runner.run()
@@ -289,7 +289,7 @@ class TestErrorPathCommitPropagation:
         runner = EvalRunner(
             config=cfg,
             dataset=_SingleRecordDataset(),
-            backend=_MockBackendWithCommit(),  # type: ignore[arg-type]
+            backend=_MockBackendWithCommit(),  # type: ignore
             scorer=_NoopScorer(),
         )
         runner.run()

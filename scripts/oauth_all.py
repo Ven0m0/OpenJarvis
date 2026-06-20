@@ -95,7 +95,7 @@ def _wait_for_code(port: int = CALLBACK_PORT, timeout: int = 120) -> str:
                 self.end_headers()
                 self.wfile.write(b"<html><body><h2>Failed</h2></body></html>")
 
-        def log_message(self, *args: Any) -> None:
+        def log_message(self, *args: Any) -> None:  # type: ignore
             pass
 
     server = HTTPServer(("127.0.0.1", port), Handler)
@@ -278,7 +278,7 @@ def _wait_for_code_https(port: int = 8888, timeout: int = 120) -> str:
                 self.end_headers()
                 self.wfile.write(b"<html><body><h2>Failed</h2></body></html>")
 
-        def log_message(self, *args: Any) -> None:
+        def log_message(self, *args: Any) -> None:  # type: ignore
             pass
 
     server = HTTPServer(("127.0.0.1", port), Handler)

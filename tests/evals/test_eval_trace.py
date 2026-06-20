@@ -75,7 +75,7 @@ class TestQueryTrace:
             "completed": True,
         }
         defaults.update(kwargs)
-        return QueryTrace(**defaults)
+        return QueryTrace(**defaults)  # type: ignore
 
     def test_num_turns(self):
         t = self._make_trace()

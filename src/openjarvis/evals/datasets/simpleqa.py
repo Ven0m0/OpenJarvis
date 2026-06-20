@@ -112,7 +112,7 @@ def _parse_metadata(meta_raw: object) -> Dict[str, Any]:
     if meta_raw is None:
         return {}
     if isinstance(meta_raw, dict):
-        return dict(meta_raw)
+        return dict(meta_raw)  # type: ignore
     if isinstance(meta_raw, str):
         text = meta_raw.strip()
         if not text:

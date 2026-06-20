@@ -28,7 +28,7 @@ def test_detect_unsupported_on_ada_4090(ada_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "sm90" in cap.reason.lower() or "compute_capability" in cap.reason.lower()
+    assert "sm90" in (cap.reason or "").lower() or "compute_capability" in (cap.reason or "").lower()
 
 
 def test_detect_unsupported_on_apple_engine(apple_hw):
@@ -42,7 +42,7 @@ def test_detect_unsupported_on_apple_engine(apple_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "mlx" in cap.reason.lower() or "engine" in cap.reason.lower()
+    assert "mlx" in (cap.reason or "").lower() or "engine" in (cap.reason or "").lower()
 
 
 def test_detect_unsupported_on_apple_gpu_vendor(apple_hw):
@@ -56,7 +56,7 @@ def test_detect_unsupported_on_apple_gpu_vendor(apple_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "nvidia" in cap.reason.lower() or "hopper" in cap.reason.lower()
+    assert "nvidia" in (cap.reason or "").lower() or "hopper" in (cap.reason or "").lower()
 
 
 def test_detect_unsupported_for_non_vllm_engine(hopper_hw):
@@ -69,7 +69,7 @@ def test_detect_unsupported_for_non_vllm_engine(hopper_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "vllm" in cap.reason.lower() or "engine" in cap.reason.lower()
+    assert "vllm" in (cap.reason or "").lower() or "engine" in (cap.reason or "").lower()
 
 
 def test_detect_unsupported_for_non_pearl_model(hopper_hw):
@@ -82,7 +82,7 @@ def test_detect_unsupported_for_non_pearl_model(hopper_hw):
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "pearl" in cap.reason.lower()
+    assert "pearl" in (cap.reason or "").lower()
 
 
 def test_detect_raw_planned_model_points_to_pearl_variant(hopper_hw):
@@ -96,6 +96,7 @@ def test_detect_raw_planned_model_points_to_pearl_variant(hopper_hw):
     )
 
     assert cap.supported is False
+    assert cap.reason is not None
     assert "pearl-ai/Gemma-4-31B-it-pearl" in cap.reason
 
 
@@ -110,6 +111,7 @@ def test_detect_planned_pearl_model_is_not_enabled_yet(hopper_hw):
     )
 
     assert cap.supported is False
+    assert cap.reason is not None
     assert "planned" in cap.reason
     assert "validation" in cap.reason
 
@@ -135,7 +137,7 @@ def test_detect_unsupported_for_low_vram():
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
-    assert "vram" in cap.reason.lower() or "memory" in cap.reason.lower()
+    assert "vram" in (cap.reason or "").lower() or "memory" in (cap.reason or "").lower()
 
 
 def test_check_docker_available_true():

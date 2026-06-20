@@ -396,8 +396,8 @@ class _FakeResponse:
 
             raise httpx.HTTPStatusError(
                 "error",
-                request=None,
-                response=None,  # type: ignore[arg-type]
+                request=None,  # type: ignore
+                response=None,  # type: ignore
             )
 
 

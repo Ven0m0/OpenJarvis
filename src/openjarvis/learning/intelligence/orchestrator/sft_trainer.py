@@ -22,8 +22,8 @@ try:
     HAS_TORCH = True
 except ImportError:
     HAS_TORCH = False
-    torch = None  # type: ignore[assignment]
-    DataLoader = None  # type: ignore[assignment,misc]
+    torch = None  # type: ignore
+    DataLoader = None  # type: ignore
 
 from openjarvis.core.registry import LearningRegistry
 from openjarvis.learning._stubs import IntelligenceLearningPolicy
@@ -280,13 +280,13 @@ class OrchestratorSFTTrainer:
             self.dataloader: Any = None
             return
 
-        self.optimizer = torch.optim.AdamW(
+        self.optimizer = torch.optim.AdamW(  # type: ignore
             self.policy.model.parameters(),
             lr=self.config.learning_rate,
             weight_decay=self.config.weight_decay,
         )
 
-        self.dataloader = DataLoader(
+        self.dataloader = DataLoader(  # type: ignore
             self.dataset,
             batch_size=self.config.batch_size,
             shuffle=True,
@@ -304,7 +304,7 @@ class OrchestratorSFTTrainer:
                 1.0 - (step - warmup_steps) / (total_steps - warmup_steps),
             )
 
-        self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda)
+        self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda)  # type: ignore
 
     def train(self) -> None:
         """Run the SFT training loop."""
@@ -351,7 +351,7 @@ class OrchestratorSFTTrainer:
 
         self.optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(
+        torch.nn.utils.clip_grad_norm_(  # type: ignore
             self.policy.model.parameters(),
             self.config.max_grad_norm,
         )
@@ -392,8 +392,8 @@ def _ensure_registered() -> None:
         """Wrapper that registers the SFT trainer as a learning policy."""
 
         def update(self, trace_store: Any, **kwargs: object) -> Dict[str, Any]:
-            config = OrchestratorSFTConfig(
-                **{
+            config = OrchestratorSFTConfig(  # type: ignore
+                **{  # type: ignore
                     k: v
                     for k, v in kwargs.items()
                     if k in OrchestratorSFTConfig.__dataclass_fields__

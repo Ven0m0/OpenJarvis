@@ -13,10 +13,10 @@ GeneralReasoning/GeneralThought-430K — community/verifier-score filtered).
 from __future__ import annotations
 
 import random
-from typing import Iterable, List, MutableMapping, Optional, Sequence
+from typing import Iterable, List, MutableMapping, Optional, Sequence, cast
 
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 HF_DATASET_ID = "natolambert/GeneralThought-430K-filtered"
@@ -69,7 +69,7 @@ class GeneralThoughtsDataset(DatasetProvider):
         if split in ("train", "test", "all"):
             rows = apply_split(
                 rows,
-                split=split,
+                split=cast(SplitName, split),
                 seed=effective_seed,
                 train_frac=0.2,
             )

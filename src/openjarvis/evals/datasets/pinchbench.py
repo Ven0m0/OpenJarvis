@@ -14,13 +14,13 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, cast
 
 import yaml
 
 from openjarvis.core.paths import get_cache_dir
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 LOGGER = logging.getLogger(__name__)
@@ -162,7 +162,7 @@ class PinchBenchDataset(DatasetProvider):
 
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
-            tasks = apply_split(tasks, split=split, seed=effective_seed, train_frac=0.2)
+            tasks = apply_split(tasks, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2)
         elif seed is not None:
             random.Random(seed).shuffle(tasks)
         if max_samples is not None:

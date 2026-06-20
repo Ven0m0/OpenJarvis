@@ -71,7 +71,7 @@ class WorkflowEngine:
             if len(stage) == 1:
                 # Sequential execution
                 step = self._execute_node(
-                    graph.get_node(stage[0]),  # type: ignore[arg-type]
+                    graph.get_node(stage[0]),  # type: ignore
                     outputs,
                     ctx,
                     system,
@@ -90,7 +90,7 @@ class WorkflowEngine:
                     futures = {
                         pool.submit(
                             self._execute_node,
-                            graph.get_node(nid),
+                            graph.get_node(nid),  # type: ignore
                             dict(outputs),
                             dict(ctx),
                             system,

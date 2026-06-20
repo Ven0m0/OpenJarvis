@@ -628,7 +628,7 @@ _HARD_TASKS: List[Dict[str, Any]] = [
 class DailyDigestDataset(DatasetProvider):
     """30 realistic workday briefing tasks."""
 
-    def load(
+    def load(  # type: ignore
         self,
         *,
         max_samples: Optional[int] = None,

@@ -136,7 +136,7 @@ def test_event_bus_integration_store(tmp_path: Path):
     import openjarvis.tools.storage.sqlite as mod
 
     original = mod.get_event_bus
-    mod.get_event_bus = lambda: bus
+    mod.get_event_bus = lambda *, record_history=False: bus  # type: ignore
     try:
         backend.store("test event emission")
         events = [e for e in bus.history if e.event_type == EventType.MEMORY_STORE]
@@ -154,7 +154,7 @@ def test_event_bus_integration_retrieve(tmp_path: Path):
     import openjarvis.tools.storage.sqlite as mod
 
     original = mod.get_event_bus
-    mod.get_event_bus = lambda: bus
+    mod.get_event_bus = lambda *, record_history=False: bus  # type: ignore
     try:
         backend.retrieve("searchable")
         events = [e for e in bus.history if e.event_type == EventType.MEMORY_RETRIEVE]

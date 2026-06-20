@@ -335,9 +335,9 @@ def compose_bench(
                 summary = _run_single(rc, console=console, suite_mode=True)
                 results_table.add_row(
                     rc.benchmark,
-                    f"{summary.accuracy:.4f}",
-                    f"{summary.correct}/{summary.scored_samples}",
-                    str(summary.errors),
+                    f"{summary.accuracy:.4f}",  # type: ignore
+                    f"{summary.correct}/{summary.scored_samples}",  # type: ignore
+                    str(summary.errors),  # type: ignore
                 )
             except Exception as exc:
                 console.print(f"  [red bold]FAILED:[/red bold] {exc}")

@@ -185,7 +185,7 @@ def _extract_json_block(text: str) -> Optional[List[Dict[str, Any]]]:
         except json.JSONDecodeError:
             continue
         if isinstance(parsed, list):
-            return parsed  # type: ignore[return-value]
+            return parsed  # type: ignore
         if isinstance(parsed, dict):
             return [parsed]
     return None
@@ -227,7 +227,7 @@ def _build_notification_channel(channel_spec: str) -> Optional[Any]:
             def disconnect(self) -> None:
                 pass
 
-            def send(
+            def send(  # type: ignore
                 self, channel: str, content: str, *, conversation_id: str = ""
             ) -> bool:
                 from openjarvis.channels.imessage_daemon import send_imessage

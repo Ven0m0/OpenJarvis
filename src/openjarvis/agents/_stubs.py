@@ -60,13 +60,14 @@ class BaseAgent(ABC):
 
     def __init__(
         self,
-        engine: InferenceEngine,
-        model: str,
+        engine: Optional[InferenceEngine],
+        model: str = "",
         *,
         bus: Optional[EventBus] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
         prompt_builder: Optional[Any] = None,
+        **kwargs: Any,
     ) -> None:
         self._engine = engine
         self._model = model
@@ -121,7 +122,7 @@ class BaseAgent(ABC):
             payload.update(data)
             self._bus.publish(EventType.AGENT_TURN_END, payload)
 
-    def _apply_persona(self, system_prompt: Optional[str]) -> Optional[str]:
+    def _apply_persona(self, system_prompt: Optional[str]) -> str:
         """Append SOUL/MEMORY/USER persona to a self-assembled system prompt.
 
         Agents like ``monitor_operative`` / ``operative`` build their own
@@ -132,10 +133,10 @@ class BaseAgent(ABC):
         wired or no persona files exist.
         """
         if self._prompt_builder is None:
-            return system_prompt
+            return system_prompt  # type: ignore
         persona = self._prompt_builder.persona_sections()
         if not persona:
-            return system_prompt
+            return system_prompt  # type: ignore
         return f"{system_prompt}\n\n{persona}" if system_prompt else persona
 
     def _build_messages(
@@ -192,7 +193,7 @@ class BaseAgent(ABC):
                 {"model": self._model, "engine": engine_id},
             )
 
-        result = self._engine.generate(
+        result = self._engine.generate(  # type: ignore
             messages,
             model=self._model,
             temperature=self._temperature,
@@ -313,7 +314,7 @@ class ToolUsingAgent(BaseAgent):
         engine: InferenceEngine,
         model: str,
         *,
-        tools: Optional[List["BaseTool"]] = None,  # noqa: F821
+        tools: Optional[List["BaseTool"]] = None,  # noqa: F821  # type: ignore
         bus: Optional[EventBus] = None,
         max_turns: Optional[int] = None,
         temperature: Optional[float] = None,

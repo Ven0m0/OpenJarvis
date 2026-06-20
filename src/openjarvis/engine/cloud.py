@@ -1105,18 +1105,18 @@ class CloudEngine(InferenceEngine):
             **kwargs,
         )
         if _is_codex_model(model):
-            return self._generate_codex(messages, **kw)
+            return self._generate_codex(messages, **kw)  # type: ignore
         if _is_openrouter_model(model):
-            return self._generate_openrouter(messages, **kw)
+            return self._generate_openrouter(messages, **kw)  # type: ignore
         if _is_minimax_model(model):
-            return self._generate_minimax(messages, **kw)
+            return self._generate_minimax(messages, **kw)  # type: ignore
         if _is_deepseek_model(model):
-            return self._generate_deepseek(messages, **kw)
+            return self._generate_deepseek(messages, **kw)  # type: ignore
         if _is_anthropic_model(model):
-            return self._generate_anthropic(messages, **kw)
+            return self._generate_anthropic(messages, **kw)  # type: ignore
         if _is_google_model(model):
-            return self._generate_google(messages, **kw)
-        return self._generate_openai(messages, **kw)
+            return self._generate_google(messages, **kw)  # type: ignore
+        return self._generate_openai(messages, **kw)  # type: ignore
 
     async def stream(
         self,
@@ -1134,25 +1134,25 @@ class CloudEngine(InferenceEngine):
             **kwargs,
         )
         if _is_codex_model(model):
-            async for token in self._stream_codex(messages, **kw):
+            async for token in self._stream_codex(messages, **kw):  # type: ignore
                 yield token
         elif _is_openrouter_model(model):
-            async for token in self._stream_openrouter(messages, **kw):
+            async for token in self._stream_openrouter(messages, **kw):  # type: ignore
                 yield token
         elif _is_minimax_model(model):
-            async for token in self._stream_minimax(messages, **kw):
+            async for token in self._stream_minimax(messages, **kw):  # type: ignore
                 yield token
         elif _is_deepseek_model(model):
-            async for token in self._stream_deepseek(messages, **kw):
+            async for token in self._stream_deepseek(messages, **kw):  # type: ignore
                 yield token
         elif _is_anthropic_model(model):
-            async for token in self._stream_anthropic(messages, **kw):
+            async for token in self._stream_anthropic(messages, **kw):  # type: ignore
                 yield token
         elif _is_google_model(model):
-            async for token in self._stream_google(messages, **kw):
+            async for token in self._stream_google(messages, **kw):  # type: ignore
                 yield token
         else:
-            async for token in self._stream_openai(messages, **kw):
+            async for token in self._stream_openai(messages, **kw):  # type: ignore
                 yield token
 
     async def _stream_codex(
@@ -1597,13 +1597,13 @@ class CloudEngine(InferenceEngine):
             **kwargs,
         )
         if _is_anthropic_model(model):
-            async for chunk in self._stream_full_anthropic(messages, **kw):
+            async for chunk in self._stream_full_anthropic(messages, **kw):  # type: ignore
                 yield chunk
         elif _is_google_model(model):
-            async for chunk in super().stream_full(messages, **kw):
+            async for chunk in super().stream_full(messages, **kw):  # type: ignore
                 yield chunk
         else:
-            async for chunk in self._stream_full_openai(messages, **kw):
+            async for chunk in self._stream_full_openai(messages, **kw):  # type: ignore
                 yield chunk
 
     def list_models(self) -> List[str]:

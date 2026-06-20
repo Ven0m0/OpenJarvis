@@ -73,7 +73,7 @@ def _make_trace(**overrides) -> Trace:
         result="The answer is 4.",
     )
     defaults.update(overrides)
-    return Trace(**defaults)
+    return Trace(**defaults)  # type: ignore
 
 
 class TestTraceJudgeInit:

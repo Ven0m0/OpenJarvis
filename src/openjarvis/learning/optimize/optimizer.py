@@ -14,7 +14,7 @@ from typing import Any, Callable, Dict, List, Optional
 try:
     import tomli_w
 except ModuleNotFoundError:  # pragma: no cover
-    tomli_w = None  # type: ignore[assignment]
+    tomli_w = None  # type: ignore
 
 from openjarvis.learning.optimize.llm_optimizer import LLMOptimizer
 from openjarvis.learning.optimize.store import OptimizationStore

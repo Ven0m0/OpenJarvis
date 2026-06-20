@@ -59,7 +59,7 @@ def _extract_text_from_pdf(data: bytes) -> str:
     """Extract text from a PDF using pdfplumber or PyPDF2."""
     # Try pdfplumber first
     try:
-        import pdfplumber  # type: ignore[import-untyped]
+        import pdfplumber  # type: ignore
 
         with pdfplumber.open(io.BytesIO(data)) as pdf:
             pages = [p.extract_text() or "" for p in pdf.pages]
@@ -69,7 +69,7 @@ def _extract_text_from_pdf(data: bytes) -> str:
 
     # Fall back to PyPDF2
     try:
-        from PyPDF2 import PdfReader  # type: ignore[import-untyped]
+        from PyPDF2 import PdfReader  # type: ignore
 
         reader = PdfReader(io.BytesIO(data))
         pages = [p.extract_text() or "" for p in reader.pages]
@@ -87,7 +87,7 @@ def _extract_text_from_pdf(data: bytes) -> str:
 def _extract_text_from_docx(data: bytes) -> str:
     """Extract text from a .docx file using python-docx."""
     try:
-        from docx import Document  # type: ignore[import-untyped]
+        from docx import Document  # type: ignore
 
         doc = Document(io.BytesIO(data))
         return "\n\n".join(p.text for p in doc.paragraphs if p.text.strip())

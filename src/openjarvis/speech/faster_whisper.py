@@ -11,7 +11,7 @@ from openjarvis.speech._stubs import Segment, SpeechBackend, TranscriptionResult
 try:
     from faster_whisper import WhisperModel
 except ImportError:
-    WhisperModel = None  # type: ignore[assignment, misc]
+    WhisperModel = None  # type: ignore
 
 
 @SpeechRegistry.register("faster-whisper")
@@ -37,7 +37,7 @@ class FasterWhisperBackend(SpeechBackend):
         # float16 is a GPU-only compute type; CTranslate2 rejects it on CPU.
         if device == "cpu" and compute_type in ("float16", "fp16"):
             compute_type = "int8"
-        model = WhisperModel(self._model_size, device=device, compute_type=compute_type)
+        model = WhisperModel(self._model_size, device=device, compute_type=compute_type)  # type: ignore
         self._device_used = device
         return model
 
@@ -79,7 +79,7 @@ class FasterWhisperBackend(SpeechBackend):
         # bug where a still-open NamedTemporaryFile cannot be reopened by
         # the decoder (PermissionError [Errno 13]).
         try:
-            segments_iter, info = model.transcribe(io.BytesIO(audio), **kwargs)
+            segments_iter, info = model.transcribe(io.BytesIO(audio), **kwargs)  # type: ignore
             segments_list = list(segments_iter)
         except RuntimeError as exc:
             # GPU runtime libraries (cuBLAS/cuDNN) may be missing even when a
@@ -90,7 +90,7 @@ class FasterWhisperBackend(SpeechBackend):
             )
             if self._device_used != "cpu" and gpu_lib_error:
                 self._model = self._build_model("cpu", "int8")
-                segments_iter, info = self._model.transcribe(
+                segments_iter, info = self._model.transcribe(  # type: ignore
                     io.BytesIO(audio), **kwargs
                 )
                 segments_list = list(segments_iter)

@@ -56,7 +56,7 @@ class _ToolAgent(BaseAgent):
     agent_id = "tool_agent"
 
     def __init__(self, bus: EventBus) -> None:
-        self._bus = bus
+        self._bus: EventBus = bus
 
     def run(
         self,
@@ -172,7 +172,7 @@ class TestTraceCollector:
             )
             return original_run(input, context=context, **kwargs)
 
-        agent.run = run_with_memory
+        agent.run = run_with_memory  # type: ignore
         collector.run("find my meeting notes")
 
         trace = store.list_traces()[0]
@@ -263,7 +263,7 @@ class _RichToolAgent(BaseAgent):
     agent_id = "rich_tool_agent"
 
     def __init__(self, bus: EventBus) -> None:
-        self._bus = bus
+        self._bus: EventBus = bus
 
     def run(
         self,

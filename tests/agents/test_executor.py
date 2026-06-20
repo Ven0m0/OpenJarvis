@@ -63,6 +63,7 @@ class TestExecutorBasic:
             executor.execute_tick(agent["id"])
 
         updated = manager.get_agent(agent["id"])
+        assert updated is not None
         assert updated["total_runs"] == 1
         assert updated["status"] == "idle"
 
@@ -159,6 +160,7 @@ def test_finalize_tick_reads_agent_result_metadata(tmp_path):
     executor._finalize_tick(agent["id"], result, error=None, duration=1.0)
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["total_tokens"] == 500
     assert updated["total_cost"] == 0.05
     assert updated["stall_retries"] == 0

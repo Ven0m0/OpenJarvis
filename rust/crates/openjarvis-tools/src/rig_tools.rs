@@ -3,8 +3,8 @@
 //! Each builtin tool gets a rig-core adapter with compile-time JSON schema
 //! generation via `schemars::JsonSchema`.
 
-use rig::completion::request::ToolDefinition;
-use rig::tool::Tool as RigTool;
+use rig_core::completion::request::ToolDefinition;
+use rig_core::tool::Tool as RigTool;
 use schemars::JsonSchema;
 use serde::Deserialize;
 

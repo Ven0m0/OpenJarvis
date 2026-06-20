@@ -547,7 +547,7 @@ def _build_step_prompt(
     if indices:
         pieces.append("Previous routing messages:")
         for j in indices:
-            ps = prior_steps[j]
+            ps = prior_steps[j]  # type: ignore
             pieces.append(
                 f"[Step {j} subtask]\n{ps['subtask']}\n"
                 f"[Step {j} response]\n{ps['output']}"
@@ -936,8 +936,8 @@ class ConductorAgent(LocalCloudAgent):
             for i, (mid, subtask, access) in enumerate(
                 zip(plan["model_id"], plan["subtasks"], plan["access_list"])
             ):
-                worker = workers[mid]
-                prompt = _build_step_prompt(question, subtask, steps, access)
+                worker = workers[mid]  # type: ignore
+                prompt = _build_step_prompt(question, subtask, steps, access)  # type: ignore
                 self.record_trace_event(
                     {
                         "kind": "conductor_step_dispatch",
@@ -988,7 +988,7 @@ class ConductorAgent(LocalCloudAgent):
                             task_meta,
                             prompt,
                             cfg,
-                            shared_workdir,
+                            shared_workdir,  # type: ignore
                             i,
                         )
                     )

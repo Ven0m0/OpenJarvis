@@ -406,7 +406,7 @@ def _run_agent(
     # and the underlying HTTP connections would close mid-execution (#461
     # adversarial review caught this).
     if mcp_clients:
-        agent._mcp_clients = mcp_clients
+        agent._mcp_clients = mcp_clients  # type: ignore
     ctx = AgentContext()
 
     # Inject memory context into conversation if available
@@ -910,7 +910,7 @@ def ask(
         if enable_profile:
             _print_profile(
                 bus,
-                time.monotonic() - wall_start,
+                time.monotonic() - (wall_start or 0.0),
                 engine_name,
                 model_name,
                 console,
@@ -1004,7 +1004,7 @@ def ask(
     if enable_profile:
         _print_profile(
             bus,
-            time.monotonic() - wall_start,
+            time.monotonic() - (wall_start or 0.0),
             engine_name,
             model_name,
             console,

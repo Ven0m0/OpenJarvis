@@ -960,7 +960,7 @@ class OSEnvironment(TaskEnvironment):
         for cmd in commands:
             self._agent_commands.append(cmd)
             try:
-                result = subprocess.run(
+                result = subprocess.run(  # type: ignore
                     ["docker", "exec", self._container_name, "bash", "-c", cmd],
                     capture_output=True,
                     timeout=self._timeout,

@@ -534,7 +534,7 @@ class WebChoreArenaTaskEnv:
         try:
             from openjarvis.evals.core.backend import InferenceBackend
 
-            backend = InferenceBackend.create_default()
+            backend = InferenceBackend.create_default()  # type: ignore
             return backend.generate(
                 prompt,
                 model=os.environ.get("JUDGE_MODEL", "gpt-4o"),

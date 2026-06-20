@@ -16,7 +16,7 @@ class _FakeBackend(MemoryBackend):
     def __init__(self, results: Optional[List[RetrievalResult]] = None) -> None:
         self._results = results or []
 
-    def store(
+    def store(  # type: ignore
         self,
         content: str,
         *,

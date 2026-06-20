@@ -25,7 +25,7 @@ try:
     HAS_TORCH = True
 except ImportError:
     HAS_TORCH = False
-    torch = None  # type: ignore[assignment]
+    torch = None  # type: ignore
 
 logger = logging.getLogger(__name__)
 

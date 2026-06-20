@@ -40,12 +40,12 @@ logger = logging.getLogger(__name__)
 # extra. When missing we still expose the optimizer class so callers
 # can introspect ``HAS_ACE``; only ``optimize()`` requires the package.
 try:
-    import ace  # type: ignore[import-not-found]
+    import ace  # type: ignore
 
     HAS_ACE = True
 except ImportError:
     HAS_ACE = False
-    ace = None  # type: ignore[assignment]
+    ace = None  # type: ignore
 
 
 def _default_save_dir(task_name: str) -> Path:
@@ -177,7 +177,7 @@ class ACEAgentOptimizer:
         save_dir.mkdir(parents=True, exist_ok=True)
 
         try:
-            ace_system = ace.ACE(  # type: ignore[union-attr]
+            ace_system = ace.ACE(  # type: ignore
                 api_provider=self.config.api_provider,
                 generator_model=self.config.generator_model,
                 reflector_model=self.config.reflector_model,

@@ -48,7 +48,7 @@ class TestContinuation:
                 {"content": "Hello world", "finish_reason": "stop"},
             ]
         )
-        agent = ContinuationAgent(engine, "test-model")
+        agent = ContinuationAgent(engine, "test-model")  # type: ignore
         result = agent.run("Hi")
         assert result.content == "Hello world"
 
@@ -59,7 +59,7 @@ class TestContinuation:
                 {"content": " Part 2.", "finish_reason": "stop"},
             ]
         )
-        agent = ContinuationAgent(engine, "test-model")
+        agent = ContinuationAgent(engine, "test-model")  # type: ignore
         result = agent.run("Hi")
         assert result.content == "Part 1... Part 2."
 
@@ -71,7 +71,7 @@ class TestContinuation:
                 {"content": "C", "finish_reason": "stop"},
             ]
         )
-        agent = ContinuationAgent(engine, "test-model")
+        agent = ContinuationAgent(engine, "test-model")  # type: ignore
         result = agent.run("Hi")
         assert result.content == "ABC"
 
@@ -84,7 +84,7 @@ class TestContinuation:
                 {"content": "D", "finish_reason": "stop"},
             ]
         )
-        agent = ContinuationAgent(engine, "test-model")
+        agent = ContinuationAgent(engine, "test-model")  # type: ignore
         # Default max_continuations=2, so should stop after 2 continuations
         messages = agent._build_messages("Hi")
         result_dict = agent._generate(messages)
@@ -97,6 +97,6 @@ class TestContinuation:
                 {"content": "Done", "finish_reason": ""},
             ]
         )
-        agent = ContinuationAgent(engine, "test-model")
+        agent = ContinuationAgent(engine, "test-model")  # type: ignore
         result = agent.run("Hi")
         assert result.content == "Done"

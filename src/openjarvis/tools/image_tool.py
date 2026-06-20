@@ -114,7 +114,13 @@ class ImageGenerateTool(BaseTool):
                 size=size,
                 n=1,
             )
-            url = response.data[0].url
+            url = response.data[0].url if response.data else None
+            if url is None:
+                return ToolResult(
+                    tool_name="image_generate",
+                    content="Image generation returned no URL",
+                    success=False,
+                )
         except Exception as exc:
             return ToolResult(
                 tool_name="image_generate",

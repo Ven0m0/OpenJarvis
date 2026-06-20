@@ -254,7 +254,7 @@ export function TraceDebugger() {
 								</div>
 								{selected.steps.map((step, i) => (
 									// biome-ignore lint/suspicious/noArrayIndexKey: steps have no stable unique id
-									<StepDetail key={`${step.type ?? "step"}-${i}`} step={step} index={i} />
+									<StepDetail key={`${ (step as any).type ?? "step"}-${i}`} step={step} index={i} />
 								))}
 							</div>
 						) : (

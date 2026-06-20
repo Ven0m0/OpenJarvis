@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 from openjarvis.evals.core.types import RunSummary
 from openjarvis.learning.optimize.optimizer import OptimizationEngine
@@ -204,7 +204,7 @@ class TestOptimizationEngineRun:
         result = engine.run()
 
         assert len(result.trials) == 1
-        assert result.best_trial.accuracy == 0.9
+        assert result.best_trial.accuracy == 0.9  # type: ignore
         # propose_next should NOT be called when max_trials=1
         optimizer.propose_next.assert_not_called()
 
@@ -306,7 +306,7 @@ class TestEarlyStopping:
 
         # Should stop after 1 (best) + 3 (patience) = 4 trials
         assert len(run.trials) == 4
-        assert run.best_trial.trial_id == "t0"
+        assert run.best_trial.trial_id == "t0"  # type: ignore
         assert run.status == "completed"
 
     def test_no_early_stop_when_improving(self) -> None:
@@ -344,7 +344,7 @@ class TestEarlyStopping:
         run = engine.run()
 
         assert len(run.trials) == 5
-        assert run.best_trial.accuracy == 0.9
+        assert run.best_trial.accuracy == 0.9  # type: ignore
 
 
 # ---------------------------------------------------------------------------

@@ -98,9 +98,9 @@ def _run_subprocess_hard_timeout(
     except subprocess.TimeoutExpired:
         # Kill the whole group, not just the direct child — Modal harness
         # subprocesses fork workers that would otherwise keep pipes open.
-        for sig in (signal.SIGTERM, signal.SIGKILL):
+        for sig in (signal.SIGTERM, signal.SIGKILL):  # type: ignore
             try:
-                os.killpg(proc.pid, sig)
+                os.killpg(proc.pid, sig)  # type: ignore
             except (ProcessLookupError, PermissionError):
                 break
             try:
@@ -132,7 +132,7 @@ def _patch_modal_cgroup_v2() -> None:
     """
     try:
         from swebench.harness.modal_eval import (
-            run_evaluation_modal as _m,  # type: ignore[import-not-found]
+            run_evaluation_modal as _m,  # type: ignore
         )
     except Exception:
         return
@@ -152,10 +152,10 @@ def _patch_modal_cgroup_v2() -> None:
             "Modal sandboxes are scoring 0 with `reason: no_report`, "
             "verify upstream swebench's Modal cgroup handling."
         )
-        _m._hybrid_cgroup_patched = True  # type: ignore[attr-defined]
+        _m._hybrid_cgroup_patched = True  # type: ignore
         return
 
-    def patched(*args, **kwargs):  # type: ignore[no-untyped-def]
+    def patched(*args, **kwargs):  # type: ignore
         try:
             return orig(*args, **kwargs)
         except FileNotFoundError:
@@ -164,8 +164,8 @@ def _patch_modal_cgroup_v2() -> None:
         except PermissionError:
             return None
 
-    _m.set_cpu_quota = patched  # type: ignore[assignment]
-    _m._hybrid_cgroup_patched = True  # type: ignore[attr-defined]
+    _m.set_cpu_quota = patched  # type: ignore
+    _m._hybrid_cgroup_patched = True  # type: ignore
 
 
 _CGROUP_SOURCE_SENTINEL = "_OPENJARVIS_CGROUP_V2_PATCH_APPLIED"
@@ -187,7 +187,7 @@ def _patch_modal_sandbox_source() -> None:
     """
     try:
         from swebench.harness.modal_eval import (
-            run_evaluation_modal as _m,  # type: ignore[import-not-found]
+            run_evaluation_modal as _m,  # type: ignore
         )
     except Exception:
         return
@@ -232,7 +232,7 @@ def _patch_modal_sandbox_write_file() -> None:
     """
     try:
         from swebench.harness.modal_eval import (
-            run_evaluation_modal as _m,  # type: ignore[import-not-found]
+            run_evaluation_modal as _m,  # type: ignore
         )
     except Exception:
         return
@@ -243,7 +243,7 @@ def _patch_modal_sandbox_write_file() -> None:
         return
     orig_write = runtime.write_file
 
-    def patched_write_file(self, file_path: str, content: str):  # type: ignore[no-untyped-def]
+    def patched_write_file(self, file_path: str, content: str):  # type: ignore
         try:
             return orig_write(self, file_path, content)
         except FileNotFoundError:
@@ -253,8 +253,8 @@ def _patch_modal_sandbox_write_file() -> None:
                 return None
             raise
 
-    runtime.write_file = patched_write_file  # type: ignore[assignment]
-    runtime._hybrid_write_file_patched = True  # type: ignore[attr-defined]
+    runtime.write_file = patched_write_file  # type: ignore
+    runtime._hybrid_write_file_patched = True  # type: ignore
 
 
 def _sentinel_present_on_disk() -> bool:
@@ -268,7 +268,7 @@ def _sentinel_present_on_disk() -> bool:
     """
     try:
         from swebench.harness.modal_eval import (
-            run_evaluation_modal as _m,  # type: ignore[import-not-found]
+            run_evaluation_modal as _m,  # type: ignore
         )
     except Exception:
         return False

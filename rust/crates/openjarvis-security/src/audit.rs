@@ -220,9 +220,13 @@ impl AuditLogger {
 }
 
 fn hex_sha256(input: &str) -> String {
+    use std::fmt::Write as _;
     let mut hasher = Sha256::new();
     hasher.update(input.as_bytes());
-    format!("{:x}", hasher.finalize())
+    hasher.finalize().iter().fold(String::new(), |mut acc, b| {
+        write!(acc, "{b:02x}").ok();
+        acc
+    })
 }
 
 #[cfg(test)]

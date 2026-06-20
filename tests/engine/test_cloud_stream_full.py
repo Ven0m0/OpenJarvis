@@ -125,6 +125,7 @@ async def test_stream_full_openai_tool_calls():
     assert result[0].tool_calls is not None
     assert result[0].tool_calls[0]["function"]["name"] == "calc"
     assert result[0].tool_calls[0]["id"] == "call_1"
+    assert result[1].tool_calls is not None
     assert result[1].tool_calls[0]["function"]["arguments"] == '{"x": 1}'
     assert result[2].finish_reason == "tool_calls"
 

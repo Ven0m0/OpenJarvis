@@ -207,7 +207,7 @@ class AgentManager:
             (agent_id, name, agent_type, config_json, now, now),
         )
         self._conn.commit()
-        return self.get_agent(agent_id)  # type: ignore[return-value]
+        return self.get_agent(agent_id)  # type: ignore
 
     def list_agents(self, include_archived: bool = False) -> List[Dict[str, Any]]:
         query = "SELECT * FROM managed_agents"
@@ -268,7 +268,7 @@ class AgentManager:
             f"UPDATE managed_agents SET {', '.join(sets)} WHERE id = ?", vals
         )
         self._conn.commit()
-        return self.get_agent(agent_id)  # type: ignore[return-value]
+        return self.get_agent(agent_id)  # type: ignore
 
     def delete_agent(self, agent_id: str) -> None:
         self._set_status(agent_id, "archived")
@@ -413,7 +413,7 @@ class AgentManager:
             (task_id, agent_id, description, status, now),
         )
         self._conn.commit()
-        return self._get_task(task_id)  # type: ignore[return-value]
+        return self._get_task(task_id)  # type: ignore
 
     def list_tasks(
         self, agent_id: str, status: Optional[str] = None
@@ -441,13 +441,13 @@ class AgentManager:
             sets.append("findings_json = ?")
             vals.append(json.dumps(kwargs["findings"]))
         if not sets:
-            return self._get_task(task_id)  # type: ignore[return-value]
+            return self._get_task(task_id)  # type: ignore
         vals.append(task_id)
         self._conn.execute(
             f"UPDATE agent_tasks SET {', '.join(sets)} WHERE id = ?", vals
         )
         self._conn.commit()
-        return self._get_task(task_id)  # type: ignore[return-value]
+        return self._get_task(task_id)  # type: ignore
 
     def delete_task(self, task_id: str) -> None:
         self._conn.execute("DELETE FROM agent_tasks WHERE id = ?", (task_id,))
@@ -478,7 +478,7 @@ class AgentManager:
             (binding_id, agent_id, channel_type, config_json, session_id, routing_mode),
         )
         self._conn.commit()
-        return self._get_binding(binding_id)  # type: ignore[return-value]
+        return self._get_binding(binding_id)  # type: ignore
 
     def list_channel_bindings(self, agent_id: str) -> List[Dict[str, Any]]:
         rows = self._conn.execute(
@@ -521,7 +521,7 @@ class AgentManager:
         try:
             import tomllib
         except ModuleNotFoundError:
-            import tomli as tomllib  # type: ignore[no-redef]
+            import tomli as tomllib  # type: ignore
 
         templates: List[Dict[str, Any]] = []
 

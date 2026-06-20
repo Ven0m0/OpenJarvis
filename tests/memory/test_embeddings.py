@@ -57,7 +57,7 @@ def test_missing_dep(monkeypatch: pytest.MonkeyPatch):
 
     real_import = builtins.__import__
 
-    def _block_st(name, *args, **kwargs):  # type: ignore[no-untyped-def]
+    def _block_st(name, *args, **kwargs):  # type: ignore
         if name == "sentence_transformers":
             raise ImportError("mocked")
         return real_import(name, *args, **kwargs)
@@ -70,4 +70,4 @@ def test_missing_dep(monkeypatch: pytest.MonkeyPatch):
 def test_embedder_abc_cannot_instantiate():
     """Embedder ABC cannot be instantiated directly."""
     with pytest.raises(TypeError):
-        Embedder()  # type: ignore[abstract]
+        Embedder()  # type: ignore

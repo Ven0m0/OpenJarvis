@@ -214,7 +214,7 @@ class LearningOrchestrator:
 
         try:
             model_name = self._model_name or "Qwen/Qwen3-0.6B"
-            trainer = LoRATrainer(self._lora_config, model_name=model_name)
+            trainer = LoRATrainer(self._lora_config, model_name=model_name)  # type: ignore
             return trainer.train(sft_pairs)
         except Exception as exc:
             logger.warning("LoRA training failed: %s", exc)

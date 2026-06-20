@@ -11,7 +11,7 @@ import pytest
 try:
     import tomllib  # Python 3.11+
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 from openjarvis.core.types import StepType, Trace, TraceStep
 from openjarvis.learning.agents.agent_evolver import AgentConfigEvolver

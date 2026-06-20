@@ -128,7 +128,7 @@ def imessage_start(
         agent = DeepResearchAgent(
             engine=engine,
             model="qwen3.5:4b",
-            tools=tools,
+            tools=tools,  # type: ignore
         )
 
         def handler(text: str) -> str:

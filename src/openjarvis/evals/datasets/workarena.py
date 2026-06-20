@@ -38,7 +38,7 @@ except ImportError as _e:
     ATOMIC_TASKS = []
     TASK_CATEGORY_MAP = {}
 
-    def get_all_tasks_agents(**kwargs):  # type: ignore[misc]
+    def get_all_tasks_agents(**kwargs):  # type: ignore
         return []
 
 
@@ -147,7 +147,7 @@ class WorkArenaDataset(DatasetProvider):
         idx: int,
     ) -> EvalRecord:
         """Convert a (task_class, seed) pair into an EvalRecord."""
-        task_id = task_class.get_task_id()
+        task_id = task_class.get_task_id()  # type: ignore
         category = TASK_CATEGORY_MAP.get(task_id, "general")
 
         # Determine level from task class hierarchy
@@ -194,7 +194,7 @@ class WorkArenaDataset(DatasetProvider):
         if task_class in ATOMIC_TASKS:
             return "l1"
 
-        task_id = task_class.get_task_id()
+        task_id = task_class.get_task_id()  # type: ignore
         if ".l3." in task_id:
             return "l3"
         if ".l2." in task_id:

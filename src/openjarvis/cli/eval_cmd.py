@@ -361,8 +361,8 @@ def eval_run(
             try:
                 summary = _run_single(rc, console=console, suite_mode=True)
                 console.print(
-                    f"  [green]{summary.accuracy:.4f}[/green] "
-                    f"({summary.correct}/{summary.scored_samples})"
+                    f"  [green]{summary.accuracy:.4f}[/green] "  # type: ignore
+                    f"({summary.correct}/{summary.scored_samples})"  # type: ignore
                 )
             except Exception as exc:
                 console.print(f"  [red bold]FAILED:[/red bold] {exc}")
@@ -429,8 +429,8 @@ def eval_run(
         )
         summary = _run_single(config, console=console)
         console.print(
-            f"\n[green]Accuracy: {summary.accuracy:.4f}[/green] "
-            f"({summary.correct}/{summary.scored_samples})"
+            f"\n[green]Accuracy: {summary.accuracy:.4f}[/green] "  # type: ignore
+            f"({summary.correct}/{summary.scored_samples})"  # type: ignore
         )
     except ImportError:
         console.print("[red]Eval CLI module not available.[/red]")

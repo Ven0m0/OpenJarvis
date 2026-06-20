@@ -63,7 +63,7 @@ def _make_outcome(
     risk_tier/rationale come from the parent Edit)."""
     outcome = EditOutcome(
         edit_id=edit_id,
-        status=status,  # type: ignore[arg-type]
+        status=status,  # type: ignore
         benchmark_delta=benchmark_delta,
         cluster_deltas={"cluster-001": 0.1} if benchmark_delta else {},
         error=None if status == "applied" else "test failure",

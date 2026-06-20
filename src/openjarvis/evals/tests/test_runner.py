@@ -455,6 +455,7 @@ class TestMetricStatsHelpers:
     def test_metric_stats_to_dict(self):
         ms = MetricStats(mean=1.0, median=2.0, min=0.5, max=3.0, std=0.8)
         d = _metric_stats_to_dict(ms)
+        assert d is not None
         assert d["mean"] == 1.0
         assert d["median"] == 2.0
         assert d["min"] == 0.5

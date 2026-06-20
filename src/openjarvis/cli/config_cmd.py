@@ -175,7 +175,7 @@ def _show_json_config(console: Console, config_path: Path) -> None:
         try:
             import tomllib  # Python 3.11+
         except ModuleNotFoundError:
-            import tomli as tomllib  # type: ignore[no-redef]
+            import tomli as tomllib  # type: ignore
 
         config_dict = tomllib.loads(config_content)
         # Write JSON to stdout so it is pipeable

@@ -90,8 +90,8 @@ class WildChatDataset(DatasetProvider):
             self._records.append(
                 EvalRecord(
                     record_id=f"wildchat-{idx}",
-                    problem=raw["_user_content"],
-                    reference=raw["_asst_content"],
+                    problem=raw["_user_content"],  # type: ignore
+                    reference=raw["_asst_content"],  # type: ignore
                     category="chat",
                     subject="conversation",
                     metadata={

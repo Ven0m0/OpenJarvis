@@ -75,7 +75,7 @@ def create_ws_router(event_bus: EventBus) -> Any:
         await websocket.accept()
         # Parse agent_id filter from query string
         agent_id = websocket.query_params.get("agent_id")
-        websocket._agent_filter = agent_id  # type: ignore[attr-defined]
+        websocket._agent_filter = agent_id  # type: ignore
         queue: asyncio.Queue = asyncio.Queue(maxsize=100)
         loop = asyncio.get_running_loop()
         clients[websocket] = (queue, loop)

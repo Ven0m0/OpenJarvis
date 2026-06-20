@@ -37,8 +37,8 @@ class LogHubScorer(LLMJudgeScorer):
             predicted = "normal"
         elif has_anomaly and has_normal:
             # Ambiguous — check which appears first
-            a_pos = _ANOMALY_PATTERN.search(model_answer).start()
-            n_pos = _NORMAL_PATTERN.search(model_answer).start()
+            a_pos = _ANOMALY_PATTERN.search(model_answer).start()  # type: ignore
+            n_pos = _NORMAL_PATTERN.search(model_answer).start()  # type: ignore
             predicted = "anomaly" if a_pos < n_pos else "normal"
         else:
             # Neither keyword found — use LLM judge fallback

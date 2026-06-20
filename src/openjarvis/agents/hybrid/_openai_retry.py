@@ -287,8 +287,8 @@ def _wrap_create(orig: Callable[..., Any]) -> Callable[..., Any]:
         assert last_exc is not None
         raise last_exc
 
-    wrapped._hybrid_patched = True  # type: ignore[attr-defined]
-    wrapped.__wrapped__ = orig  # type: ignore[attr-defined]
+    wrapped._hybrid_patched = True  # type: ignore
+    wrapped.__wrapped__ = orig  # type: ignore
     return wrapped
 
 
@@ -322,15 +322,15 @@ def patch_openai_globally() -> None:
                 kwargs.setdefault("max_retries", _MAX_RETRIES)
                 return _orig_init(self, *args, **kwargs)
 
-            _patched_init._hybrid_patched = True  # type: ignore[attr-defined]
-            openai.OpenAI.__init__ = _patched_init  # type: ignore[assignment]
+            _patched_init._hybrid_patched = True  # type: ignore
+            openai.OpenAI.__init__ = _patched_init  # type: ignore
 
         # Wrap chat.completions.create. The SDK exposes the bound method
         # via ``Completions.create``; we replace the class attribute so
         # every instance (including ones built inside external libs)
         # sees the wrapped version.
         if not getattr(_comp_mod.Completions.create, "_hybrid_patched", False):
-            _comp_mod.Completions.create = _wrap_create(  # type: ignore[assignment]
+            _comp_mod.Completions.create = _wrap_create(  # type: ignore
                 _comp_mod.Completions.create
             )
 

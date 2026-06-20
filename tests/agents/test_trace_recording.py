@@ -97,5 +97,6 @@ def test_executor_no_trace_without_store(tmp_path):
         executor.execute_tick(agent["id"])
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "idle"
     mgr.close()

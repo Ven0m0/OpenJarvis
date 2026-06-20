@@ -132,5 +132,5 @@ class TestAppleEngineRecommendation:
             ram_gb=ram_gb,
             gpu=gpu,
         )
-        assert hw.gpu.vram_gb == hw.ram_gb
+        assert hw.gpu.vram_gb == hw.ram_gb  # type: ignore
         assert recommend_engine(hw) == "mlx"

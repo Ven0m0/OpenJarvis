@@ -15,11 +15,11 @@ import random
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, cast
 
 from openjarvis.core.paths import get_cache_dir
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 LOGGER = logging.getLogger(__name__)
@@ -137,7 +137,7 @@ class LiveResearchBenchDataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             queries = apply_split(
-                queries, split=split, seed=effective_seed, train_frac=0.2
+                queries, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2
             )
         elif seed is not None:
             random.Random(seed).shuffle(queries)

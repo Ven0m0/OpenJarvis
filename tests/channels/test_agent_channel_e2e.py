@@ -23,6 +23,7 @@ def test_agent_sends_to_webchat(scenario_harness: ScenarioHarness):
 
     h.executor.execute_tick(agent["id"])
     data = h.manager.get_agent(agent["id"])
+    assert data is not None
     assert data["status"] == "idle"
     assert data["total_runs"] == 1
     webchat.disconnect()
@@ -41,6 +42,7 @@ def test_channel_failure_does_not_crash_agent(scenario_harness: ScenarioHarness)
 
     h.executor.execute_tick(agent["id"])
     data = h.manager.get_agent(agent["id"])
+    assert data is not None
     assert data["status"] == "idle"
     assert data["total_runs"] == 1
 
@@ -69,5 +71,6 @@ def test_agent_with_channel_binding(scenario_harness: ScenarioHarness):
 
     h.executor.execute_tick(aid)
     data = h.manager.get_agent(aid)
+    assert data is not None
     assert data["status"] == "idle"
     webchat.disconnect()

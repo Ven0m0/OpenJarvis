@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 
 # --- Safe expression evaluation for ``python``-action templates -----------
@@ -149,7 +149,7 @@ def _eval_node(node: ast.AST, names: Dict[str, Any]) -> Any:
         return {_eval_node(e, names) for e in node.elts}
     if isinstance(node, ast.Dict):
         return {
-            _eval_node(k, names): _eval_node(v, names)
+            _eval_node(k, names): _eval_node(v, names)  # type: ignore
             for k, v in zip(node.keys, node.values)
         }
     raise ValueError(f"disallowed expression element: {type(node).__name__}")

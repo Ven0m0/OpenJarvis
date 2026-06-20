@@ -99,6 +99,7 @@ class HybridMemory(MemoryBackend):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         """Store in both sub-backends with the same doc id."""
         # Store in sparse first to get the id

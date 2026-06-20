@@ -41,6 +41,7 @@ class TestMessage:
     def test_tool_calls(self) -> None:
         tc = ToolCall(id="1", name="calc", arguments='{"x": 1}')
         msg = Message(role=Role.ASSISTANT, content="", tool_calls=[tc])
+        assert msg.tool_calls is not None
         assert len(msg.tool_calls) == 1
         assert msg.tool_calls[0].name == "calc"
 

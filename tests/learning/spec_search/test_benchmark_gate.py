@@ -74,7 +74,7 @@ class TestBenchmarkGate:
         )
         result = gate.evaluate(before=before, session_seed=42)
         assert not result.accepted
-        assert "no improvement" in result.reason.lower()
+        assert "no improvement" in (result.reason or "").lower()
 
     def test_rejects_regression(self) -> None:
         from openjarvis.learning.spec_search.gate.benchmark_gate import (
@@ -98,7 +98,7 @@ class TestBenchmarkGate:
         )
         result = gate.evaluate(before=before, session_seed=42)
         assert not result.accepted
-        assert "regression" in result.reason.lower()
+        assert "regression" in (result.reason or "").lower()
 
     def test_min_improvement_threshold(self) -> None:
         from openjarvis.learning.spec_search.gate.benchmark_gate import (

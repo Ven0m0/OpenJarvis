@@ -120,7 +120,7 @@ def stop() -> None:
         else:
             # Force kill if still running
             try:
-                os.kill(pid, signal.SIGKILL)
+                os.kill(pid, signal.SIGKILL)  # type: ignore
             except OSError:
                 pass
     except OSError:

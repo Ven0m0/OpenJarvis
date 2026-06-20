@@ -605,13 +605,13 @@ async def prometheus_metrics(request: Request):
         lines = [
             "# HELP openjarvis_requests_total Total requests processed",
             "# TYPE openjarvis_requests_total counter",
-            f"openjarvis_requests_total {stats.get('total_requests', 0)}",
+            f"openjarvis_requests_total {stats.get('total_requests', 0)}",  # type: ignore
             "# HELP openjarvis_tokens_total Total tokens generated",
             "# TYPE openjarvis_tokens_total counter",
-            f"openjarvis_tokens_total {stats.get('total_tokens', 0)}",
+            f"openjarvis_tokens_total {stats.get('total_tokens', 0)}",  # type: ignore
             "# HELP openjarvis_latency_avg_ms Average latency in milliseconds",
             "# TYPE openjarvis_latency_avg_ms gauge",
-            f"openjarvis_latency_avg_ms {stats.get('avg_latency_ms', 0)}",
+            f"openjarvis_latency_avg_ms {stats.get('avg_latency_ms', 0)}",  # type: ignore
         ]
         from starlette.responses import PlainTextResponse
 

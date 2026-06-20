@@ -29,7 +29,7 @@ class _DummyAnalyzer(QueryAnalyzer):
 class TestRouterPolicy:
     def test_abc_cannot_instantiate(self) -> None:
         with pytest.raises(TypeError):
-            RouterPolicy()  # type: ignore[abstract]
+            RouterPolicy()  # type: ignore
 
     def test_concrete_implementation(self) -> None:
         router = _DummyRouter()
@@ -40,7 +40,7 @@ class TestRouterPolicy:
 class TestQueryAnalyzer:
     def test_abc_cannot_instantiate(self) -> None:
         with pytest.raises(TypeError):
-            QueryAnalyzer()  # type: ignore[abstract]
+            QueryAnalyzer()  # type: ignore
 
     def test_concrete_implementation(self) -> None:
         analyzer = _DummyAnalyzer()

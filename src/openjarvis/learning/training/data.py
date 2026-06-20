@@ -124,7 +124,7 @@ class TrainingDataMiner:
         )
         for t in traces:
             qc = classify_query(t.query)
-            class_model_scores[qc][t.model].append(t.feedback)  # type: ignore[arg-type]
+            class_model_scores[qc][t.model].append(t.feedback)  # type: ignore
 
         result: Dict[str, Dict[str, Any]] = {}
         for qc, model_scores in class_model_scores.items():
@@ -179,7 +179,7 @@ class TrainingDataMiner:
 
         for t in traces:
             qc = classify_query(t.query)
-            class_agent_scores[qc][t.agent].append(t.feedback)  # type: ignore[arg-type]
+            class_agent_scores[qc][t.agent].append(t.feedback)  # type: ignore
             tools = self._tools_from_trace(t)
             class_agent_tools[qc][t.agent].append(tools)
 
@@ -203,7 +203,7 @@ class TrainingDataMiner:
                 for tool in tool_list:
                     tool_freq[tool] += 1
 
-            best_tools = sorted(tool_freq, key=tool_freq.get, reverse=True)  # type: ignore[arg-type]
+            best_tools = sorted(tool_freq, key=tool_freq.get, reverse=True)  # type: ignore
 
             total_scores = [s for scores in agent_scores.values() for s in scores]
             overall_avg = sum(total_scores) / len(total_scores) if total_scores else 0.0

@@ -38,7 +38,7 @@ SPIKE_RESPONSE = {
 
 class TestPartParsing:
     def test_extract_text_joins_text_parts(self):
-        assert _extract_text(SPIKE_RESPONSE["parts"]) == "Hello from the local model."
+        assert _extract_text(SPIKE_RESPONSE["parts"]) == "Hello from the local model."  # type: ignore
 
     def test_extract_text_ignores_non_text(self):
         assert _extract_text([{"type": "step-start"}, {"type": "tool"}]) == ""
@@ -107,10 +107,10 @@ class TestAvailability:
 class TestConfigBuilding:
     def test_includes_provider_when_base_url(self, tmp_path):
         cfg = OpenCodeAgent(
-            SimpleNamespace(_host="http://localhost:11434"),
+            SimpleNamespace(_host="http://localhost:11434"),  # type: ignore
             "qwen3:8b",
             workspace=str(tmp_path),
-        )._build_config()
+        )._build_config()  # type: ignore
         prov = cfg["provider"]["openjarvis"]
         assert prov["npm"] == "@ai-sdk/openai-compatible"
         assert prov["options"]["baseURL"] == "http://localhost:11434/v1"
@@ -119,44 +119,44 @@ class TestConfigBuilding:
     def test_no_provider_when_no_base_url(self, tmp_path):
         # Pass-through model -> rely on opencode's own provider; no provider block.
         cfg = OpenCodeAgent(
-            SimpleNamespace(), "ollama/llama3", workspace=str(tmp_path)
-        )._build_config()
+            SimpleNamespace(), "ollama/llama3", workspace=str(tmp_path)  # type: ignore
+        )._build_config()  # type: ignore
         assert "provider" not in cfg
 
     def test_build_mode_permission_allows_edit_and_bash(self, tmp_path):
         cfg = OpenCodeAgent(
-            SimpleNamespace(_host="http://h:1"),
+            SimpleNamespace(_host="http://h:1"),  # type: ignore
             "m",
             workspace=str(tmp_path),
             agent="build",
-        )._build_config()
+        )._build_config()  # type: ignore
         assert cfg["permission"]["edit"] == "allow"
         assert cfg["permission"]["bash"] == "allow"
 
     def test_plan_mode_permission_denies_edit_and_bash(self, tmp_path):
         cfg = OpenCodeAgent(
-            SimpleNamespace(_host="http://h:1"),
+            SimpleNamespace(_host="http://h:1"),  # type: ignore
             "m",
             workspace=str(tmp_path),
             agent="plan",
-        )._build_config()
+        )._build_config()  # type: ignore
         assert cfg["permission"]["edit"] == "deny"
         assert cfg["permission"]["bash"] == "deny"
 
     def test_custom_permission_override(self, tmp_path):
         cfg = OpenCodeAgent(
-            SimpleNamespace(_host="http://h:1"),
+            SimpleNamespace(_host="http://h:1"),  # type: ignore
             "m",
             workspace=str(tmp_path),
             permission={"bash": "deny"},
-        )._build_config()
+        )._build_config()  # type: ignore
         assert cfg["permission"] == {"bash": "deny"}
 
     def test_does_not_pollute_workspace(self, tmp_path):
         # The config goes to a private OPENCODE_CONFIG file, never the workspace.
         OpenCodeAgent(
-            SimpleNamespace(_host="http://h:1"), "m", workspace=str(tmp_path)
-        )._build_config()
+            SimpleNamespace(_host="http://h:1"), "m", workspace=str(tmp_path)  # type: ignore
+        )._build_config()  # type: ignore
         assert not (tmp_path / "opencode.json").exists()
 
 
@@ -164,7 +164,7 @@ class TestRunGracefulDegradation:
     def test_missing_binary_returns_error_result(self, monkeypatch, tmp_path):
         monkeypatch.setattr("openjarvis.agents.opencode.shutil.which", lambda n: None)
         agent = OpenCodeAgent(
-            SimpleNamespace(_host="http://h:1"),
+            SimpleNamespace(_host="http://h:1"),  # type: ignore
             "m",
             workspace=str(tmp_path),
             opencode_bin="/nonexistent/opencode",
@@ -176,7 +176,7 @@ class TestRunGracefulDegradation:
     def test_unresolvable_provider_fails_clearly(self, tmp_path):
         # No derivable base URL + bare model name -> clear error, not a 500
         # (and we fail before spawning a server).
-        agent = OpenCodeAgent(SimpleNamespace(), "qwen3:8b", workspace=str(tmp_path))
+        agent = OpenCodeAgent(SimpleNamespace(), "qwen3:8b", workspace=str(tmp_path))  # type: ignore
         res = agent.run("do something")
         assert res.metadata.get("error") is True
         assert "could not determine" in res.content.lower()
@@ -230,7 +230,7 @@ class _FakeClient:
         if path == "/session":
             return _FakeResp({"id": "ses_x"})
         if path.endswith("/message"):
-            _FakeClient.last_body = json
+            _FakeClient.last_body = json  # type: ignore
             return _FakeResp(SPIKE_RESPONSE)
         return _FakeResp({})
 
@@ -241,7 +241,7 @@ class _FakeClient:
 class TestRunParsing:
     def test_run_parses_message_and_tools(self, monkeypatch, tmp_path):
         agent = OpenCodeAgent(
-            SimpleNamespace(_host="http://h:1"),
+            SimpleNamespace(_host="http://h:1"),  # type: ignore
             "local-model",
             workspace=str(tmp_path),
             agent="build",
@@ -256,7 +256,7 @@ class TestRunParsing:
         assert res.metadata["model_id"] == "local-model"
         assert res.metadata["agent"] == "build"
         # the model was addressed as openjarvis/local-model
-        assert _FakeClient.last_body["model"] == {
+        assert _FakeClient.last_body["model"] == {  # type: ignore
             "providerID": "openjarvis",
             "modelID": "local-model",
         }

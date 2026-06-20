@@ -208,6 +208,307 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "src\\openjarvis\\_rust_bridge.py",
+      "accessCount": 7,
+      "lastAccessed": 1781888897989,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\evals\\datasets\\gaia.py",
+      "accessCount": 7,
+      "lastAccessed": 1781891028198,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\engine\\cloud.py",
+      "accessCount": 7,
+      "lastAccessed": 1781892040982,
+      "type": "file"
+    },
+    {
+      "path": "frontend\\src\\components\\Chat\\AudioPlayer.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1781893082809,
+      "type": "file"
+    },
+    {
+      "path": "tests\\cli\\test_serve_channel_wiring.py",
+      "accessCount": 6,
+      "lastAccessed": 1781889095631,
+      "type": "file"
+    },
+    {
+      "path": "tests\\evals\\test_trackers.py",
+      "accessCount": 6,
+      "lastAccessed": 1781891844271,
+      "type": "file"
+    },
+    {
+      "path": "frontend\\src\\components\\Desktop\\LearningCurve.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1781893166652,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\tools\\image_tool.py",
+      "accessCount": 5,
+      "lastAccessed": 1781886721723,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\connectors\\store.py",
+      "accessCount": 5,
+      "lastAccessed": 1781892260607,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\agents\\executor.py",
+      "accessCount": 4,
+      "lastAccessed": 1781886347534,
+      "type": "file"
+    },
+    {
+      "path": "tests\\traces\\test_collector.py",
+      "accessCount": 4,
+      "lastAccessed": 1781886593736,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\evals\\execution\\pinchbench_env.py",
+      "accessCount": 4,
+      "lastAccessed": 1781888707738,
+      "type": "file"
+    },
+    {
+      "path": "tests\\analytics\\test_redaction.py",
+      "accessCount": 4,
+      "lastAccessed": 1781888775359,
+      "type": "file"
+    },
+    {
+      "path": "tests\\mining\\test_discovery.py",
+      "accessCount": 4,
+      "lastAccessed": 1781888811423,
+      "type": "file"
+    },
+    {
+      "path": "tests\\telemetry\\test_energy_amd.py",
+      "accessCount": 4,
+      "lastAccessed": 1781888969666,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\evals\\datasets\\adp.py",
+      "accessCount": 4,
+      "lastAccessed": 1781891032066,
+      "type": "file"
+    },
+    {
+      "path": "frontend\\src\\components\\Dashboard\\TraceDebugger.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1781893134426,
+      "type": "file"
+    },
+    {
+      "path": "rust\\crates\\openjarvis-tools\\src\\rig_tools.rs",
+      "accessCount": 3,
+      "lastAccessed": 1781888202647,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\agents\\_stubs.py",
+      "accessCount": 3,
+      "lastAccessed": 1781888745591,
+      "type": "file"
+    },
+    {
+      "path": "tests\\mining\\test_apple_mps_pearl.py",
+      "accessCount": 3,
+      "lastAccessed": 1781888793412,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\tools\\storage\\_stubs.py",
+      "accessCount": 3,
+      "lastAccessed": 1781892269185,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\core\\registry.py",
+      "accessCount": 3,
+      "lastAccessed": 1781892340575,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\tools\\storage\\sqlite.py",
+      "accessCount": 3,
+      "lastAccessed": 1781892518717,
+      "type": "file"
+    },
+    {
+      "path": "frontend\\src\\components\\Layout.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1781893050523,
+      "type": "file"
+    },
+    {
+      "path": "frontend\\src\\components\\Chat\\MicButton.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1781893090577,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 3,
+      "lastAccessed": 1781893585094,
+      "type": "directory"
+    },
+    {
+      "path": "src\\openjarvis\\connectors\\gmail_imap.py",
+      "accessCount": 2,
+      "lastAccessed": 1781886701534,
+      "type": "file"
+    },
+    {
+      "path": "tests\\agents\\test_budget.py",
+      "accessCount": 2,
+      "lastAccessed": 1781886744404,
+      "type": "file"
+    },
+    {
+      "path": "pyproject.toml",
+      "accessCount": 2,
+      "lastAccessed": 1781886915330,
+      "type": "file"
+    },
+    {
+      "path": "examples\\twitter_bot\\test_real_world.py",
+      "accessCount": 2,
+      "lastAccessed": 1781888183071,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\evals\\tests\\test_display.py",
+      "accessCount": 2,
+      "lastAccessed": 1781888365628,
+      "type": "file"
+    },
+    {
+      "path": "tests\\learning\\test_trial_runner.py",
+      "accessCount": 2,
+      "lastAccessed": 1781888781198,
+      "type": "file"
+    },
+    {
+      "path": "tests\\mining\\test_cpu_pearl.py",
+      "accessCount": 2,
+      "lastAccessed": 1781888797574,
+      "type": "file"
+    },
+    {
+      "path": "tests\\engine\\test_structured_output.py",
+      "accessCount": 2,
+      "lastAccessed": 1781888940715,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\evals\\datasets\\generalthoughts.py",
+      "accessCount": 2,
+      "lastAccessed": 1781891131502,
+      "type": "file"
+    },
+    {
+      "path": "tests\\evals\\core\\test_splits.py",
+      "accessCount": 2,
+      "lastAccessed": 1781891188128,
+      "type": "file"
+    },
+    {
+      "path": "tests\\agents\\test_research_loop.py",
+      "accessCount": 2,
+      "lastAccessed": 1781891249822,
+      "type": "file"
+    },
+    {
+      "path": "analyze_ty.py",
+      "accessCount": 2,
+      "lastAccessed": 1781891875722,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\system\\orchestrator.py",
+      "accessCount": 1,
+      "lastAccessed": 1781886304263,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\agents\\hybrid\\runner.py",
+      "accessCount": 1,
+      "lastAccessed": 1781886321469,
+      "type": "file"
+    },
+    {
+      "path": "tests\\agents\\test_stall.py",
+      "accessCount": 1,
+      "lastAccessed": 1781886745164,
+      "type": "file"
+    },
+    {
+      "path": "rust\\crates\\openjarvis-engine\\Cargo.toml",
+      "accessCount": 1,
+      "lastAccessed": 1781887650571,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\agents\\manager.py",
+      "accessCount": 1,
+      "lastAccessed": 1781888352934,
+      "type": "file"
+    },
+    {
+      "path": "tests\\bench\\test_bench_stats.py",
+      "accessCount": 1,
+      "lastAccessed": 1781888391060,
+      "type": "file"
+    },
+    {
+      "path": "tests\\agents\\test_persona_persistent.py",
+      "accessCount": 1,
+      "lastAccessed": 1781888720114,
+      "type": "file"
+    },
+    {
+      "path": "tests\\core\\test_rust_bridge.py",
+      "accessCount": 1,
+      "lastAccessed": 1781888846230,
+      "type": "file"
+    },
+    {
+      "path": "src\\openjarvis\\engine\\_stubs.py",
+      "accessCount": 1,
+      "lastAccessed": 1781891236321,
+      "type": "file"
+    },
+    {
+      "path": "tests\\agents\\test_opencode_agent.py",
+      "accessCount": 1,
+      "lastAccessed": 1781891327203,
+      "type": "file"
+    },
+    {
+      "path": "tests\\engine\\test_cloud.py",
+      "accessCount": 1,
+      "lastAccessed": 1781891327980,
+      "type": "file"
+    },
+    {
+      "path": "fix_type_ignores.py",
+      "accessCount": 1,
+      "lastAccessed": 1781892389081,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }

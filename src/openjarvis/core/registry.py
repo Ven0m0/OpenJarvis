@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from openjarvis.tools.storage._stubs import MemoryBackend
 
 T = TypeVar("T")
+_E = TypeVar("_E")
 
 
 class RegistryBase(Generic[T]):
@@ -29,14 +30,14 @@ class RegistryBase(Generic[T]):
         return storage
 
     @classmethod
-    def register(cls, key: str) -> Callable[[T], T]:
+    def register(cls, key: str) -> Callable[[_E], _E]:
         """Decorator that registers *entry* under *key*."""
 
-        def decorator(entry: T) -> T:
+        def decorator(entry: _E) -> _E:
             entries = cls._entries()
             if key in entries:
                 raise ValueError(f"{cls.__name__} already has an entry for '{key}'")
-            entries[key] = entry
+            entries[key] = entry  # type: ignore
             return entry
 
         return decorator
@@ -69,7 +70,7 @@ class RegistryBase(Generic[T]):
                 f"{cls.__name__} entry '{key}' is not callable"
                 " and cannot be instantiated"
             )
-        return entry(*args, **kwargs)
+        return entry(*args, **kwargs)  # type: ignore
 
     @classmethod
     def items(cls) -> Tuple[Tuple[str, T], ...]:

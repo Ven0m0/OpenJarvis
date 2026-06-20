@@ -13,8 +13,8 @@ try:
     import gspread
     from google.oauth2.service_account import Credentials
 except ImportError:
-    gspread = None  # type: ignore[assignment]
-    Credentials = None  # type: ignore[assignment,misc]
+    gspread = None  # type: ignore
+    Credentials = None  # type: ignore
 
 LOGGER = logging.getLogger(__name__)
 
@@ -90,7 +90,7 @@ class SheetsTracker(ResultTracker):
             spreadsheet = gc.open_by_key(self._spreadsheet_id)
             try:
                 ws = spreadsheet.worksheet(self._worksheet_name)
-            except gspread.exceptions.WorksheetNotFound:
+            except gspread.exceptions.WorksheetNotFound:  # type: ignore
                 ws = spreadsheet.add_worksheet(
                     title=self._worksheet_name,
                     rows=1000,
@@ -115,7 +115,7 @@ class SheetsTracker(ResultTracker):
             "https://www.googleapis.com/auth/drive",
         ]
         if self._credentials_path:
-            creds = Credentials.from_service_account_file(
+            creds = Credentials.from_service_account_file(  # type: ignore
                 self._credentials_path,
                 scopes=scopes,
             )
@@ -124,7 +124,7 @@ class SheetsTracker(ResultTracker):
             import google.auth
 
             creds, _ = google.auth.default(scopes=scopes)
-        return gspread.authorize(creds)
+        return gspread.authorize(creds)  # type: ignore
 
     def _build_row(self, s: RunSummary) -> List[Any]:
         """Build a flat row matching SHEET_COLUMNS order."""

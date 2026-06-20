@@ -61,7 +61,7 @@ class TestChannelMessage:
 class TestBaseChannel:
     def test_base_channel_is_abstract(self) -> None:
         with pytest.raises(TypeError):
-            BaseChannel()  # type: ignore[abstract]
+            BaseChannel()  # type: ignore
 
     def test_channel_handler_type(self) -> None:
         """ChannelHandler should accept ChannelMessage and return Optional[str]."""

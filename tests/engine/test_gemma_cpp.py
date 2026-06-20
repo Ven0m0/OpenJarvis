@@ -101,7 +101,7 @@ class TestGemmaCppLifecycle:
             "model_type": "2b-it",
         }
         defaults.update(kwargs)
-        return GemmaCppEngine(**defaults)
+        return GemmaCppEngine(**defaults)  # type: ignore
 
     @patch("openjarvis.engine.gemma_cpp._import_pygemma")
     def test_prepare_loads_model(self, mock_import) -> None:
@@ -356,10 +356,10 @@ class TestGemmaCppDiscovery:
             num_threads=4,
         )
         engine = _make_engine("gemma_cpp", config)
-        assert engine._model_path == "/cfg/model.sbs"
-        assert engine._tokenizer_path == "/cfg/tokenizer.spm"
-        assert engine._model_type == "9b-it"
-        assert engine._num_threads == 4
+        assert engine._model_path == "/cfg/model.sbs"  # type: ignore
+        assert engine._tokenizer_path == "/cfg/tokenizer.spm"  # type: ignore
+        assert engine._model_type == "9b-it"  # type: ignore
+        assert engine._num_threads == 4  # type: ignore
 
     def test_registry_contains_gemma_cpp(self) -> None:
         from openjarvis.core.registry import EngineRegistry

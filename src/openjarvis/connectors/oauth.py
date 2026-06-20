@@ -584,7 +584,7 @@ def _wait_for_callback_code(
                 self.send_response(400)
                 self.end_headers()
 
-        def log_message(self, *_args: Any) -> None:
+        def log_message(self, *_args: Any) -> None:  # type: ignore
             pass
 
     # Ensure port is free

@@ -1167,8 +1167,8 @@ def _run_from_config(
             summary = _run_single(rc, console=console, suite_mode=True)
             summaries.append(summary)
             console.print(
-                f"  [green]{summary.accuracy:.4f}[/green] "
-                f"({summary.correct}/{summary.scored_samples})"
+                f"  [green]{summary.accuracy:.4f}[/green] "  # type: ignore
+                f"({summary.correct}/{summary.scored_samples})"  # type: ignore
             )
         except Exception as exc:
             console.print(f"  [red bold]FAILED:[/red bold] {exc}")
@@ -1176,7 +1176,7 @@ def _run_from_config(
     # Print overall summary table
     if summaries:
         print_section(console, "Suite Results")
-        print_suite_summary(console, summaries, suite_name)
+        print_suite_summary(console, summaries, suite_name)  # type: ignore
 
 
 @click.group()

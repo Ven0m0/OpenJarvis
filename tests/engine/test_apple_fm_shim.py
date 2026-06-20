@@ -56,9 +56,9 @@ def _install_stub_sdk(
             rec["respond_calls"].append({"prompt": prompt, "options": options})
             return respond_text
 
-    sdk.GenerationOptions = GenerationOptions  # type: ignore[attr-defined]
-    sdk.SystemLanguageModel = SystemLanguageModel  # type: ignore[attr-defined]
-    sdk.LanguageModelSession = LanguageModelSession  # type: ignore[attr-defined]
+    sdk.GenerationOptions = GenerationOptions  # type: ignore
+    sdk.SystemLanguageModel = SystemLanguageModel  # type: ignore
+    sdk.LanguageModelSession = LanguageModelSession  # type: ignore
 
     sys.modules["apple_fm_sdk"] = sdk
     return rec

@@ -42,7 +42,7 @@ def test_detect_requires_macos(hopper_hw):
     with patch(_AVAIL, return_value=True):
         cap = AppleMpsPearlProvider.detect(hopper_hw, engine_id="mlx", model="any")
     assert cap.supported is False
-    assert "macos" in cap.reason.lower()
+    assert "macos" in (cap.reason or "").lower()
 
 
 def test_detect_requires_apple_gpu():
@@ -55,7 +55,7 @@ def test_detect_requires_apple_gpu():
     with patch(_AVAIL, return_value=True):
         cap = AppleMpsPearlProvider.detect(hw, engine_id="mlx", model="any")
     assert cap.supported is False
-    assert "apple gpu" in cap.reason.lower()
+    assert "apple gpu" in (cap.reason or "").lower()
 
 
 def test_detect_requires_pearl_packages(apple_hw):
@@ -64,6 +64,7 @@ def test_detect_requires_pearl_packages(apple_hw):
     with patch(_AVAIL, return_value=False):
         cap = AppleMpsPearlProvider.detect(apple_hw, engine_id="mlx", model="any")
     assert cap.supported is False
+    assert cap.reason is not None
     assert "mining-pearl-cpu" in cap.reason
 
 

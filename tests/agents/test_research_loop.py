@@ -22,9 +22,10 @@ from openjarvis.agents.research_loop import (
     shape_results_for_model,
 )
 from openjarvis.connectors.hybrid_search import SearchHit
+from openjarvis.engine._stubs import InferenceEngine
 
 
-class _MockEngine:
+class _MockEngine(InferenceEngine):
     """Engine stub that lets a test script the per-call response.
 
     ``responses`` is a list of dicts in ``OllamaEngine.generate`` shape
@@ -56,6 +57,15 @@ class _MockEngine:
                 else self._responses[0]
             )
         return {"content": "", "tool_calls": [], "usage": {}}
+
+    async def stream(self, messages: Sequence, *, model: str, **kwargs: Any):  # type: ignore
+        yield ""
+
+    def list_models(self) -> List[str]:
+        return []
+
+    def health(self) -> bool:
+        return True
 
 
 def _search_call(call_id: str, query: str = "anything") -> Dict[str, Any]:

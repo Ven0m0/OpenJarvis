@@ -20,7 +20,7 @@ def test_dataset_full_size():
 def test_record_structure():
     ds = BrowserAssistantDataset()
     ds.load(max_samples=1, seed=42)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     assert record.record_id.startswith("browser-assistant-")
     assert record.category == "agentic"
     assert record.metadata.get("question")
@@ -31,7 +31,7 @@ def test_record_structure():
 def test_fact_types():
     ds = BrowserAssistantDataset()
     ds.load(max_samples=1, seed=0)
-    record = next(ds.iter_records())
+    record = next(iter(ds.iter_records()))
     fact = record.metadata["expected_facts"][0]
     assert "fact" in fact
     assert "type" in fact

@@ -54,10 +54,11 @@ class SQLiteMemory(MemoryBackend):
         except ImportError as exc:
             raise MemoryBackendUnavailable() from exc
         self._rust_impl = _rust.SQLiteMemory(self._db_path)
-        self._conn = None  # type: ignore[assignment]
+        self._conn = None  # type: ignore
 
     def _create_tables(self) -> None:
-        self._conn.executescript("""
+        self._conn.executescript(  # type: ignore
+            """
             CREATE TABLE IF NOT EXISTS documents (
                 id       TEXT PRIMARY KEY,
                 content  TEXT NOT NULL,
@@ -80,6 +81,7 @@ class SQLiteMemory(MemoryBackend):
         *,
         source: str = "",
         metadata: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
     ) -> str:
         """Persist *content* and return a unique document id."""
         meta_json = json.dumps(metadata) if metadata else None

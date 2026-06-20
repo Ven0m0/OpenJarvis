@@ -81,9 +81,9 @@ def fake_tb(monkeypatch, tmp_path):
     mod_tb = types.ModuleType("terminal_bench")
     mod_terminal_pkg = types.ModuleType("terminal_bench.terminal")
     mod_terminal = types.ModuleType("terminal_bench.terminal.terminal")
-    mod_terminal.spin_up_terminal = spin_up_terminal
-    mod_tb.terminal = mod_terminal_pkg
-    mod_terminal_pkg.terminal = mod_terminal
+    mod_terminal.spin_up_terminal = spin_up_terminal  # type: ignore
+    mod_tb.terminal = mod_terminal_pkg  # type: ignore
+    mod_terminal_pkg.terminal = mod_terminal  # type: ignore
     monkeypatch.setitem(sys.modules, "terminal_bench", mod_tb)
     monkeypatch.setitem(sys.modules, "terminal_bench.terminal", mod_terminal_pkg)
     monkeypatch.setitem(sys.modules, "terminal_bench.terminal.terminal", mod_terminal)

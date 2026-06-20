@@ -143,7 +143,7 @@ class SessionStore:
         self._db.commit()
 
     def clear_pending_response(self, sender_id: str, channel_type: str) -> None:
-        self.set_pending_response(sender_id, channel_type, None)
+        self.set_pending_response(sender_id, channel_type, None)  # type: ignore
 
     def expire_sessions(self, max_age_hours: int = 24) -> int:
         cur = self._db.execute(

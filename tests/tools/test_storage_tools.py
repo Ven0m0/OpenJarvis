@@ -26,7 +26,7 @@ class _InMemoryBackend(MemoryBackend):
         self._data = {}
         self._counter = 0
 
-    def store(self, content, *, source="", metadata=None):
+    def store(self, content, *, source="", metadata=None):  # type: ignore
         self._counter += 1
         doc_id = f"doc-{self._counter}"
         self._data[doc_id] = {"content": content, "source": source}

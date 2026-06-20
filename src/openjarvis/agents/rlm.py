@@ -138,7 +138,7 @@ class RLMAgent(ToolUsingAgent):
         )
         # Override executor: RLM only creates one if tools are provided
         if not self._tools:
-            self._executor = None  # type: ignore[assignment]
+            self._executor = None  # type: ignore
         self._sub_model = sub_model or model
         self._sub_temperature = sub_temperature
         self._sub_max_tokens = sub_max_tokens
@@ -305,7 +305,7 @@ class RLMAgent(ToolUsingAgent):
         resolution before returning the final text.
         """
         messages = [Message(role=Role.USER, content=prompt)]
-        result = self._engine.generate(
+        result = self._engine.generate(  # type: ignore
             messages,
             model=self._sub_model,
             temperature=self._sub_temperature,
@@ -341,7 +341,7 @@ class RLMAgent(ToolUsingAgent):
                         name=tc.name,
                     )
                 )
-            followup = self._engine.generate(
+            followup = self._engine.generate(  # type: ignore
                 messages,
                 model=self._sub_model,
                 temperature=self._sub_temperature,

@@ -56,7 +56,7 @@ class OpenHandsAgent(BaseAgent):
         **kwargs: Any,
     ) -> AgentResult:
         try:
-            from openhands.sdk import (  # type: ignore[import-untyped]
+            from openhands.sdk import (  # type: ignore
                 LLM,
                 Agent,
                 Conversation,

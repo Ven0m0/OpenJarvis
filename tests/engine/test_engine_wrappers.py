@@ -114,10 +114,10 @@ async def test_multi_routes_stream_full_by_model():
     chunks_b = [StreamChunk(content="from B"), StreamChunk(finish_reason="stop")]
 
     engine_a = _FakeStreamFullEngine(chunks_a)
-    engine_a.list_models = lambda: ["model-a"]
+    engine_a.list_models = lambda: ["model-a"]  # type: ignore
 
     engine_b = _FakeStreamFullEngine(chunks_b)
-    engine_b.list_models = lambda: ["model-b"]
+    engine_b.list_models = lambda: ["model-b"]  # type: ignore
 
     multi = MultiEngine([("a", engine_a), ("b", engine_b)])
 

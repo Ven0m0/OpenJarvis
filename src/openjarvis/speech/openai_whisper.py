@@ -12,7 +12,7 @@ from openjarvis.speech._stubs import SpeechBackend, TranscriptionResult
 try:
     from openai import OpenAI
 except ImportError:
-    OpenAI = None  # type: ignore[assignment, misc]
+    OpenAI = None  # type: ignore
 
 
 @SpeechRegistry.register("openai")

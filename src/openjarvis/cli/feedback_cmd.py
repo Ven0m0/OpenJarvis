@@ -181,9 +181,9 @@ def feedback_stats() -> None:
         total = len(all_traces)
         scored_count = len(scored)
         mean_score = (
-            sum(t.feedback for t in scored) / scored_count if scored_count > 0 else 0.0
+            sum((t.feedback or 0.0) for t in scored) / scored_count if scored_count > 0 else 0.0
         )
-        positive = sum(1 for t in scored if t.feedback >= 0.5)
+        positive = sum(1 for t in scored if (t.feedback or 0.0) >= 0.5)
 
         console.print("[bold cyan]Feedback Statistics[/bold cyan]")
         console.print(f"  Total traces:    {total}")

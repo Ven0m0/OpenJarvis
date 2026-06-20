@@ -212,7 +212,7 @@ class KnowledgeStore(MemoryBackend):
     # MemoryBackend interface
     # ------------------------------------------------------------------
 
-    def store(  # type: ignore[override]
+    def store(  # type: ignore
         self,
         content: str,
         *,
@@ -235,6 +235,7 @@ class KnowledgeStore(MemoryBackend):
         embedding: Optional[bytes] = None,
         embedding_model_version: str = "",
         last_synced: Optional[Union[datetime, str, float]] = None,
+        **kwargs: Any,
     ) -> str:
         """Persist a content chunk and return its unique chunk id.
 

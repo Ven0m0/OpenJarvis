@@ -33,7 +33,7 @@ from typing import Any, Dict, List, Optional
 try:
     import tomllib  # py3.11+
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[import-not-found,no-redef]
+    import tomli as tomllib  # type: ignore
 
 from openjarvis.agents._stubs import AgentContext, AgentResult
 from openjarvis.agents.hybrid._energy import EnergyCollector
@@ -282,7 +282,7 @@ def _get_gaia_scorer():
                     backend = JarvisDirectBackend(engine_key="cloud")
                 except Exception:  # noqa: BLE001
                     backend = None
-                _GAIA_SCORER = GAIAScorer(backend, judge_model)
+                _GAIA_SCORER = GAIAScorer(backend, judge_model)  # type: ignore
     return _GAIA_SCORER
 
 
@@ -394,7 +394,7 @@ def _cell_lock(out_dir: Path, cell_name: str):
     lock_path = out_dir / ".lock"
     f = lock_path.open("a+")
     try:
-        fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)  # type: ignore
     except BlockingIOError:
         f.seek(0)
         prev = (f.read() or "?").strip() or "?"
@@ -411,7 +411,7 @@ def _cell_lock(out_dir: Path, cell_name: str):
         yield
     finally:
         try:
-            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)  # type: ignore
         except Exception:
             pass
         f.close()

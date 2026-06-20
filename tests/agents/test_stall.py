@@ -31,6 +31,7 @@ def test_activity_tracking_updates_last_activity_at(tmp_path):
         executor.execute_tick(agent["id"])
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["last_activity_at"] is not None
     assert updated["last_activity_at"] > 0
     mgr.close()
@@ -60,6 +61,7 @@ def test_activity_tracking_filters_by_agent_id(tmp_path):
         executor.execute_tick(agent_a["id"])
 
     updated_b = mgr.get_agent(agent_b["id"])
+    assert updated_b is not None
     assert updated_b["last_activity_at"] is None
     mgr.close()
 
@@ -85,6 +87,7 @@ def test_reconcile_detects_stalled_agent(tmp_path):
     scheduler._reconcile()
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["stall_retries"] == 1
 
     stall_events = [
@@ -109,6 +112,7 @@ def test_reconcile_skips_active_agent(tmp_path):
     scheduler._reconcile()
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "running"
     mgr.close()
 
@@ -139,5 +143,6 @@ def test_reconcile_retries_exhausted_sets_error(tmp_path):
     scheduler._reconcile()
 
     updated = mgr.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "error"
     mgr.close()

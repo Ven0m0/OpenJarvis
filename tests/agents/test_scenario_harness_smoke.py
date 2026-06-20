@@ -17,6 +17,7 @@ def test_harness_creates_and_runs_agent(scenario_harness: ScenarioHarness):
     )
     h.executor.execute_tick(agent["id"])
     updated = h.manager.get_agent(agent["id"])
+    assert updated is not None
     assert updated["status"] == "idle"
     assert updated["total_runs"] == 1
     assert updated["summary_memory"] != ""

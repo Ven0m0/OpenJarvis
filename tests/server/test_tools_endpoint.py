@@ -5,7 +5,7 @@ import pytest
 try:
     from openjarvis.server.agent_manager_routes import build_tools_list
 except ImportError:
-    build_tools_list = None
+    build_tools_list = None  # type: ignore
 
 pytestmark = pytest.mark.skipif(
     build_tools_list is None,

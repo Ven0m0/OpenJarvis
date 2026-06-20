@@ -124,7 +124,7 @@ class SWEfficiencyDataset(DatasetProvider):
         # Try both field name variants for speedup
         speedup_raw = raw.get("speedup", raw.get("expected_speedup"))
         try:
-            expected_speedup = float(speedup_raw)  # type: ignore[arg-type]
+            expected_speedup = float(speedup_raw)  # type: ignore
         except (TypeError, ValueError):
             expected_speedup = 1.0
 

@@ -1044,7 +1044,7 @@ _HARD_TASKS: List[Dict[str, Any]] = [
 class DocQADataset(DatasetProvider):
     """30 document-grounded QA tasks."""
 
-    def load(
+    def load(  # type: ignore
         self,
         *,
         max_samples: Optional[int] = None,

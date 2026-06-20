@@ -1866,7 +1866,7 @@ function AgentCard({
 						<span>Budget</span>
 						<span>
 							{formatCost(agent.total_cost)} / $
-							{(agent.config?.max_cost ?? 0).toFixed(0)}
+							{((agent.config as any)?.max_cost ?? 0).toFixed(0)}
 						</span>
 					</div>
 					<div

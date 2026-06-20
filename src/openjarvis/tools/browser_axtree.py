@@ -20,7 +20,7 @@ from openjarvis.tools._stubs import BaseTool, ToolSpec
 try:
     from openjarvis.tools.browser import _session
 except Exception:  # pragma: no cover — optional dependency
-    _session = None  # type: ignore[assignment]
+    _session = None  # type: ignore
 
 
 @ToolRegistry.register("browser_axtree")
@@ -56,7 +56,7 @@ class BrowserAXTreeTool(BaseTool):
         max_depth = params.get("max_depth", 10)
 
         try:
-            page = _session.page  # type: ignore[union-attr]
+            page = _session.page  # type: ignore
         except ImportError as exc:
             return ToolResult(
                 tool_name="browser_axtree",

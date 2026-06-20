@@ -467,10 +467,10 @@ def _call_orchestrator_with_tool_calls(
     ]
     resp = client.chat.completions.create(
         model=model,
-        messages=messages,
+        messages=messages,  # type: ignore
         temperature=temperature,
         max_tokens=max_tokens,
-        tools=tools,
+        tools=tools,  # type: ignore
         extra_body={"chat_template_kwargs": {"enable_thinking": False}},
     )
     choice = resp.choices[0]

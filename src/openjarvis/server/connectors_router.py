@@ -19,7 +19,7 @@ else:
     try:
         from starlette.requests import Request
     except ImportError:  # starlette ships with fastapi; absent only without it
-        Request = Any  # type: ignore[assignment,misc]
+        Request = Any  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +83,7 @@ try:
         password: Optional[str] = None
 
 except ImportError:
-    ConnectRequest = None  # type: ignore[assignment,misc]
+    ConnectRequest = None  # type: ignore
 
 
 def create_connectors_router():

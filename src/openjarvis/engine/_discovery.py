@@ -39,17 +39,17 @@ def _make_engine(key: str, config: JarvisConfig) -> InferenceEngine:
     if key == "gemma_cpp":
         cfg = config.engine.gemma_cpp
         return cls(
-            model_path=cfg.model_path or None,
-            tokenizer_path=cfg.tokenizer_path or None,
-            model_type=cfg.model_type or None,
-            num_threads=cfg.num_threads,
+            model_path=cfg.model_path or None,  # type: ignore
+            tokenizer_path=cfg.tokenizer_path or None,  # type: ignore
+            model_type=cfg.model_type or None,  # type: ignore
+            num_threads=cfg.num_threads,  # type: ignore
         )
 
     host_attr = _HOST_MAP.get(key)
     if host_attr is not None:
         host = getattr(config.engine, host_attr, None)
         if host:
-            return cls(host=host)
+            return cls(host=host)  # type: ignore
     return cls()
 
 

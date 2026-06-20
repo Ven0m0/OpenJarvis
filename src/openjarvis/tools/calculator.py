@@ -63,13 +63,13 @@ def _safe_eval_node(node: ast.AST) -> Any:
             raise ValueError(f"Unsupported operator: {op_type.__name__}")
         left = _safe_eval_node(node.left)
         right = _safe_eval_node(node.right)
-        return _BINOPS[op_type](left, right)
+        return _BINOPS[op_type](left, right)  # type: ignore
     if isinstance(node, ast.UnaryOp):
         op_type = type(node.op)
         if op_type not in _UNARYOPS:
             raise ValueError(f"Unsupported unary operator: {op_type.__name__}")
         operand = _safe_eval_node(node.operand)
-        return _UNARYOPS[op_type](operand)
+        return _UNARYOPS[op_type](operand)  # type: ignore
     if isinstance(node, ast.Call):
         if not isinstance(node.func, ast.Name):
             raise ValueError("Only simple function calls are allowed")
@@ -78,7 +78,7 @@ def _safe_eval_node(node: ast.AST) -> Any:
             raise ValueError(f"Unknown function: {fname}")
         func = _MATH_FUNCS[fname]
         args = [_safe_eval_node(a) for a in node.args]
-        return func(*args)
+        return func(*args)  # type: ignore
     if isinstance(node, ast.Name):
         name = node.id
         if name in _MATH_FUNCS:

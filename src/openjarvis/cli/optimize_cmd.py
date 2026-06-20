@@ -185,7 +185,7 @@ def optimize_run(
             )
         else:
             runner = TrialRunner(
-                benchmark=benchmark,
+                benchmark=benchmark,  # type: ignore
                 max_samples=max_samples,
                 output_dir=output_dir,
             )
@@ -200,14 +200,14 @@ def optimize_run(
         engine = OptimizationEngine(
             search_space=search_space,
             llm_optimizer=llm_opt,
-            trial_runner=runner,
+            trial_runner=runner,  # type: ignore
             store=store,
             max_trials=trials,
             early_stop_patience=early_stop,
         )
         if objectives:
             # Pre-set objectives on the engine's run
-            engine._default_objectives = objectives
+            engine._default_objectives = objectives  # type: ignore
 
         run = engine.run(
             progress_callback=lambda t, m: console.print(

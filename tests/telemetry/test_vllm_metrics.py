@@ -68,7 +68,7 @@ class TestParseHistogramBuckets:
     def test_parses_ttft_buckets(self):
         lines = SAMPLE_METRICS.splitlines()
         buckets, sum_val, count_val = _parse_histogram_buckets(
-            lines, "vllm:time_to_first_token_seconds"
+            lines, "vllm:time_to_first_token_seconds"  # type: ignore
         )
         assert len(buckets) == 7
         assert sum_val == 5.5
@@ -86,7 +86,7 @@ class TestParseHistogramBuckets:
 
     def test_no_matching_metric(self):
         lines = SAMPLE_METRICS.splitlines()
-        buckets, s, c = _parse_histogram_buckets(lines, "no_such_metric")
+        buckets, s, c = _parse_histogram_buckets(lines, "no_such_metric")  # type: ignore
         assert buckets == []
         assert s == 0.0
 
@@ -102,7 +102,7 @@ class TestPercentileFromBuckets:
     def test_median_interpolation(self):
         lines = SAMPLE_METRICS.splitlines()
         buckets, _, _ = _parse_histogram_buckets(
-            lines, "vllm:time_to_first_token_seconds"
+            lines, "vllm:time_to_first_token_seconds"  # type: ignore
         )
         p50 = _percentile_from_buckets(buckets, 50)
         # 50th percentile: target = 50 out of 100
@@ -114,7 +114,7 @@ class TestPercentileFromBuckets:
     def test_p95(self):
         lines = SAMPLE_METRICS.splitlines()
         buckets, _, _ = _parse_histogram_buckets(
-            lines, "vllm:time_to_first_token_seconds"
+            lines, "vllm:time_to_first_token_seconds"  # type: ignore
         )
         p95 = _percentile_from_buckets(buckets, 95)
         # target = 95, bucket le=0.25 has 95 exactly
@@ -127,17 +127,17 @@ class TestPercentileFromBuckets:
 class TestParseGauge:
     def test_parses_gauge(self):
         lines = SAMPLE_METRICS.splitlines()
-        val = _parse_gauge(lines, "vllm:gpu_cache_usage_perc")
+        val = _parse_gauge(lines, "vllm:gpu_cache_usage_perc")  # type: ignore
         assert val == 0.42
 
     def test_missing_gauge(self):
         lines = SAMPLE_METRICS.splitlines()
-        val = _parse_gauge(lines, "nonexistent_gauge")
+        val = _parse_gauge(lines, "nonexistent_gauge")  # type: ignore
         assert val == 0.0
 
     def test_queue_depth(self):
         lines = SAMPLE_METRICS.splitlines()
-        val = _parse_gauge(lines, "vllm:num_requests_waiting")
+        val = _parse_gauge(lines, "vllm:num_requests_waiting")  # type: ignore
         assert val == 3.0
 
 

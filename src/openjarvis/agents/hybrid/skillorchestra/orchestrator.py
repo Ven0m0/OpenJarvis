@@ -105,12 +105,12 @@ def _orchestrate_step(
             tool_choice="auto",
         )
         if is_gpt5_family(model):
-            kwargs["max_completion_tokens"] = max_tokens
-            kwargs["temperature"] = 1.0
+            kwargs["max_completion_tokens"] = max_tokens  # type: ignore
+            kwargs["temperature"] = 1.0  # type: ignore
         else:
-            kwargs["max_tokens"] = max_tokens
-            kwargs["temperature"] = 1.0
-        resp = client.chat.completions.create(**kwargs)
+            kwargs["max_tokens"] = max_tokens  # type: ignore
+            kwargs["temperature"] = 1.0  # type: ignore
+        resp = client.chat.completions.create(**kwargs)  # type: ignore
         choice = resp.choices[0].message
         text = choice.content or ""
         tool_calls = []
@@ -344,7 +344,7 @@ def run_orchestrator(
         finish = False
         for tc in tcalls:
             tool = tc["name"]
-            tool_alias = (tc.get("input") or {}).get("model")
+            tool_alias = (tc.get("input") or {}).get("model")  # type: ignore
             stage = _TOOL_STAGE.get(tool, "answer")
             chosen_alias = _route(stage, tool_alias, text)
             spec: ModelSpec = (

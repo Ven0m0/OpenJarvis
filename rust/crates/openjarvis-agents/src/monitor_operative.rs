@@ -12,9 +12,9 @@ use crate::utils::strip_think_tags;
 use openjarvis_core::{AgentContext, AgentResult, OpenJarvisError, ToolResult};
 use openjarvis_tools::executor::ToolExecutor;
 use regex::Regex;
-use rig::agent::AgentBuilder;
-use rig::completion::message::Message as RigMessage;
-use rig::completion::request::{Chat, CompletionModel};
+use rig_core::agent::AgentBuilder;
+use rig_core::completion::message::Message as RigMessage;
+use rig_core::completion::request::{Chat, CompletionModel};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -150,7 +150,7 @@ fn build_system_prompt(config: &MonitorConfig, tool_list: &str) -> String {
 /// `NativeReActAgent`) augmented with strategy-driven observation
 /// compression, memory extraction, and task decomposition.
 pub struct MonitorOperativeAgent<M: CompletionModel> {
-    agent: rig::agent::Agent<M>,
+    agent: rig_core::agent::Agent<M>,
     executor: Arc<ToolExecutor>,
     max_turns: usize,
     config: MonitorConfig,
@@ -321,7 +321,7 @@ impl<M: CompletionModel + 'static> OjAgent for MonitorOperativeAgent<M> {
         for turn in 1..=self.max_turns {
             let response = self
                 .agent
-                .chat(&current_input, history.clone())
+                .chat(&current_input, &mut history.clone())
                 .await
                 .map_err(|e| {
                     OpenJarvisError::Agent(openjarvis_core::error::AgentError::Execution(

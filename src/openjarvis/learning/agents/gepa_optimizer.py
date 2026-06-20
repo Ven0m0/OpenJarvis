@@ -23,7 +23,7 @@ try:
     HAS_GEPA = True
 except ImportError:
     HAS_GEPA = False
-    gepa = None  # type: ignore[assignment]
+    gepa = None  # type: ignore
 
 
 class OpenJarvisGEPAAdapter:
@@ -229,7 +229,7 @@ class GEPAAgentOptimizer:
         queries = list({t.query for t in traces})
 
         # Initialize GEPA optimizer
-        optimizer = gepa.GEPAOptimizer(
+        optimizer = gepa.GEPAOptimizer(  # type: ignore
             adapter=adapter,
             max_metric_calls=self.config.max_metric_calls,
             population_size=self.config.population_size,
@@ -264,7 +264,7 @@ class GEPAAgentOptimizer:
                         tool_freq[tool_name] = tool_freq.get(tool_name, 0) + 1
             turn_counts.append(n_tools)
 
-        ranked_tools = sorted(tool_freq, key=tool_freq.get, reverse=True)  # type: ignore[arg-type]
+        ranked_tools = sorted(tool_freq, key=tool_freq.get, reverse=True)  # type: ignore
 
         avg_turns = sum(turn_counts) / len(turn_counts) if turn_counts else 10
         max_turns = max(int(avg_turns * 1.5), 5)

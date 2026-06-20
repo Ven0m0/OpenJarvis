@@ -28,7 +28,7 @@ if platform.system() != "Darwin":
     sys.exit(1)
 
 try:
-    import apple_fm_sdk  # type: ignore[import-untyped]
+    import apple_fm_sdk  # type: ignore
 except ImportError:
     print(
         "apple_fm_shim: apple-fm-sdk is not available. The SDK is not on\n"

@@ -82,8 +82,8 @@ def _stub_archon_imports() -> None:
         if name in sys.modules:
             continue
         sys.modules[name] = types.ModuleType(name)
-    sys.modules["groq"].Groq = type("Groq", (), {})  # type: ignore[attr-defined]
-    sys.modules["litellm"].completion = lambda *a, **k: None  # type: ignore[attr-defined]
+    sys.modules["groq"].Groq = type("Groq", (), {})  # type: ignore
+    sys.modules["litellm"].completion = lambda *a, **k: None  # type: ignore
     sys.modules["google.generativeai"] = types.ModuleType("google.generativeai")
 
 
@@ -107,13 +107,13 @@ def _patch_anthropic_for_opus() -> None:
         return
     orig = cls.create
 
-    def patched(self, **kwargs):  # type: ignore[no-untyped-def]
+    def patched(self, **kwargs):  # type: ignore
         if str(kwargs.get("model", "")).startswith(NO_TEMP_PREFIXES):
             kwargs.pop("temperature", None)
         return orig(self, **kwargs)
 
-    patched._hybrid_archon_patched = True  # type: ignore[attr-defined]
-    cls.create = patched  # type: ignore[assignment]
+    patched._hybrid_archon_patched = True  # type: ignore
+    cls.create = patched  # type: ignore
 
 
 # ---------- Per-run token tally + custom generators ----------
@@ -173,7 +173,7 @@ def _make_local_generator(local_endpoint: str, local_model: str):
 
     client = OpenAI(base_url=local_endpoint, api_key="EMPTY")
 
-    def local_gen(model, messages, max_tokens=2048, temperature=0.7, **_kw):  # type: ignore[no-untyped-def]
+    def local_gen(model, messages, max_tokens=2048, temperature=0.7, **_kw):  # type: ignore
         import time as _time
 
         t0 = _time.time()
@@ -227,7 +227,7 @@ def _wrap_archon_cloud_generators() -> None:
     import anthropic as _anth
     from openai import OpenAI as _OAI
 
-    def gen_openai(model, messages, max_tokens=2048, temperature=0.7, **_kw):  # type: ignore[no-untyped-def]
+    def gen_openai(model, messages, max_tokens=2048, temperature=0.7, **_kw):  # type: ignore
         import time as _time
 
         client = _OAI()
@@ -264,7 +264,7 @@ def _wrap_archon_cloud_generators() -> None:
         )
         return text
 
-    def gen_anthropic(model, messages, max_tokens=2048, temperature=0.7, **_kw):  # type: ignore[no-untyped-def]
+    def gen_anthropic(model, messages, max_tokens=2048, temperature=0.7, **_kw):  # type: ignore
         import time as _time
 
         client = _anth.Anthropic(timeout=600.0)
@@ -315,7 +315,7 @@ def _wrap_archon_cloud_generators() -> None:
         return text.strip()
 
     from archon.completions.components.Generator import (
-        GENERATE_MAP as _GMAP,  # type: ignore[import-not-found]
+        GENERATE_MAP as _GMAP,  # type: ignore
     )
 
     _GMAP["OpenAI_API"] = gen_openai
@@ -345,24 +345,24 @@ def _patch_archon_prompts() -> None:
     Opus drifts to a markdown bug report and scores 0. We append an explicit
     format-honor reminder to the fuser prompt."""
     from archon.completions.components import (
-        prompts as _p,  # type: ignore[import-not-found]
+        prompts as _p,  # type: ignore
     )
 
     if getattr(_p.make_fuser_prompt, "_hybrid_format_patched", False):
         return
     orig = _p.make_fuser_prompt
 
-    def patched(conv, references, critiques=None, length_control=False):  # type: ignore[no-untyped-def]
+    def patched(conv, references, critiques=None, length_control=False):  # type: ignore
         base = orig(
             conv, references, critiques=critiques, length_control=length_control
         )
         return base + _FUSER_FORMAT_REMINDER
 
-    patched._hybrid_format_patched = True  # type: ignore[attr-defined]
+    patched._hybrid_format_patched = True  # type: ignore
     _p.make_fuser_prompt = patched
     # Fuser imports the symbol by name at class-body time — rebind there too.
     from archon.completions.components import (
-        Fuser as _F,  # type: ignore[import-not-found]
+        Fuser as _F,  # type: ignore
     )
 
     _F.make_fuser_prompt = patched
@@ -379,7 +379,7 @@ def _apply_patches_once() -> None:
     _add_archon_to_path()
     _patch_anthropic_for_opus()
     # Trigger Archon imports so GENERATE_MAP exists.
-    import archon.completions.components.Generator  # type: ignore[import-not-found]  # noqa: F401
+    import archon.completions.components.Generator  # type: ignore  # noqa: F401
 
     _wrap_archon_cloud_generators()
     _patch_archon_prompts()
@@ -475,9 +475,9 @@ class ArchonAgent(LocalCloudAgent):
             return self._run_swe(input, task_meta, cfg)
 
         _apply_patches_once()
-        from archon.completions import Archon  # type: ignore[import-not-found]
+        from archon.completions import Archon  # type: ignore
         from archon.completions.components.Generator import (
-            GENERATE_MAP as _GMAP,  # type: ignore[import-not-found]
+            GENERATE_MAP as _GMAP,  # type: ignore
         )
 
         arch = cfg.get("architecture", "ensemble_rank_fuse")

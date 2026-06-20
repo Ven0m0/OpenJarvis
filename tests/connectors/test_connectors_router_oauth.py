@@ -52,7 +52,7 @@ _ALL_GOOGLE_FILES = (
 
 
 @pytest.fixture()
-def hermetic_connectors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+def hermetic_connectors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:  # type: ignore
     """Redirect all Google credential paths into *tmp_path*.
 
     Ensures connector instances created by the router's ``_get_or_create``

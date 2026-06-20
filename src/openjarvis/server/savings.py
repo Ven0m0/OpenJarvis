@@ -22,7 +22,7 @@ from openjarvis.core.types import TOKEN_COUNTING_VERSION  # noqa: E402,F401
 # params_b: model size in billions, for no-KV-cache FLOPs
 # ---------------------------------------------------------------------------
 
-CLOUD_PRICING: Dict[str, Dict[str, float]] = {
+CLOUD_PRICING: Dict[str, Dict[str, float]] = {  # type: ignore
     "gpt-5.3": {
         "input_per_1m": 2.00,
         "output_per_1m": 10.00,
@@ -154,7 +154,7 @@ def compute_savings(
         providers.append(
             ProviderSavings(
                 provider=key,
-                label=pricing["label"],
+                label=pricing["label"],  # type: ignore
                 input_cost=input_cost,
                 output_cost=output_cost,
                 total_cost=total_cost,

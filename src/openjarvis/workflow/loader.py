@@ -11,7 +11,7 @@ from openjarvis.workflow.types import NodeType, WorkflowEdge, WorkflowNode
 try:
     import tomllib
 except ModuleNotFoundError:
-    import tomli as tomllib  # type: ignore[no-redef]
+    import tomli as tomllib  # type: ignore
 
 
 def load_workflow(path: str | Path) -> WorkflowGraph:

@@ -411,7 +411,7 @@ def main(results_glob: str, tables: str, output_dir: Optional[Path]) -> None:
             click.echo(f"  ! unknown table {name}; skipping")
             continue
         try:
-            fragment, standalone = _TABLE_BUILDERS[name](frame)
+            fragment, standalone = _TABLE_BUILDERS[name](frame)  # type: ignore
         except Exception as e:
             click.echo(f"  ! {name} build failed: {e}")
             continue

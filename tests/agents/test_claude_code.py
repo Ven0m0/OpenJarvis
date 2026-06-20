@@ -137,7 +137,7 @@ class TestClaudeCodeRun:
             "workspace": "/tmp/test",
         }
         defaults.update(kwargs)
-        return ClaudeCodeAgent(engine, "test-model", **defaults)
+        return ClaudeCodeAgent(engine, "test-model", **defaults)  # type: ignore
 
     def test_successful_run(self):
         agent = self._make_agent()

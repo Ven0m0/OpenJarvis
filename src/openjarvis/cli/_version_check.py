@@ -82,7 +82,7 @@ def _config_disabled() -> bool:
         import tomllib
     except ImportError:  # Python 3.10
         try:
-            import tomli as tomllib  # type: ignore[no-redef]
+            import tomli as tomllib  # type: ignore
         except ImportError:
             logger.debug("tomli not available, skipping config opt-out check")
             return False

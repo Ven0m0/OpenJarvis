@@ -309,7 +309,7 @@ name = "Discovered"
         from openjarvis.scheduler.scheduler import TaskScheduler
 
         store = FakeSchedulerStore()
-        scheduler = TaskScheduler(store)
+        scheduler = TaskScheduler(store)  # type: ignore
         system = _make_system(scheduler=scheduler)
         mgr = OperatorManager(system)
 
@@ -334,7 +334,7 @@ name = "Discovered"
         from openjarvis.scheduler.scheduler import TaskScheduler
 
         store = FakeSchedulerStore()
-        scheduler = TaskScheduler(store)
+        scheduler = TaskScheduler(store)  # type: ignore
         system = _make_system(scheduler=scheduler)
         mgr = OperatorManager(system)
 
@@ -343,6 +343,7 @@ name = "Discovered"
         mgr.activate("ag_test")
 
         task_dict = store.get_task("operator:ag_test")
+        assert task_dict is not None
         assert task_dict["agent"] == "operative"
 
     def test_activate_passes_metadata(self):
@@ -350,7 +351,7 @@ name = "Discovered"
         from openjarvis.scheduler.scheduler import TaskScheduler
 
         store = FakeSchedulerStore()
-        scheduler = TaskScheduler(store)
+        scheduler = TaskScheduler(store)  # type: ignore
         system = _make_system(scheduler=scheduler)
         mgr = OperatorManager(system)
 
@@ -364,7 +365,7 @@ name = "Discovered"
         mgr.activate("meta_test")
 
         task_dict = store.get_task("operator:meta_test")
-        meta = task_dict.get("metadata", {})
+        meta = task_dict.get("metadata", {})  # type: ignore
         assert meta["operator_id"] == "meta_test"
         assert meta["system_prompt"] == "Do stuff"
         assert meta["temperature"] == 0.5
@@ -374,7 +375,7 @@ name = "Discovered"
         from openjarvis.scheduler.scheduler import TaskScheduler
 
         store = FakeSchedulerStore()
-        scheduler = TaskScheduler(store)
+        scheduler = TaskScheduler(store)  # type: ignore
         system = _make_system(scheduler=scheduler)
         mgr = OperatorManager(system)
 
@@ -384,6 +385,7 @@ name = "Discovered"
         mgr.deactivate("deact")
 
         task_dict = store.get_task("operator:deact")
+        assert task_dict is not None
         assert task_dict["status"] == "cancelled"
 
     def test_pause_resume(self):
@@ -391,7 +393,7 @@ name = "Discovered"
         from openjarvis.scheduler.scheduler import TaskScheduler
 
         store = FakeSchedulerStore()
-        scheduler = TaskScheduler(store)
+        scheduler = TaskScheduler(store)  # type: ignore
         system = _make_system(scheduler=scheduler)
         mgr = OperatorManager(system)
 
@@ -401,10 +403,12 @@ name = "Discovered"
 
         mgr.pause("pr_test")
         task_dict = store.get_task("operator:pr_test")
+        assert task_dict is not None
         assert task_dict["status"] == "paused"
 
         mgr.resume("pr_test")
         task_dict = store.get_task("operator:pr_test")
+        assert task_dict is not None
         assert task_dict["status"] == "active"
 
     def test_status(self):
@@ -427,7 +431,7 @@ name = "Discovered"
         from openjarvis.scheduler.scheduler import TaskScheduler
 
         store = FakeSchedulerStore()
-        scheduler = TaskScheduler(store)
+        scheduler = TaskScheduler(store)  # type: ignore
         system = _make_system(scheduler=scheduler)
         mgr = OperatorManager(system)
 
@@ -489,7 +493,7 @@ class TestOperativeAgent:
             "openjarvis.agents._stubs.load_config",
             side_effect=Exception("no config"),
         ):
-            agent = OperativeAgent(engine, "test-model")
+            agent = OperativeAgent(engine, "test-model")  # type: ignore
         assert agent.agent_id == "operative"
         assert agent._temperature == 0.3
         assert agent._max_tokens == 2048
@@ -505,7 +509,7 @@ class TestOperativeAgent:
 
         engine = FakeEngine([{"content": "Response with prompt."}])
         agent = OperativeAgent(
-            engine,
+            engine,  # type: ignore
             "test-model",
             system_prompt="You are a test operator.",
         )
@@ -532,7 +536,7 @@ class TestOperativeAgent:
 
         engine = FakeEngine([{"content": "New tick done."}])
         agent = OperativeAgent(
-            engine,
+            engine,  # type: ignore
             "test-model",
             operator_id="test_op",
             session_store=session_store,
@@ -547,7 +551,7 @@ class TestOperativeAgent:
 
         engine = FakeEngine([{"content": "Tick response."}])
         agent = OperativeAgent(
-            engine,
+            engine,  # type: ignore
             "test-model",
             operator_id="save_test",
             session_store=session_store,
@@ -568,7 +572,7 @@ class TestOperativeAgent:
 
         engine = FakeEngine([{"content": "State recalled."}])
         agent = OperativeAgent(
-            engine,
+            engine,  # type: ignore
             "test-model",
             operator_id="recall_test",
             memory_backend=memory,
@@ -614,7 +618,7 @@ class TestOperativeAgent:
         )
 
         agent = OperativeAgent(
-            engine,
+            engine,  # type: ignore
             "test-model",
             tools=[tool],
         )
@@ -626,7 +630,7 @@ class TestOperativeAgent:
         from openjarvis.agents.operative import OperativeAgent
 
         engine = FakeEngine([{"content": "No persistence needed."}])
-        agent = OperativeAgent(engine, "test-model")
+        agent = OperativeAgent(engine, "test-model")  # type: ignore
         result = agent.run("Simple query")
         assert result.content == "No persistence needed."
 
@@ -637,7 +641,7 @@ class TestOperativeAgent:
 
         engine = FakeEngine([{"content": "Tick complete."}])
         agent = OperativeAgent(
-            engine,
+            engine,  # type: ignore
             "test-model",
             operator_id="persist_test",
             memory_backend=memory,
@@ -678,7 +682,7 @@ class TestOperativeAgent:
         tool.run = MagicMock(return_value="thought")
 
         agent = OperativeAgent(
-            engine,
+            engine,  # type: ignore
             "test-model",
             tools=[tool],
             max_turns=3,
@@ -723,7 +727,7 @@ class TestSystemAskPassthrough:
             real_system = JarvisSystem(
                 config=system.config,
                 bus=system.bus,
-                engine=engine,
+                engine=engine,  # type: ignore
                 engine_key="test",
                 model="test-model",
                 agent_name="operative",
@@ -760,7 +764,7 @@ class TestSystemAskPassthrough:
             real_system = JarvisSystem(
                 config=system.config,
                 bus=system.bus,
-                engine=engine,
+                engine=engine,  # type: ignore
                 engine_key="test",
                 model="test-model",
                 agent_name="operative",
@@ -784,7 +788,7 @@ class TestSchedulerOperatorExecution:
         mock_system = MagicMock()
         mock_system.ask = MagicMock(return_value="Tick result")
 
-        scheduler = TaskScheduler(store, system=mock_system)
+        scheduler = TaskScheduler(store, system=mock_system)  # type: ignore
 
         task = ScheduledTask(
             id="operator:test_op",

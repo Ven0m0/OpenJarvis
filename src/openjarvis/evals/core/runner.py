@@ -41,12 +41,12 @@ from openjarvis.evals.core.types import (
 try:
     from openjarvis.telemetry.efficiency import compute_efficiency
 except ImportError:  # pragma: no cover
-    compute_efficiency = None  # type: ignore[assignment]
+    compute_efficiency = None  # type: ignore
 
 try:
     from openjarvis.telemetry.efficiency import estimate_model_flops_per_token
 except ImportError:  # pragma: no cover
-    estimate_model_flops_per_token = None  # type: ignore[assignment]
+    estimate_model_flops_per_token = None  # type: ignore
 
 LOGGER = logging.getLogger(__name__)
 
@@ -284,8 +284,8 @@ class EvalRunner:
             traces_dir = self._write_traces(output_path)
 
         # Attach paths to summary for callers (e.g. CLI display)
-        summary._output_path = output_path  # type: ignore[attr-defined]
-        summary._traces_dir = traces_dir  # type: ignore[attr-defined]
+        summary._output_path = output_path  # type: ignore
+        summary._traces_dir = traces_dir  # type: ignore
 
         return summary
 
@@ -668,7 +668,7 @@ class EvalRunner:
 
         try:
             env = self._dataset.create_task_env(record)
-            env.reset(record)
+            env.reset(record)  # type: ignore
 
             # Build system prompt from record (first part before task)
             system_prompt = ""
@@ -735,7 +735,7 @@ class EvalRunner:
                 else self._MAX_INTERACTIVE_TURNS_DEFAULT
             )
 
-            for turn in range(max_turns):
+            for turn in range(max_turns):  # type: ignore
                 # Format conversation as prompt for the backend
                 prompt = self._format_messages_as_prompt(messages)
 
@@ -759,14 +759,14 @@ class EvalRunner:
                 messages.append({"role": "assistant", "content": cleaned})
 
                 # Step the environment
-                observation, is_done = env.step(cleaned)
+                observation, is_done = env.step(cleaned)  # type: ignore
                 messages.append({"role": "user", "content": observation})
 
                 if is_done:
                     break
 
             # Evaluate
-            is_correct, scoring_meta = env.evaluate()
+            is_correct, scoring_meta = env.evaluate()  # type: ignore
             scoring_meta["num_turns"] = len(all_responses)
             scoring_meta["interactive"] = True
             # Store full interaction history for lifelong example injection.
@@ -815,7 +815,7 @@ class EvalRunner:
         finally:
             if env is not None:
                 try:
-                    env.close()
+                    env.close()  # type: ignore
                 except Exception:
                     pass
 

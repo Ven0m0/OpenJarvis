@@ -40,7 +40,7 @@ def _make_summary(**overrides) -> RunSummary:
         total_cost_usd=0.05,
     )
     defaults.update(overrides)
-    return RunSummary(**defaults)
+    return RunSummary(**defaults)  # type: ignore
 
 
 def _make_metric_stats(**kw) -> MetricStats:

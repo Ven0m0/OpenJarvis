@@ -255,19 +255,17 @@ impl PyItlStats {
     }
 
     #[staticmethod]
-    fn compute(token_timestamps_ms: Vec<f64>) -> PyResult<pyo3::Py<pyo3::types::PyDict>> {
+    fn compute(py: Python<'_>, token_timestamps_ms: Vec<f64>) -> PyResult<pyo3::Py<pyo3::types::PyDict>> {
         let stats = openjarvis_telemetry::itl::compute_itl_stats(&token_timestamps_ms);
-        pyo3::Python::with_gil(|py| {
-            let dict = pyo3::types::PyDict::new(py);
-            dict.set_item("p50_ms", stats.p50_ms)?;
-            dict.set_item("p90_ms", stats.p90_ms)?;
-            dict.set_item("p95_ms", stats.p95_ms)?;
-            dict.set_item("p99_ms", stats.p99_ms)?;
-            dict.set_item("mean_ms", stats.mean_ms)?;
-            dict.set_item("min_ms", stats.min_ms)?;
-            dict.set_item("max_ms", stats.max_ms)?;
-            Ok(dict.into())
-        })
+        let dict = pyo3::types::PyDict::new(py);
+        dict.set_item("p50_ms", stats.p50_ms)?;
+        dict.set_item("p90_ms", stats.p90_ms)?;
+        dict.set_item("p95_ms", stats.p95_ms)?;
+        dict.set_item("p99_ms", stats.p99_ms)?;
+        dict.set_item("mean_ms", stats.mean_ms)?;
+        dict.set_item("min_ms", stats.min_ms)?;
+        dict.set_item("max_ms", stats.max_ms)?;
+        Ok(dict.into())
     }
 }
 
@@ -307,6 +305,7 @@ impl PyPhaseMetrics {
 
     #[staticmethod]
     fn compute(
+        py: Python<'_>,
         samples: Vec<PyTelemetrySample>,
         start_ns: u64,
         end_ns: u64,
@@ -331,19 +330,18 @@ impl PyPhaseMetrics {
             end_ns,
             tokens,
         );
-        pyo3::Python::with_gil(|py| {
-            let dict = pyo3::types::PyDict::new(py);
-            dict.set_item("energy_j", metrics.energy_j)?;
-            dict.set_item("mean_power_w", metrics.mean_power_w)?;
-            dict.set_item("duration_s", metrics.duration_s)?;
-            dict.set_item("energy_per_token_j", metrics.energy_per_token_j)?;
-            dict.set_item("tokens", metrics.tokens)?;
-            Ok(dict.into())
-        })
+        let dict = pyo3::types::PyDict::new(py);
+        dict.set_item("energy_j", metrics.energy_j)?;
+        dict.set_item("mean_power_w", metrics.mean_power_w)?;
+        dict.set_item("duration_s", metrics.duration_s)?;
+        dict.set_item("energy_per_token_j", metrics.energy_per_token_j)?;
+        dict.set_item("tokens", metrics.tokens)?;
+        Ok(dict.into())
     }
 
     #[staticmethod]
     fn split_at_ttft(
+        py: Python<'_>,
         samples: Vec<PyTelemetrySample>,
         start_ns: u64,
         ttft_ns: u64,
@@ -372,22 +370,20 @@ impl PyPhaseMetrics {
             input_tokens,
             output_tokens,
         );
-        pyo3::Python::with_gil(|py| {
-            let prefill_dict = pyo3::types::PyDict::new(py);
-            prefill_dict.set_item("energy_j", prefill.energy_j)?;
-            prefill_dict.set_item("mean_power_w", prefill.mean_power_w)?;
-            prefill_dict.set_item("duration_s", prefill.duration_s)?;
-            prefill_dict.set_item("energy_per_token_j", prefill.energy_per_token_j)?;
-            prefill_dict.set_item("tokens", prefill.tokens)?;
+        let prefill_dict = pyo3::types::PyDict::new(py);
+        prefill_dict.set_item("energy_j", prefill.energy_j)?;
+        prefill_dict.set_item("mean_power_w", prefill.mean_power_w)?;
+        prefill_dict.set_item("duration_s", prefill.duration_s)?;
+        prefill_dict.set_item("energy_per_token_j", prefill.energy_per_token_j)?;
+        prefill_dict.set_item("tokens", prefill.tokens)?;
 
-            let decode_dict = pyo3::types::PyDict::new(py);
-            decode_dict.set_item("energy_j", decode.energy_j)?;
-            decode_dict.set_item("mean_power_w", decode.mean_power_w)?;
-            decode_dict.set_item("duration_s", decode.duration_s)?;
-            decode_dict.set_item("energy_per_token_j", decode.energy_per_token_j)?;
-            decode_dict.set_item("tokens", decode.tokens)?;
+        let decode_dict = pyo3::types::PyDict::new(py);
+        decode_dict.set_item("energy_j", decode.energy_j)?;
+        decode_dict.set_item("mean_power_w", decode.mean_power_w)?;
+        decode_dict.set_item("duration_s", decode.duration_s)?;
+        decode_dict.set_item("energy_per_token_j", decode.energy_per_token_j)?;
+        decode_dict.set_item("tokens", decode.tokens)?;
 
-            Ok((prefill_dict.into(), decode_dict.into()))
-        })
+        Ok((prefill_dict.into(), decode_dict.into()))
     }
 }

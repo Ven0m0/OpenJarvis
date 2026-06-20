@@ -72,7 +72,7 @@ export function AudioPlayer({
 
 	const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-	const seek = (e: React.MouseEvent<HTMLDivElement>) => {
+	const seek = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const el = audioRef.current;
 		if (!el || !duration) return;
 		const rect = e.currentTarget.getBoundingClientRect();

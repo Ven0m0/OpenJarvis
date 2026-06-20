@@ -251,7 +251,7 @@ class TestMCPIntegration:
         from openjarvis.tools.think import ThinkTool
 
         tools = [CalculatorTool(), ThinkTool()]
-        server = MCPServer(tools)
+        server = MCPServer(tools)  # type: ignore
         transport = InProcessTransport(server)
         client = MCPClient(transport)
 

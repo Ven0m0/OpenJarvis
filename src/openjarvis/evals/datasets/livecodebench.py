@@ -12,10 +12,10 @@ from __future__ import annotations
 import json
 import logging
 import random
-from typing import Any, Dict, Iterable, List, MutableMapping, Optional, Sequence
+from typing import Any, Dict, Iterable, List, MutableMapping, Optional, Sequence, cast
 
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 LOGGER = logging.getLogger(__name__)
@@ -122,7 +122,7 @@ class LiveCodeBenchDataset(DatasetProvider):
         effective_seed = 42 if seed is None else seed
         if split in ("train", "test", "all"):
             rows = list(rows)
-            rows = apply_split(rows, split=split, seed=effective_seed, train_frac=0.2)
+            rows = apply_split(rows, split=cast(SplitName, split), seed=effective_seed, train_frac=0.2)
         elif seed is not None:
             rng = random.Random(seed)
             rows = list(rows)

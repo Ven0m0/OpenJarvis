@@ -31,10 +31,10 @@ from __future__ import annotations
 
 import ast
 import random
-from typing import Any, Iterable, List, MutableMapping, Optional
+from typing import Any, Iterable, List, MutableMapping, Optional, cast
 
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 HF_DATASET_ID = "nvidia/ToolScale"
@@ -124,7 +124,7 @@ class ToolOrchestraDataset(DatasetProvider):
         if split in ("train", "test", "all"):
             rows = apply_split(
                 rows,
-                split=split,
+                split=cast(SplitName, split),
                 seed=effective_seed,
                 train_frac=0.2,
             )

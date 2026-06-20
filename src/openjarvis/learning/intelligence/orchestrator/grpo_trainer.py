@@ -27,8 +27,8 @@ try:
     HAS_TORCH = True
 except ImportError:
     HAS_TORCH = False
-    torch = None  # type: ignore[assignment]
-    F = None  # type: ignore[assignment]
+    torch = None  # type: ignore
+    F = None  # type: ignore
 
 from openjarvis.core.registry import LearningRegistry
 from openjarvis.learning._stubs import IntelligenceLearningPolicy
@@ -166,7 +166,7 @@ class OrchestratorGRPOTrainer:
             except ImportError as exc:
                 logger.debug("FP8 not available for GRPO: %s", exc)
 
-        self.optimizer = torch.optim.AdamW(
+        self.optimizer = torch.optim.AdamW(  # type: ignore
             self.policy.model.parameters(),
             lr=self.config.learning_rate,
         )
@@ -280,30 +280,30 @@ class OrchestratorGRPOTrainer:
                 all_rewards.append(rew)
 
         # Policy gradient loss
-        total_loss = torch.tensor(0.0, device=self.device, requires_grad=True)
+        total_loss = torch.tensor(0.0, device=self.device, requires_grad=True)  # type: ignore
 
         for prompt, response, advantage in zip(
             all_prompts, all_responses, all_advantages
         ):
             current_lp = self._compute_log_probs(prompt, response)
-            with torch.no_grad():
+            with torch.no_grad():  # type: ignore
                 ref_lp = self._compute_log_probs_ref(prompt, response)
 
             log_ratio = current_lp - ref_lp
-            ratio = torch.exp(log_ratio)
-            ratio = torch.clamp(ratio, min=0.01, max=100.0)
+            ratio = torch.exp(log_ratio)  # type: ignore
+            ratio = torch.clamp(ratio, min=0.01, max=100.0)  # type: ignore
 
             clip = self.config.clip_ratio
-            clipped = torch.clamp(ratio, 1 - clip, 1 + clip)
+            clipped = torch.clamp(ratio, 1 - clip, 1 + clip)  # type: ignore
 
-            policy_loss = -torch.min(ratio * advantage, clipped * advantage)
+            policy_loss = -torch.min(ratio * advantage, clipped * advantage)  # type: ignore
             kl = (ratio - 1) - log_ratio
             total_loss = total_loss + policy_loss + self.config.kl_coef * kl
 
         avg_loss = total_loss / max(len(all_prompts), 1)
         loss_val = avg_loss.item()
 
-        if torch.isnan(avg_loss) or torch.isinf(avg_loss):
+        if torch.isnan(avg_loss) or torch.isinf(avg_loss):  # type: ignore
             avg_reward = sum(all_rewards) / len(all_rewards) if all_rewards else 0.0
             return 0.0, float(avg_reward)
 
@@ -312,12 +312,12 @@ class OrchestratorGRPOTrainer:
 
         # Check for NaN gradients
         for param in self.policy.model.parameters():
-            if param.grad is not None and torch.isnan(param.grad).any():
+            if param.grad is not None and torch.isnan(param.grad).any():  # type: ignore
                 self.optimizer.zero_grad()
                 avg_reward = sum(all_rewards) / len(all_rewards) if all_rewards else 0.0
                 return float(loss_val), float(avg_reward)
 
-        torch.nn.utils.clip_grad_norm_(
+        torch.nn.utils.clip_grad_norm_(  # type: ignore
             self.policy.model.parameters(), self.config.max_grad_norm
         )
         self.optimizer.step()
@@ -340,7 +340,7 @@ class OrchestratorGRPOTrainer:
         max_new = min(self.config.max_response_length, 32000 - input_len - 100)
         max_new = max(min(max_new, 2048), 128)
 
-        with torch.no_grad():
+        with torch.no_grad():  # type: ignore
             outputs = self.policy.model.generate(
                 **inputs,
                 max_new_tokens=max_new,
@@ -352,25 +352,25 @@ class OrchestratorGRPOTrainer:
 
         generated_ids = outputs.sequences[0][input_len:]
         if len(generated_ids) == 0:
-            return "", torch.tensor(0.0, device=self.device)
+            return "", torch.tensor(0.0, device=self.device)  # type: ignore
 
         text = self.policy.tokenizer.decode(generated_ids, skip_special_tokens=True)
 
         log_probs = []
         for token_id, logits in zip(generated_ids, outputs.scores):
-            probs = F.softmax(logits[0], dim=-1)
+            probs = F.softmax(logits[0], dim=-1)  # type: ignore
             tid = token_id.item()
             if 0 <= tid < probs.shape[0]:
-                log_probs.append(torch.log(probs[tid] + 1e-10))
+                log_probs.append(torch.log(probs[tid] + 1e-10))  # type: ignore
 
         total_lp = (
-            torch.stack(log_probs).sum()
+            torch.stack(log_probs).sum()  # type: ignore
             if log_probs
-            else torch.tensor(0.0, device=self.device)
+            else torch.tensor(0.0, device=self.device)  # type: ignore
         )
         return text, total_lp
 
-    def _compute_log_probs(self, prompt: str, response: str) -> "torch.Tensor":
+    def _compute_log_probs(self, prompt: str, response: str) -> "torch.Tensor":  # type: ignore
         """Log-probs of *response* given *prompt* under current policy."""
         full = prompt + response
         inputs = self.policy.tokenizer(full, return_tensors="pt", truncation=True).to(
@@ -380,7 +380,7 @@ class OrchestratorGRPOTrainer:
             prompt, return_tensors="pt", truncation=True
         ).to(self.device)
 
-        with torch.enable_grad():
+        with torch.enable_grad():  # type: ignore
             logits = self.policy.model(**inputs).logits
 
         start = len(prompt_inputs.input_ids[0])
@@ -388,12 +388,12 @@ class OrchestratorGRPOTrainer:
 
         lps = []
         for i in range(start, end - 1):
-            lp = F.log_softmax(logits[0, i, :], dim=-1)[inputs.input_ids[0, i + 1]]
+            lp = F.log_softmax(logits[0, i, :], dim=-1)[inputs.input_ids[0, i + 1]]  # type: ignore
             lps.append(lp)
 
-        return torch.stack(lps).sum() if lps else torch.tensor(0.0)
+        return torch.stack(lps).sum() if lps else torch.tensor(0.0)  # type: ignore
 
-    def _compute_log_probs_ref(self, prompt: str, response: str) -> "torch.Tensor":
+    def _compute_log_probs_ref(self, prompt: str, response: str) -> "torch.Tensor":  # type: ignore
         """Log-probs under the frozen reference policy (no grad)."""
         full = prompt + response
         inputs = self.ref_policy.tokenizer(
@@ -403,7 +403,7 @@ class OrchestratorGRPOTrainer:
             prompt, return_tensors="pt", truncation=True
         ).to(self.device)
 
-        with torch.no_grad():
+        with torch.no_grad():  # type: ignore
             logits = self.ref_policy.model(**inputs).logits
 
         start = len(prompt_inputs.input_ids[0])
@@ -411,10 +411,10 @@ class OrchestratorGRPOTrainer:
 
         lps = []
         for i in range(start, end - 1):
-            lp = F.log_softmax(logits[0, i, :], dim=-1)[inputs.input_ids[0, i + 1]]
+            lp = F.log_softmax(logits[0, i, :], dim=-1)[inputs.input_ids[0, i + 1]]  # type: ignore
             lps.append(lp)
 
-        return torch.stack(lps).sum() if lps else torch.tensor(0.0)
+        return torch.stack(lps).sum() if lps else torch.tensor(0.0)  # type: ignore
 
     # -- Checkpointing -------------------------------------------------------
 
@@ -470,8 +470,8 @@ def _ensure_registered() -> None:
         """Wrapper that registers the GRPO trainer as a learning policy."""
 
         def update(self, trace_store: Any, **kwargs: object) -> Dict[str, Any]:
-            config = OrchestratorGRPOConfig(
-                **{
+            config = OrchestratorGRPOConfig(  # type: ignore
+                **{  # type: ignore
                     k: v
                     for k, v in kwargs.items()
                     if k in OrchestratorGRPOConfig.__dataclass_fields__

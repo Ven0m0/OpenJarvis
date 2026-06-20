@@ -127,7 +127,7 @@ def _check_ssrf_python(url: str) -> Optional[str]:
         )
         for family, stype, proto, canonname, sockaddr in resolved:
             ip = sockaddr[0]
-            if is_private_ip(ip):
+            if is_private_ip(ip):  # type: ignore
                 return f"URL resolves to private IP: {ip}"
     except socket.gaierror:
         pass  # DNS resolution failed — allow (will fail at request time)

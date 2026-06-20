@@ -26,7 +26,7 @@ import random
 from typing import Iterable, List, MutableMapping, Optional
 
 from openjarvis.evals.core.dataset import DatasetProvider
-from openjarvis.evals.core.splits import apply_split
+from openjarvis.evals.core.splits import SplitName, apply_split
 from openjarvis.evals.core.types import EvalRecord
 
 HF_DATASET_ID = "neulab/agent-data-collection"
@@ -60,12 +60,12 @@ _CONFIGS = [
 def _parse_content(raw: object) -> List[MutableMapping[str, object]]:
     """Parse the ``content`` field, which may be a list or a string repr of one."""
     if isinstance(raw, list):
-        return raw  # type: ignore[return-value]
+        return raw  # type: ignore
     if isinstance(raw, str):
         try:
             parsed = ast.literal_eval(raw)
             if isinstance(parsed, list):
-                return parsed  # type: ignore[return-value]
+                return parsed  # type: ignore
         except (ValueError, SyntaxError):
             pass
     return []
@@ -117,11 +117,11 @@ class ADPDataset(DatasetProvider):
     def __init__(self) -> None:
         self._records: List[EvalRecord] = []
 
-    def load(
+    def load(  # type: ignore
         self,
         *,
         max_samples: Optional[int] = None,
-        split: Optional[str] = None,
+        split: Optional[SplitName] = None,
         seed: Optional[int] = None,
     ) -> None:
         from datasets import load_dataset
@@ -151,7 +151,7 @@ class ADPDataset(DatasetProvider):
                     HF_DATASET_ID, cfg, split=HF_SPLIT, streaming=True
                 )
                 for row in ds_stream:
-                    rows.append(dict(row))  # type: ignore[arg-type]
+                    rows.append(dict(row))  # type: ignore
                     if row_cap is not None and len(rows) >= row_cap:
                         break
             except Exception:

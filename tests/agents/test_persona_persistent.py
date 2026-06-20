@@ -55,7 +55,7 @@ class TestApplyPersona:
     def test_appends_to_base_prompt(self, tmp_path):
         from openjarvis.agents.simple import SimpleAgent
 
-        agent = SimpleAgent(object(), "m", prompt_builder=_builder_with_soul(tmp_path))
+        agent = SimpleAgent(object(), "m", prompt_builder=_builder_with_soul(tmp_path))  # type: ignore
         out = agent._apply_persona("MONITOR INSTRUCTIONS")
         assert out.startswith("MONITOR INSTRUCTIONS")
         assert "You are Kira." in out
@@ -63,7 +63,7 @@ class TestApplyPersona:
     def test_noop_without_builder(self):
         from openjarvis.agents.simple import SimpleAgent
 
-        agent = SimpleAgent(object(), "m")
+        agent = SimpleAgent(object(), "m")  # type: ignore
         assert agent._apply_persona("BASE") == "BASE"
 
 
@@ -74,7 +74,7 @@ class TestPersistentAgentsReceivePromptBuilder:
         from openjarvis.agents.monitor_operative import MonitorOperativeAgent
 
         builder = _builder_with_soul(tmp_path)
-        agent = MonitorOperativeAgent(object(), "m", prompt_builder=builder)
+        agent = MonitorOperativeAgent(object(), "m", prompt_builder=builder)  # type: ignore
         assert agent._prompt_builder is builder
         applied = agent._apply_persona("MONITOR INSTRUCTIONS")
         assert "MONITOR INSTRUCTIONS" in applied
@@ -84,13 +84,13 @@ class TestPersistentAgentsReceivePromptBuilder:
         from openjarvis.agents.operative import OperativeAgent
 
         builder = _builder_with_soul(tmp_path)
-        agent = OperativeAgent(object(), "m", prompt_builder=builder)
+        agent = OperativeAgent(object(), "m", prompt_builder=builder)  # type: ignore
         assert agent._prompt_builder is builder
         assert "You are Kira." in agent._apply_persona("OP INSTRUCTIONS")
 
     def test_monitor_operative_without_builder_is_unaffected(self):
         from openjarvis.agents.monitor_operative import MonitorOperativeAgent
 
-        agent = MonitorOperativeAgent(object(), "m")
+        agent = MonitorOperativeAgent(object(), "m")  # type: ignore
         assert agent._prompt_builder is None
         assert agent._apply_persona("BASE") == "BASE"

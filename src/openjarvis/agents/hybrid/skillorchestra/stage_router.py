@@ -458,7 +458,7 @@ class WeakestSkillStrategy(RoutingStrategy):
             return ModelRoutingResult(
                 defaults.get(stage, "answer-1"), "weakest_skill_no_model_scores", 0.5
             )
-        best = max(model_scores, key=model_scores.get)
+        best = max(model_scores, key=model_scores.get)  # type: ignore
         return ModelRoutingResult(
             best, f"weakest_skill_{weakest.skill_id}", model_scores[best], model_scores
         )
@@ -501,7 +501,7 @@ class StrongestSkillStrategy(RoutingStrategy):
             return ModelRoutingResult(
                 defaults.get(stage, "answer-1"), "strongest_skill_no_model_scores", 0.5
             )
-        best = max(model_scores, key=model_scores.get)
+        best = max(model_scores, key=model_scores.get)  # type: ignore
         return ModelRoutingResult(
             best,
             f"strongest_skill_{strongest.skill_id}",

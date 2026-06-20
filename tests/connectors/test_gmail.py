@@ -585,7 +585,7 @@ class _FakeResponse:
             import httpx as _httpx
 
             raise _httpx.HTTPStatusError(
-                f"HTTP {self.status_code}", request=None, response=self
+                f"HTTP {self.status_code}", request=None, response=self  # type: ignore
             )
 
 

@@ -37,7 +37,7 @@ const ICON_MAP: Record<
 // ---------------------------------------------------------------------------
 
 function CategorySection({
-	_category,
+	category: _category,
 	label,
 	cards,
 	selected,

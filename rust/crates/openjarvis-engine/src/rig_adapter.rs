@@ -2,8 +2,8 @@
 
 use crate::traits::InferenceEngine;
 use openjarvis_core::{GenerateResult, Message};
-use rig::completion::message::Message as RigMessage;
-use rig::completion::request::{
+use rig_core::completion::message::Message as RigMessage;
+use rig_core::completion::request::{
     CompletionError, CompletionRequest, CompletionResponse, ToolDefinition,
 };
 use serde::{Deserialize, Serialize};
@@ -20,14 +20,17 @@ pub struct OjRawResponse {
     pub completion_tokens: i64,
 }
 
-impl rig::completion::request::GetTokenUsage for OjRawResponse {
-    fn token_usage(&self) -> Option<rig::completion::Usage> {
-        Some(rig::completion::Usage {
+impl rig_core::completion::request::GetTokenUsage for OjRawResponse {
+    fn token_usage(&self) -> rig_core::completion::Usage {
+        rig_core::completion::Usage {
             input_tokens: self.prompt_tokens as u64,
             output_tokens: self.completion_tokens as u64,
             total_tokens: (self.prompt_tokens + self.completion_tokens) as u64,
             cached_input_tokens: 0,
-        })
+            cache_creation_input_tokens: 0,
+            reasoning_tokens: 0,
+            tool_use_prompt_tokens: 0,
+        }
     }
 }
 
@@ -71,7 +74,7 @@ fn rig_request_to_oj_messages(request: &CompletionRequest) -> Vec<Message> {
                 let text = content
                     .iter()
                     .filter_map(|c| {
-                        if let rig::completion::message::UserContent::Text(t) = c {
+                        if let rig_core::completion::message::UserContent::Text(t) = c {
                             Some(t.text.as_str())
                         } else {
                             None
@@ -85,7 +88,7 @@ fn rig_request_to_oj_messages(request: &CompletionRequest) -> Vec<Message> {
                 let text = content
                     .iter()
                     .filter_map(|c| {
-                        if let rig::completion::message::AssistantContent::Text(t) = c {
+                        if let rig_core::completion::message::AssistantContent::Text(t) = c {
                             Some(t.text.as_str())
                         } else {
                             None
@@ -94,6 +97,9 @@ fn rig_request_to_oj_messages(request: &CompletionRequest) -> Vec<Message> {
                     .collect::<Vec<_>>()
                     .join("\n");
                 messages.push(Message::assistant(&text));
+            }
+            RigMessage::System { content } => {
+                messages.push(Message::system(content));
             }
         }
     }
@@ -133,12 +139,15 @@ fn tools_to_extra(tools: &[ToolDefinition]) -> Option<Value> {
     Some(serde_json::json!({ "tools": tool_specs }))
 }
 
-fn make_usage(result: &GenerateResult) -> rig::completion::Usage {
-    rig::completion::Usage {
+fn make_usage(result: &GenerateResult) -> rig_core::completion::Usage {
+    rig_core::completion::Usage {
         input_tokens: result.usage.prompt_tokens as u64,
         output_tokens: result.usage.completion_tokens as u64,
         total_tokens: result.usage.total_tokens as u64,
         cached_input_tokens: 0,
+        cache_creation_input_tokens: 0,
+        reasoning_tokens: 0,
+        tool_use_prompt_tokens: 0,
     }
 }
 
@@ -152,7 +161,7 @@ fn make_raw(result: &GenerateResult) -> OjRawResponse {
     }
 }
 
-impl<E: InferenceEngine + 'static> rig::completion::request::CompletionModel
+impl<E: InferenceEngine + 'static> rig_core::completion::request::CompletionModel
     for RigModelAdapter<E>
 {
     type Response = OjRawResponse;
@@ -194,8 +203,8 @@ impl<E: InferenceEngine + 'static> rig::completion::request::CompletionModel
             let raw = make_raw(&result);
             let usage = make_usage(&result);
 
-            let choice = rig::one_or_many::OneOrMany::one(
-                rig::completion::message::AssistantContent::text(&result.content),
+            let choice = rig_core::one_or_many::OneOrMany::one(
+                rig_core::completion::message::AssistantContent::text(&result.content),
             );
 
             Ok(CompletionResponse {
@@ -210,7 +219,7 @@ impl<E: InferenceEngine + 'static> rig::completion::request::CompletionModel
     async fn stream(
         &self,
         _request: CompletionRequest,
-    ) -> Result<rig::streaming::StreamingCompletionResponse<Self::StreamingResponse>, CompletionError>
+    ) -> Result<rig_core::streaming::StreamingCompletionResponse<Self::StreamingResponse>, CompletionError>
     {
         // Our engines use blocking HTTP clients. Streaming is not supported
         // through the rig adapter — callers should use `completion()` instead.
@@ -230,7 +239,7 @@ mod tests {
         let request = CompletionRequest {
             model: None,
             preamble: Some("You are helpful".into()),
-            chat_history: rig::one_or_many::OneOrMany::one(RigMessage::user("Hello")),
+            chat_history: rig_core::one_or_many::OneOrMany::one(RigMessage::user("Hello")),
             documents: vec![],
             tools: vec![],
             temperature: None,

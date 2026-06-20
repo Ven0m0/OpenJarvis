@@ -120,17 +120,18 @@ class PinchBenchTaskEnv:
             )
             result = {"score": 0.0, "breakdown": {}, "notes": f"Grading error: {exc}"}
 
-        self._record.metadata["is_resolved"] = result["score"] >= 0.5
-        self._record.metadata["reward"] = result["score"]
-        self._record.metadata["pinchbench_score"] = result["score"]
+        score = float(result["score"] or 0.0)  # type: ignore
+        self._record.metadata["is_resolved"] = score >= 0.5
+        self._record.metadata["reward"] = score
+        self._record.metadata["pinchbench_score"] = score
         self._record.metadata["pinchbench_breakdown"] = result["breakdown"]
         self._record.metadata["pinchbench_notes"] = result.get("notes", "")
 
         LOGGER.info(
             "PinchBench grading for %s: score=%.2f resolved=%s",
             self._record.record_id,
-            result["score"],
-            result["score"] >= 0.5,
+            score,
+            score >= 0.5,
         )
 
     def __exit__(
