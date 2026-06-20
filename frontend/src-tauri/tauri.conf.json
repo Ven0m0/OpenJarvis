@@ -6,8 +6,8 @@
 	"build": {
 		"frontendDist": "../dist",
 		"devUrl": "http://localhost:5173",
-		"beforeDevCommand": "npm run dev",
-		"beforeBuildCommand": "npm run build:tauri"
+		"beforeDevCommand": "bun run dev",
+		"beforeBuildCommand": "bun run build:tauri"
 	},
 	"app": {
 		"windows": [
@@ -31,7 +31,7 @@
 	"bundle": {
 		"active": true,
 		"targets": "all",
-		"createUpdaterArtifacts": true,
+		"createUpdaterArtifacts": false,
 		"icon": [
 			"icons/32x32.png",
 			"icons/128x128.png",
