@@ -88,6 +88,15 @@ docs/superpowers/
 .superpowers/
 
 .claude/
+!.claude/settings.json
+!.claude/agents/
+!.claude/skills/
+!.claude/rules/
+!!.claude/commands/
+.omc/
+.serena/
+.codegraph
+
 
 # Tauri auto-generated schemas
 **/src-tauri/gen/schemas/
