@@ -433,7 +433,7 @@ async def _stream_research(
         yield _sse(
             {
                 "type": "error",
-                "message": f"Research failed: {type(exc).__name__}: {exc}",
+                "message": "Research failed due to an internal error.",
             }
         )
         yield _sse({"type": "done", "usage": {}})
@@ -545,7 +545,7 @@ async def _stream_research(
         yield _sse(
             {
                 "type": "error",
-                "message": f"Research failed: {type(exc).__name__}: {exc}",
+                "message": "Research failed due to an internal error.",
             }
         )
         yield _sse({"type": "done", "usage": final_usage, "sources": final_sources})
