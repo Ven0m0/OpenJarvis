@@ -53,5 +53,5 @@ ed25519-dalek = { version = "3", features = ["rand_core"] }
 fnmatch-regex = "0.3"
 url = "2"
 sysinfo = "0.39"
-rig-core = "0.40"
+rig-core = "0.41"
 schemars = "1"
