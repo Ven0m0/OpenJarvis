@@ -22,6 +22,7 @@ from abc import ABC, abstractmethod
 from openjarvis.tools._stubs import ToolSpec
 from openjarvis.core.types import ToolResult
 
+
 class BaseTool(ABC):
     tool_id: str
 
@@ -109,6 +110,7 @@ openai_tools = executor.get_openai_tools()
 
 # Execute a tool call
 from openjarvis.core.types import ToolCall
+
 tc = ToolCall(id="call_1", name="calculator", arguments='{"expression": "2+2"}')
 result = executor.execute(tc)
 print(result.content)  # "4"
@@ -239,8 +241,8 @@ from openjarvis.tools.calculator import CalculatorTool
 
 calc = CalculatorTool()
 result = calc.execute(expression="sqrt(144) + 3**2")
-print(result.content)   # "21.0"
-print(result.success)   # True
+print(result.content)  # "21.0"
+print(result.success)  # True
 ```
 
 ### Think
@@ -262,8 +264,8 @@ from openjarvis.tools.think import ThinkTool
 
 think = ThinkTool()
 result = think.execute(thought="Let me break this problem into steps...")
-print(result.content)   # "Let me break this problem into steps..."
-print(result.success)   # True
+print(result.content)  # "Let me break this problem into steps..."
+print(result.success)  # True
 ```
 
 !!! info "Cost and Latency"
@@ -298,7 +300,7 @@ from openjarvis.memory.sqlite import SQLiteMemory
 backend = SQLiteMemory(db_path="./memory.db")
 retrieval = RetrievalTool(backend=backend)
 result = retrieval.execute(query="machine learning")
-print(result.content)   # Formatted context with source tags
+print(result.content)  # Formatted context with source tags
 ```
 
 ### LLM

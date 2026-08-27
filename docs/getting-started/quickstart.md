@@ -46,6 +46,7 @@ OpenJarvis is a modular AI assistant framework. Here's what developers build wit
 
     ```python
     from openjarvis import Jarvis
+
     with Jarvis() as j:
         print(j.ask("Hello!"))
     ```
@@ -213,9 +214,9 @@ For detailed results including token usage and model info:
 ```python
 result = j.ask_full("What is the capital of France?")
 print(result["content"])  # The response text
-print(result["model"])    # Model that handled the query
-print(result["engine"])   # Engine that ran inference
-print(result["usage"])    # Token usage statistics
+print(result["model"])  # Model that handled the query
+print(result["engine"])  # Engine that ran inference
+print(result["usage"])  # Token usage statistics
 ```
 
 #### SDK Constructor Options
@@ -280,7 +281,7 @@ result = j.ask_full(
 )
 print(result["content"])
 print(result["tool_results"])  # List of tool invocations and results
-print(result["turns"])         # Number of agent turns
+print(result["turns"])  # Number of agent turns
 j.close()
 ```
 

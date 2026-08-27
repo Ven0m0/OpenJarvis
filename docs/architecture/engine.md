@@ -62,7 +62,7 @@ The `generate()` method returns a dictionary with the following structure:
     },
     "model": "qwen3:8b",
     "finish_reason": "stop",
-    "tool_calls": [...]  # Optional, present if model requested tool calls
+    "tool_calls": [...],  # Optional, present if model requested tool calls
 }
 ```
 
@@ -74,7 +74,7 @@ When the model requests tool calls, they are extracted and passed through in Ope
         {
             "id": "call_abc123",
             "name": "calculator",
-            "arguments": "{\"expression\": \"2 + 2\"}"
+            "arguments": '{"expression": "2 + 2"}',
         }
     ]
 }
@@ -97,7 +97,7 @@ All providers produce the same output format consumed by agents:
 ```python
 {
     "tool_calls": [
-        {"id": "call_abc", "name": "calculator", "arguments": "{\"expression\": \"2+2\"}"}
+        {"id": "call_abc", "name": "calculator", "arguments": '{"expression": "2+2"}'}
     ]
 }
 ```

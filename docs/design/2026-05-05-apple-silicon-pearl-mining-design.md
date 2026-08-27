@@ -360,15 +360,24 @@ class LlamaCppPearlMetalProvider(MiningProvider):
     @classmethod
     def detect(cls, hw: HardwareInfo, engine_id: str, model: str) -> MiningCapabilities:
         if hw.platform != "darwin":
-            return MiningCapabilities(False, reason="Apple Silicon required (platform != darwin)")
+            return MiningCapabilities(
+                False, reason="Apple Silicon required (platform != darwin)"
+            )
         if hw.gpu is None or hw.gpu.vendor != "apple":
             return MiningCapabilities(False, reason="Apple Silicon GPU required")
         if engine_id not in {"llamacpp", "llama-cpp"}:
-            return MiningCapabilities(False, reason=f"engine '{engine_id}' has no Pearl Metal plugin; use llamacpp")
+            return MiningCapabilities(
+                False,
+                reason=f"engine '{engine_id}' has no Pearl Metal plugin; use llamacpp",
+            )
         if not _pearl_metal_plugin_available():
-            return MiningCapabilities(False, reason="install with `uv sync --extra mining-pearl-metal`")
+            return MiningCapabilities(
+                False, reason="install with `uv sync --extra mining-pearl-metal`"
+            )
         if not _model_has_pearl_variant(model):
-            return MiningCapabilities(False, reason=f"model '{model}' has no Pearl-blessed variant")
+            return MiningCapabilities(
+                False, reason=f"model '{model}' has no Pearl-blessed variant"
+            )
         return MiningCapabilities(True, estimated_hashrate=_estimate_hashrate(hw))
 ```
 
@@ -602,11 +611,17 @@ class CpuPearlProvider(MiningProvider):
     def detect(cls, hw: HardwareInfo, engine_id: str, model: str) -> MiningCapabilities:
         # cpu-pearl is engine-independent — it doesn't plug into inference
         if not _pearl_mining_available():
-            return MiningCapabilities(False, reason="install with `uv sync --extra mining-pearl-cpu`")
+            return MiningCapabilities(
+                False, reason="install with `uv sync --extra mining-pearl-cpu`"
+            )
         if not _pearl_gateway_available():
-            return MiningCapabilities(False, reason="pearl-gateway package not installed")
+            return MiningCapabilities(
+                False, reason="pearl-gateway package not installed"
+            )
         if hw.platform not in {"darwin", "linux"}:
-            return MiningCapabilities(False, reason=f"platform '{hw.platform}' not yet supported")
+            return MiningCapabilities(
+                False, reason=f"platform '{hw.platform}' not yet supported"
+            )
         # Optional: hardware-specific hashrate estimates
         return MiningCapabilities(True, estimated_hashrate=_estimate_cpu_hashrate(hw))
 ```

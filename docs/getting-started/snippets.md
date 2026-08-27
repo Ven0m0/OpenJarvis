@@ -22,10 +22,12 @@ with Jarvis() as j:
 import asyncio
 from openjarvis import Jarvis
 
+
 async def main():
     with Jarvis() as j:
         async for token in j.ask_stream("Tell me a story"):
             print(token, end="", flush=True)
+
 
 asyncio.run(main())
 ```
@@ -92,17 +94,25 @@ from openjarvis.core.registry import ToolRegistry
 from openjarvis.core.types import ToolResult
 from openjarvis.tools._stubs import BaseTool, ToolSpec
 
+
 @ToolRegistry.register("my_tool")
 class MyTool(BaseTool):
     tool_id = "my_tool"
 
     @property
     def spec(self):
-        return ToolSpec(name="my_tool", description="My custom tool",
-                        parameters={"type": "object", "properties": {"input": {"type": "string"}}})
+        return ToolSpec(
+            name="my_tool",
+            description="My custom tool",
+            parameters={"type": "object", "properties": {"input": {"type": "string"}}},
+        )
 
     def execute(self, **params):
-        return ToolResult(tool_name="my_tool", content=f"Processed: {params.get('input', '')}", success=True)
+        return ToolResult(
+            tool_name="my_tool",
+            content=f"Processed: {params.get('input', '')}",
+            success=True,
+        )
 ```
 
 ## Multi-Model Routing (5 lines)
@@ -112,7 +122,7 @@ from openjarvis import Jarvis
 
 j = Jarvis()
 # Router automatically selects the best model per query
-simple = j.ask("What is 2+2?")            # routes to fast/cheap model
+simple = j.ask("What is 2+2?")  # routes to fast/cheap model
 complex = j.ask("Analyze this research paper...")  # routes to capable model
 j.close()
 ```

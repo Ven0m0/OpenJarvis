@@ -123,12 +123,13 @@ store = SchedulerStore(db_path="~/.openjarvis/scheduler.db")  # (1)!
 
 # Wire in a JarvisSystem for task execution
 from openjarvis import Jarvis
+
 jarvis = Jarvis()
 
 scheduler = TaskScheduler(
     store=store,
-    system=jarvis,         # (2)!
-    poll_interval=60,      # (3)!
+    system=jarvis,  # (2)!
+    poll_interval=60,  # (3)!
 )
 
 # Create tasks
@@ -146,11 +147,11 @@ for task in scheduler.list_tasks(status="active"):
 
 # Manage task state
 scheduler.pause_task(daily_summary.id)
-scheduler.resume_task(daily_summary.id)   # next_run recomputed from now
+scheduler.resume_task(daily_summary.id)  # next_run recomputed from now
 scheduler.cancel_task(daily_summary.id)  # permanent
 
 # Start the background thread
-scheduler.start()   # (4)!
+scheduler.start()  # (4)!
 
 # ... application runs ...
 

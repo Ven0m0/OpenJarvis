@@ -26,6 +26,7 @@ class RouterPolicy(ABC):
     def select_model(self, context: RoutingContext) -> str:
         """Return the model registry key best suited for *context*."""
 
+
 class QueryAnalyzer(ABC):
     @abstractmethod
     def analyze(self, query: str) -> RoutingContext:
@@ -43,12 +44,12 @@ The `RoutingContext` dataclass is now defined in `core/types.py` (moved from `le
 # core/types.py
 @dataclass(slots=True)
 class RoutingContext:
-    query: str = ""            # The raw query text
-    query_length: int = 0      # Character count
-    has_code: bool = False     # Whether code patterns were detected
-    has_math: bool = False     # Whether math keywords were detected
-    language: str = "en"       # Detected language
-    urgency: float = 0.5      # 0 = low priority, 1 = real-time
+    query: str = ""  # The raw query text
+    query_length: int = 0  # Character count
+    has_code: bool = False  # Whether code patterns were detected
+    has_math: bool = False  # Whether math keywords were detected
+    language: str = "en"  # Detected language
+    urgency: float = 0.5  # 0 = low priority, 1 = real-time
     metadata: Dict[str, Any] = field(default_factory=dict)
 ```
 
@@ -94,6 +95,7 @@ def ensure_registered() -> None:
     """Register TraceDrivenPolicy if not already present."""
     if not RouterPolicyRegistry.contains("learned"):
         RouterPolicyRegistry.register_value("learned", TraceDrivenPolicy)
+
 
 ensure_registered()  # Called at module import time
 ```
@@ -169,6 +171,7 @@ The `heuristic_policy.py` module wires `HeuristicRouter` into the `RouterPolicyR
 def ensure_registered() -> None:
     if not RouterPolicyRegistry.contains("heuristic"):
         RouterPolicyRegistry.register_value("heuristic", HeuristicRouter)
+
 
 ensure_registered()
 ```
@@ -254,6 +257,7 @@ The `SFTRouterPolicy` (in `learning/sft_policy.py`) is an `IntelligenceLearningP
 
 ```python
 from openjarvis.learning.sft_policy import SFTRouterPolicy
+
 # or via the backward-compat alias:
 from openjarvis.learning.sft_policy import SFTPolicy
 ```
@@ -329,8 +333,8 @@ reward_fn = HeuristicRewardFunction(
     weight_latency=0.4,
     weight_cost=0.3,
     weight_efficiency=0.3,
-    max_latency=30.0,   # seconds
-    max_cost=0.01,       # USD
+    max_latency=30.0,  # seconds
+    max_cost=0.01,  # USD
 )
 
 reward = reward_fn.compute(
@@ -359,16 +363,16 @@ The trace system records the full sequence of steps in every agent interaction, 
 from openjarvis.traces.store import TraceStore
 
 store = TraceStore("~/.openjarvis/traces.db")
-store.save(trace)                          # Persist a complete trace
-trace = store.get("abc123")                # Retrieve by trace ID
-traces = store.list_traces(                # Query with filters
+store.save(trace)  # Persist a complete trace
+trace = store.get("abc123")  # Retrieve by trace ID
+traces = store.list_traces(  # Query with filters
     agent="orchestrator",
     model="qwen3:8b",
     outcome="success",
     since=1700000000.0,
     limit=100,
 )
-count = store.count()                      # Total trace count
+count = store.count()  # Total trace count
 ```
 
 **Database schema:**

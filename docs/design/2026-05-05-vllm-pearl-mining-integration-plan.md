@@ -134,6 +134,7 @@ Add a second test below the registration test:
 ```python
 def test_miner_registry_cleared_between_tests():
     from openjarvis.core.registry import MinerRegistry
+
     # If autouse clear works, no entry from prior tests remains
     assert MinerRegistry.contains("stub-pearl") is False
 ```
@@ -289,6 +290,7 @@ import pytest
 
 def test_mining_capabilities_default_unsupported():
     from openjarvis.mining._stubs import MiningCapabilities
+
     cap = MiningCapabilities(supported=False, reason="needs sm90")
     assert cap.supported is False
     assert cap.reason == "needs sm90"
@@ -297,12 +299,14 @@ def test_mining_capabilities_default_unsupported():
 
 def test_solo_target_dataclass():
     from openjarvis.mining._stubs import SoloTarget
+
     t = SoloTarget(pearld_rpc_url="http://localhost:44107")
     assert t.pearld_rpc_url == "http://localhost:44107"
 
 
 def test_pool_target_dataclass():
     from openjarvis.mining._stubs import PoolTarget
+
     t = PoolTarget(url="https://pool.example/submit", worker_id="rig01")
     assert t.url == "https://pool.example/submit"
     assert t.worker_id == "rig01"
@@ -310,6 +314,7 @@ def test_pool_target_dataclass():
 
 def test_mining_config_v1_defaults():
     from openjarvis.mining._stubs import MiningConfig, SoloTarget
+
     cfg = MiningConfig(
         provider="vllm-pearl",
         wallet_address="prl1qexample",
@@ -322,6 +327,7 @@ def test_mining_config_v1_defaults():
 
 def test_mining_stats_v1_defaults():
     from openjarvis.mining._stubs import MiningStats
+
     s = MiningStats(provider_id="vllm-pearl")
     assert s.shares_submitted == 0
     assert s.shares_accepted == 0
@@ -331,12 +337,16 @@ def test_mining_stats_v1_defaults():
 
 def test_mining_provider_is_abstract():
     from openjarvis.mining._stubs import MiningProvider
+
     with pytest.raises(TypeError):
         MiningProvider()  # cannot instantiate ABC
 
 
-def test_sidecar_write_then_read_roundtrip(sidecar_path: Path, sample_sidecar_payload: dict):
+def test_sidecar_write_then_read_roundtrip(
+    sidecar_path: Path, sample_sidecar_payload: dict
+):
     from openjarvis.mining._stubs import Sidecar
+
     Sidecar.write(sidecar_path, sample_sidecar_payload)
     payload = Sidecar.read(sidecar_path)
     assert payload == sample_sidecar_payload
@@ -344,11 +354,13 @@ def test_sidecar_write_then_read_roundtrip(sidecar_path: Path, sample_sidecar_pa
 
 def test_sidecar_read_missing_returns_none(sidecar_path: Path):
     from openjarvis.mining._stubs import Sidecar
+
     assert Sidecar.read(sidecar_path) is None
 
 
 def test_sidecar_remove_is_idempotent(sidecar_path: Path):
     from openjarvis.mining._stubs import Sidecar
+
     Sidecar.remove(sidecar_path)  # missing file — should not raise
     sidecar_path.write_text(json.dumps({"x": 1}))
     Sidecar.remove(sidecar_path)
@@ -716,6 +728,7 @@ Add to `tests/core/test_config.py`:
 ```python
 def test_mining_config_absent_means_none(tmp_path):
     from openjarvis.core.config import load_config
+
     cfg_path = tmp_path / "config.toml"
     cfg_path.write_text("")  # empty config
     cfg = load_config(cfg_path)
@@ -726,6 +739,7 @@ def test_mining_config_solo_parsed(tmp_path):
     from pathlib import Path
     from openjarvis.core.config import load_config
     from openjarvis.mining._stubs import SoloTarget
+
     src = Path(__file__).parent.parent / "mining" / "fixtures" / "config_minimal.toml"
     target = tmp_path / "config.toml"
     target.write_text(src.read_text())
@@ -743,6 +757,7 @@ def test_mining_config_pool_parsed_as_pool_target(tmp_path):
     from pathlib import Path
     from openjarvis.core.config import load_config
     from openjarvis.mining._stubs import PoolTarget
+
     src = Path(__file__).parent.parent / "mining" / "fixtures" / "config_pool_v2.toml"
     target = tmp_path / "config.toml"
     target.write_text(src.read_text())
@@ -863,6 +878,7 @@ from unittest.mock import MagicMock, patch
 
 def test_detect_supported_on_h100(hopper_hw):
     from openjarvis.mining._discovery import detect_for_engine_model
+
     cap = detect_for_engine_model(
         hw=hopper_hw,
         engine_id="vllm",
@@ -875,6 +891,7 @@ def test_detect_supported_on_h100(hopper_hw):
 
 def test_detect_unsupported_on_ada_4090(ada_hw):
     from openjarvis.mining._discovery import detect_for_engine_model
+
     cap = detect_for_engine_model(
         hw=ada_hw,
         engine_id="vllm",
@@ -887,6 +904,7 @@ def test_detect_unsupported_on_ada_4090(ada_hw):
 
 def test_detect_unsupported_on_apple(apple_hw):
     from openjarvis.mining._discovery import detect_for_engine_model
+
     cap = detect_for_engine_model(
         hw=apple_hw,
         engine_id="mlx",
@@ -899,6 +917,7 @@ def test_detect_unsupported_on_apple(apple_hw):
 
 def test_detect_unsupported_for_non_vllm_engine(hopper_hw):
     from openjarvis.mining._discovery import detect_for_engine_model
+
     cap = detect_for_engine_model(
         hw=hopper_hw,
         engine_id="ollama",
@@ -911,6 +930,7 @@ def test_detect_unsupported_for_non_vllm_engine(hopper_hw):
 
 def test_detect_unsupported_for_non_pearl_model(hopper_hw):
     from openjarvis.mining._discovery import detect_for_engine_model
+
     cap = detect_for_engine_model(
         hw=hopper_hw,
         engine_id="vllm",
@@ -924,6 +944,7 @@ def test_detect_unsupported_for_non_pearl_model(hopper_hw):
 def test_detect_unsupported_for_low_vram():
     from openjarvis.mining._discovery import detect_for_engine_model
     from openjarvis.core.config import GpuInfo, HardwareInfo
+
     hw = HardwareInfo(
         platform="linux",
         gpu=GpuInfo(
@@ -935,7 +956,9 @@ def test_detect_unsupported_for_low_vram():
         ),
     )
     cap = detect_for_engine_model(
-        hw=hw, engine_id="vllm", model="pearl-ai/Llama-3.3-70B-Instruct-pearl",
+        hw=hw,
+        engine_id="vllm",
+        model="pearl-ai/Llama-3.3-70B-Instruct-pearl",
         provider_id="vllm-pearl",
     )
     assert cap.supported is False
@@ -944,6 +967,7 @@ def test_detect_unsupported_for_low_vram():
 
 def test_check_docker_available_true():
     from openjarvis.mining._discovery import check_docker_available
+
     with patch("openjarvis.mining._discovery._docker_client") as fake:
         fake.return_value.ping.return_value = True
         fake.return_value.version.return_value = {"Version": "24.0.7"}
@@ -954,6 +978,7 @@ def test_check_docker_available_true():
 
 def test_check_docker_available_false_when_daemon_down():
     from openjarvis.mining._discovery import check_docker_available
+
     with patch("openjarvis.mining._discovery._docker_client") as fake:
         fake.side_effect = Exception("Cannot connect to the Docker daemon")
         ok, info = check_docker_available()
@@ -963,26 +988,35 @@ def test_check_docker_available_false_when_daemon_down():
 
 def test_check_disk_free_passes(tmp_path):
     from openjarvis.mining._discovery import check_disk_free
+
     with patch("openjarvis.mining._discovery.shutil.disk_usage") as du:
         # 500 GB free
-        du.return_value = MagicMock(total=1_000_000_000_000, used=500_000_000_000, free=500_000_000_000)
+        du.return_value = MagicMock(
+            total=1_000_000_000_000, used=500_000_000_000, free=500_000_000_000
+        )
         ok, info = check_disk_free(tmp_path)
         assert ok is True
 
 
 def test_check_disk_free_fails_below_threshold(tmp_path):
     from openjarvis.mining._discovery import check_disk_free
+
     with patch("openjarvis.mining._discovery.shutil.disk_usage") as du:
-        du.return_value = MagicMock(total=1_000_000_000_000, used=950_000_000_000, free=50_000_000_000)
+        du.return_value = MagicMock(
+            total=1_000_000_000_000, used=950_000_000_000, free=50_000_000_000
+        )
         ok, info = check_disk_free(tmp_path)
         assert ok is False
 
 
 def test_check_pearld_reachable_true():
     from openjarvis.mining._discovery import check_pearld_reachable
+
     with patch("openjarvis.mining._discovery.httpx.post") as post:
         post.return_value.status_code = 200
-        post.return_value.json.return_value = {"result": {"blocks": 442107, "headers": 442107}}
+        post.return_value.json.return_value = {
+            "result": {"blocks": 442107, "headers": 442107}
+        }
         ok, info = check_pearld_reachable("http://localhost:44107", "user", "pass")
         assert ok is True
         assert "442107" in info
@@ -991,6 +1025,7 @@ def test_check_pearld_reachable_true():
 def test_check_pearld_reachable_false_on_connection_error():
     from openjarvis.mining._discovery import check_pearld_reachable
     import httpx
+
     with patch("openjarvis.mining._discovery.httpx.post") as post:
         post.side_effect = httpx.ConnectError("connection refused")
         ok, info = check_pearld_reachable("http://localhost:44107", "user", "pass")
@@ -999,12 +1034,14 @@ def test_check_pearld_reachable_false_on_connection_error():
 
 def test_check_wallet_address_format_valid():
     from openjarvis.mining._discovery import check_wallet_address_format
+
     ok, info = check_wallet_address_format("prl1qexampleaddress0123456789")
     assert ok is True
 
 
 def test_check_wallet_address_format_invalid():
     from openjarvis.mining._discovery import check_wallet_address_format
+
     ok, info = check_wallet_address_format("not-a-pearl-address")
     assert ok is False
 ```
@@ -1060,9 +1097,7 @@ def detect_for_engine_model(
     ``jarvis mine doctor`` and ``jarvis mine init``.
     """
     if provider_id != "vllm-pearl":
-        return MiningCapabilities(
-            False, reason=f"unknown provider {provider_id!r}"
-        )
+        return MiningCapabilities(False, reason=f"unknown provider {provider_id!r}")
 
     # Engine
     if engine_id not in SUPPORTED_VLLM_ENGINE_IDS:
@@ -1135,14 +1170,17 @@ def check_disk_free(path: Path) -> Tuple[bool, str]:
     return True, f"{free_gb:.0f} GB free"
 
 
-def check_pearld_reachable(
-    url: str, user: str, password: str
-) -> Tuple[bool, str]:
+def check_pearld_reachable(url: str, user: str, password: str) -> Tuple[bool, str]:
     """Probe pearld via JSON-RPC ``getblockchaininfo``."""
     try:
         resp = httpx.post(
             url,
-            json={"jsonrpc": "1.0", "id": "ojprobe", "method": "getblockchaininfo", "params": []},
+            json={
+                "jsonrpc": "1.0",
+                "id": "ojprobe",
+                "method": "getblockchaininfo",
+                "params": [],
+            },
             auth=(user, password),
             timeout=5.0,
         )
@@ -1212,8 +1250,11 @@ from unittest.mock import MagicMock, patch
 
 def test_ensure_image_already_local():
     from openjarvis.mining._docker import PearlDockerLauncher
+
     fake = MagicMock()
-    fake.images.get.return_value = MagicMock(id="sha256:abc", tags=["openjarvis/pearl-miner:main"])
+    fake.images.get.return_value = MagicMock(
+        id="sha256:abc", tags=["openjarvis/pearl-miner:main"]
+    )
     launcher = PearlDockerLauncher(client=fake)
     out = launcher.ensure_image("openjarvis/pearl-miner:main")
     assert out == "openjarvis/pearl-miner:main"
@@ -1224,6 +1265,7 @@ def test_ensure_image_already_local():
 def test_ensure_image_pulls_if_published():
     from openjarvis.mining._docker import PearlDockerLauncher
     import docker.errors as derr
+
     fake = MagicMock()
     fake.images.get.side_effect = derr.ImageNotFound("nope")
     fake.images.pull.return_value = MagicMock(id="sha256:def")
@@ -1237,13 +1279,15 @@ def test_ensure_image_falls_back_to_build_for_default_tag():
     from openjarvis.mining._docker import PearlDockerLauncher
     from openjarvis.mining._constants import PEARL_IMAGE_TAG
     import docker.errors as derr
+
     fake = MagicMock()
     fake.images.get.side_effect = derr.ImageNotFound("nope")
     fake.images.pull.side_effect = derr.NotFound("registry refused")
     launcher = PearlDockerLauncher(client=fake)
-    with patch.object(launcher, "_clone_pearl_repo") as clone, patch.object(
-        launcher, "_docker_build"
-    ) as build:
+    with (
+        patch.object(launcher, "_clone_pearl_repo") as clone,
+        patch.object(launcher, "_docker_build") as build,
+    ):
         clone.return_value = "/tmp/pearl-cache"
         build.return_value = PEARL_IMAGE_TAG
         out = launcher.ensure_image(PEARL_IMAGE_TAG)
@@ -1256,6 +1300,7 @@ def test_ensure_image_errors_when_non_default_tag_missing():
     from openjarvis.mining._docker import PearlDockerLauncher, ImageAcquisitionError
     import docker.errors as derr
     import pytest
+
     fake = MagicMock()
     fake.images.get.side_effect = derr.ImageNotFound("nope")
     fake.images.pull.side_effect = derr.NotFound("registry refused")
@@ -1368,7 +1413,14 @@ class PearlDockerLauncher:
             )
         else:
             subprocess.run(
-                ["git", "clone", "--branch", PEARL_PINNED_REF, PEARL_REPO, str(PEARL_CACHE_DIR)],
+                [
+                    "git",
+                    "clone",
+                    "--branch",
+                    PEARL_PINNED_REF,
+                    PEARL_REPO,
+                    str(PEARL_CACHE_DIR),
+                ],
                 check=True,
             )
         return PEARL_CACHE_DIR
@@ -1429,6 +1481,7 @@ def _env_password(monkeypatch):
 def test_launcher_start_calls_run_with_expected_kwargs(_env_password):
     from openjarvis.mining._docker import PearlDockerLauncher
     from openjarvis.mining._stubs import MiningConfig, SoloTarget
+
     fake = MagicMock()
     fake.containers.run.return_value = MagicMock(id="cid-1", status="running")
     launcher = PearlDockerLauncher(client=fake)
@@ -1471,6 +1524,7 @@ def test_launcher_start_calls_run_with_expected_kwargs(_env_password):
 
 def test_launcher_stop_calls_container_stop_and_remove():
     from openjarvis.mining._docker import PearlDockerLauncher
+
     fake_client = MagicMock()
     fake_container = MagicMock()
     launcher = PearlDockerLauncher(client=fake_client)
@@ -1481,6 +1535,7 @@ def test_launcher_stop_calls_container_stop_and_remove():
 
 def test_launcher_is_running_when_container_running():
     from openjarvis.mining._docker import PearlDockerLauncher
+
     fake_client = MagicMock()
     fake_container = MagicMock(status="running")
     fake_container.reload.return_value = None
@@ -1491,6 +1546,7 @@ def test_launcher_is_running_when_container_running():
 
 def test_launcher_is_running_false_when_container_exited():
     from openjarvis.mining._docker import PearlDockerLauncher
+
     fake_client = MagicMock()
     fake_container = MagicMock()
     fake_container.reload.return_value = None
@@ -1502,6 +1558,7 @@ def test_launcher_is_running_false_when_container_exited():
 
 def test_launcher_get_logs_returns_decoded_string():
     from openjarvis.mining._docker import PearlDockerLauncher
+
     fake_client = MagicMock()
     fake_container = MagicMock()
     fake_container.logs.return_value = b"hello\nworld\n"
@@ -1513,6 +1570,7 @@ def test_launcher_get_logs_returns_decoded_string():
 def test_launcher_start_errors_when_password_env_missing():
     from openjarvis.mining._docker import PearlDockerLauncher, ConfigurationError
     from openjarvis.mining._stubs import MiningConfig, SoloTarget
+
     fake = MagicMock()
     launcher = PearlDockerLauncher(client=fake)
     cfg = MiningConfig(
@@ -1549,7 +1607,6 @@ Append to `src/openjarvis/mining/_docker.py`:
 class ConfigurationError(RuntimeError):
     """Raised when required env vars or config fields are missing."""
 
-
     # ----- in PearlDockerLauncher class, append these methods -----
 
     def start(self, config: "MiningConfig", image: str) -> Any:
@@ -1580,11 +1637,15 @@ class ConfigurationError(RuntimeError):
 
         command = [
             model,
-            "--host", "0.0.0.0",
-            "--port", str(vllm_port),
-            "--gpu-memory-utilization", str(gpu_mem),
+            "--host",
+            "0.0.0.0",
+            "--port",
+            str(vllm_port),
+            "--gpu-memory-utilization",
+            str(gpu_mem),
             "--enforce-eager",
-            "--max-model-len", str(max_len),
+            "--max-model-len",
+            str(max_len),
         ]
 
         environment = {
@@ -1599,6 +1660,7 @@ class ConfigurationError(RuntimeError):
         # Dynamic import so tests don't need the real `docker` package shape.
         try:
             from docker.types import DeviceRequest
+
             device_requests = [DeviceRequest(count=-1, capabilities=[["gpu"]])]
         except ImportError:  # pragma: no cover
             device_requests = None
@@ -1737,6 +1799,7 @@ FIXTURE = Path(__file__).parent / "fixtures" / "gateway_metrics_sample.txt"
 
 def test_parse_gateway_metrics_full():
     from openjarvis.mining._metrics import parse_gateway_metrics
+
     text = FIXTURE.read_text()
     stats = parse_gateway_metrics(text, provider_id="vllm-pearl")
     assert stats.provider_id == "vllm-pearl"
@@ -1750,6 +1813,7 @@ def test_parse_gateway_metrics_full():
 
 def test_parse_gateway_metrics_missing_metrics_zero_fills():
     from openjarvis.mining._metrics import parse_gateway_metrics
+
     stats = parse_gateway_metrics("# empty exposition\n", provider_id="vllm-pearl")
     assert stats.shares_submitted == 0
     assert stats.shares_accepted == 0
@@ -1759,6 +1823,7 @@ def test_parse_gateway_metrics_missing_metrics_zero_fills():
 
 def test_parse_gateway_metrics_ignores_comment_lines():
     from openjarvis.mining._metrics import parse_gateway_metrics
+
     stats = parse_gateway_metrics(
         "# HELP something\n# TYPE something counter\nsomething 99\n",
         provider_id="vllm-pearl",
@@ -1900,8 +1965,10 @@ import pytest
 
 def test_vllm_pearl_detect_supported_on_h100(hopper_hw):
     from openjarvis.mining.vllm_pearl import VllmPearlProvider
+
     cap = VllmPearlProvider.detect(
-        hopper_hw, engine_id="vllm",
+        hopper_hw,
+        engine_id="vllm",
         model="pearl-ai/Llama-3.3-70B-Instruct-pearl",
     )
     assert cap.supported is True
@@ -1909,8 +1976,10 @@ def test_vllm_pearl_detect_supported_on_h100(hopper_hw):
 
 def test_vllm_pearl_detect_unsupported_on_apple(apple_hw):
     from openjarvis.mining.vllm_pearl import VllmPearlProvider
+
     cap = VllmPearlProvider.detect(
-        apple_hw, engine_id="mlx",
+        apple_hw,
+        engine_id="mlx",
         model="pearl-ai/Llama-3.3-70B-Instruct-pearl",
     )
     assert cap.supported is False
@@ -1922,9 +1991,7 @@ async def test_vllm_pearl_start_writes_sidecar(tmp_path, monkeypatch):
     from openjarvis.mining._stubs import MiningConfig, SoloTarget, Sidecar
 
     sidecar_path = tmp_path / "mining.json"
-    monkeypatch.setattr(
-        "openjarvis.mining.vllm_pearl.SIDECAR_PATH", sidecar_path
-    )
+    monkeypatch.setattr("openjarvis.mining.vllm_pearl.SIDECAR_PATH", sidecar_path)
     monkeypatch.setenv("PEARLD_RPC_PASSWORD", "x")
 
     fake_client = MagicMock()
@@ -1969,14 +2036,14 @@ async def test_vllm_pearl_start_writes_sidecar(tmp_path, monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_vllm_pearl_start_pool_target_raises_not_implemented(monkeypatch, tmp_path):
+async def test_vllm_pearl_start_pool_target_raises_not_implemented(
+    monkeypatch, tmp_path
+):
     from openjarvis.mining.vllm_pearl import VllmPearlProvider
     from openjarvis.mining._stubs import MiningConfig, PoolTarget
 
     sidecar_path = tmp_path / "mining.json"
-    monkeypatch.setattr(
-        "openjarvis.mining.vllm_pearl.SIDECAR_PATH", sidecar_path
-    )
+    monkeypatch.setattr("openjarvis.mining.vllm_pearl.SIDECAR_PATH", sidecar_path)
 
     cfg = MiningConfig(
         provider="vllm-pearl",
@@ -1993,9 +2060,8 @@ async def test_vllm_pearl_start_pool_target_raises_not_implemented(monkeypatch, 
 @pytest.mark.asyncio
 async def test_vllm_pearl_stop_removes_sidecar(tmp_path, monkeypatch, written_sidecar):
     from openjarvis.mining.vllm_pearl import VllmPearlProvider
-    monkeypatch.setattr(
-        "openjarvis.mining.vllm_pearl.SIDECAR_PATH", written_sidecar
-    )
+
+    monkeypatch.setattr("openjarvis.mining.vllm_pearl.SIDECAR_PATH", written_sidecar)
     fake_client = MagicMock()
     provider = VllmPearlProvider(docker_client=fake_client)
     provider._launcher._container = MagicMock()  # simulate running
@@ -2005,9 +2071,8 @@ async def test_vllm_pearl_stop_removes_sidecar(tmp_path, monkeypatch, written_si
 
 def test_vllm_pearl_stats_reads_gateway(monkeypatch, written_sidecar):
     from openjarvis.mining.vllm_pearl import VllmPearlProvider
-    monkeypatch.setattr(
-        "openjarvis.mining.vllm_pearl.SIDECAR_PATH", written_sidecar
-    )
+
+    monkeypatch.setattr("openjarvis.mining.vllm_pearl.SIDECAR_PATH", written_sidecar)
     sample = (
         "pearl_gateway_shares_submitted_total 100\n"
         "pearl_gateway_shares_accepted_total 99\n"
@@ -2029,6 +2094,7 @@ def test_ensure_registered_is_idempotent():
         VllmPearlProvider,
         ensure_registered,
     )
+
     ensure_registered()
     ensure_registered()  # second call should not raise
     assert MinerRegistry.contains("vllm-pearl")
@@ -2095,6 +2161,7 @@ class VllmPearlProvider(MiningProvider):
     def __init__(self, docker_client: Optional[Any] = None):
         if docker_client is None:
             import docker
+
             docker_client = docker.from_env()
         self._client = docker_client
         self._launcher = PearlDockerLauncher(client=docker_client)
@@ -2102,7 +2169,10 @@ class VllmPearlProvider(MiningProvider):
     @classmethod
     def detect(cls, hw: HardwareInfo, engine_id: str, model: str) -> MiningCapabilities:
         return detect_for_engine_model(
-            hw=hw, engine_id=engine_id, model=model, provider_id=cls.provider_id,
+            hw=hw,
+            engine_id=engine_id,
+            model=model,
+            provider_id=cls.provider_id,
         )
 
     async def start(self, config: MiningConfig) -> None:
@@ -2125,16 +2195,19 @@ class VllmPearlProvider(MiningProvider):
         )
         model_name = config.extra.get("model", DEFAULT_PEARL_MODEL)
 
-        Sidecar.write(SIDECAR_PATH, {
-            "provider": self.provider_id,
-            "vllm_endpoint": f"http://127.0.0.1:{vllm_port}/v1",
-            "model": model_name,
-            "gateway_url": f"http://127.0.0.1:{gw_port}",
-            "gateway_metrics_url": f"http://127.0.0.1:{gw_metrics}",
-            "container_id": getattr(container, "id", ""),
-            "wallet_address": config.wallet_address,
-            "started_at": int(time.time()),
-        })
+        Sidecar.write(
+            SIDECAR_PATH,
+            {
+                "provider": self.provider_id,
+                "vllm_endpoint": f"http://127.0.0.1:{vllm_port}/v1",
+                "model": model_name,
+                "gateway_url": f"http://127.0.0.1:{gw_port}",
+                "gateway_metrics_url": f"http://127.0.0.1:{gw_metrics}",
+                "container_id": getattr(container, "id", ""),
+                "wallet_address": config.wallet_address,
+                "started_at": int(time.time()),
+            },
+        )
 
     async def stop(self) -> None:
         self._launcher.stop()
@@ -2216,7 +2289,9 @@ Identify the function that resolves engines (likely `discover_engines()` or `get
 Add to `tests/engine/test_discovery.py`:
 
 ```python
-def test_engine_discovery_picks_up_mining_sidecar(tmp_path, monkeypatch, written_sidecar):
+def test_engine_discovery_picks_up_mining_sidecar(
+    tmp_path, monkeypatch, written_sidecar
+):
     """When a mining sidecar exists, engine resolution should expose a
     'vllm-pearl-mining' engine pointing at the sidecar's vllm_endpoint.
     """
@@ -2280,7 +2355,9 @@ def _maybe_register_mining_sidecar_engine() -> None:
         return
 
     from openjarvis.core.registry import EngineRegistry
-    from openjarvis.engine.openai_compat_engines import OpenAICompatEngine  # adjust to actual class name
+    from openjarvis.engine.openai_compat_engines import (
+        OpenAICompatEngine,
+    )  # adjust to actual class name
 
     if EngineRegistry.contains("vllm-pearl-mining"):
         return
@@ -2464,7 +2541,9 @@ class MiningTelemetryCollector:
                 )
             return parse_gateway_metrics(resp.text, provider_id=provider_id)
         except Exception as e:  # noqa: BLE001
-            return MiningStats(provider_id=provider_id, last_error=str(e).splitlines()[0])
+            return MiningStats(
+                provider_id=provider_id, last_error=str(e).splitlines()[0]
+            )
 
     async def run(self) -> None:
         while not self._stop:
@@ -2520,6 +2599,7 @@ Add to `tests/telemetry/test_store.py`:
 ```python
 def test_inference_row_has_mining_session_id_column(tmp_path):
     from openjarvis.telemetry.store import TelemetryStore
+
     db = tmp_path / "tel.db"
     store = TelemetryStore(db_path=db)
     store.record_inference(
@@ -2537,6 +2617,7 @@ def test_inference_row_has_mining_session_id_column(tmp_path):
 
 def test_inference_row_can_be_tagged_with_mining_session_id(tmp_path):
     from openjarvis.telemetry.store import TelemetryStore
+
     db = tmp_path / "tel.db"
     store = TelemetryStore(db_path=db)
     store.record_inference(
@@ -2554,6 +2635,7 @@ def test_inference_row_can_be_tagged_with_mining_session_id(tmp_path):
 def test_record_mining_stats_persists(tmp_path):
     from openjarvis.telemetry.store import TelemetryStore
     from openjarvis.mining._stubs import MiningStats
+
     db = tmp_path / "tel.db"
     store = TelemetryStore(db_path=db)
     store.record_mining_stats(
@@ -2642,21 +2724,37 @@ from click.testing import CliRunner
 
 def test_mine_doctor_prints_capability_matrix(monkeypatch):
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
 
     # Force the H100 hardware fixture so detect() returns supported.
     from openjarvis.core.config import GpuInfo, HardwareInfo
+
     fake_hw = HardwareInfo(
         platform="linux",
         gpu=GpuInfo(
-            vendor="nvidia", name="H100", vram_gb=80.0,
-            compute_capability="9.0", count=1,
+            vendor="nvidia",
+            name="H100",
+            vram_gb=80.0,
+            compute_capability="9.0",
+            count=1,
         ),
     )
-    with patch("openjarvis.cli.mine_cmd._detect_hardware", return_value=fake_hw), \
-         patch("openjarvis.cli.mine_cmd.check_docker_available", return_value=(True, "running 24.0.7")), \
-         patch("openjarvis.cli.mine_cmd.check_disk_free", return_value=(True, "300 GB free")), \
-         patch("openjarvis.cli.mine_cmd.check_pearld_reachable", return_value=(True, "block height 442107 (synced)")):
+    with (
+        patch("openjarvis.cli.mine_cmd._detect_hardware", return_value=fake_hw),
+        patch(
+            "openjarvis.cli.mine_cmd.check_docker_available",
+            return_value=(True, "running 24.0.7"),
+        ),
+        patch(
+            "openjarvis.cli.mine_cmd.check_disk_free",
+            return_value=(True, "300 GB free"),
+        ),
+        patch(
+            "openjarvis.cli.mine_cmd.check_pearld_reachable",
+            return_value=(True, "block height 442107 (synced)"),
+        ),
+    ):
         result = runner.invoke(mine, ["doctor"])
     assert result.exit_code == 0, result.output
     out = result.output.lower()
@@ -2668,20 +2766,35 @@ def test_mine_doctor_prints_capability_matrix(monkeypatch):
 
 def test_mine_doctor_flags_unsupported_hardware():
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
 
     from openjarvis.core.config import GpuInfo, HardwareInfo
+
     fake_hw = HardwareInfo(
         platform="linux",
         gpu=GpuInfo(
-            vendor="nvidia", name="RTX 4090", vram_gb=24.0,
-            compute_capability="8.9", count=1,
+            vendor="nvidia",
+            name="RTX 4090",
+            vram_gb=24.0,
+            compute_capability="8.9",
+            count=1,
         ),
     )
-    with patch("openjarvis.cli.mine_cmd._detect_hardware", return_value=fake_hw), \
-         patch("openjarvis.cli.mine_cmd.check_docker_available", return_value=(True, "ok")), \
-         patch("openjarvis.cli.mine_cmd.check_disk_free", return_value=(True, "300 GB free")), \
-         patch("openjarvis.cli.mine_cmd.check_pearld_reachable", return_value=(False, "connection refused")):
+    with (
+        patch("openjarvis.cli.mine_cmd._detect_hardware", return_value=fake_hw),
+        patch(
+            "openjarvis.cli.mine_cmd.check_docker_available", return_value=(True, "ok")
+        ),
+        patch(
+            "openjarvis.cli.mine_cmd.check_disk_free",
+            return_value=(True, "300 GB free"),
+        ),
+        patch(
+            "openjarvis.cli.mine_cmd.check_pearld_reachable",
+            return_value=(False, "connection refused"),
+        ),
+    ):
         result = runner.invoke(mine, ["doctor"])
     assert result.exit_code == 0
     assert "✗" in result.output or "FAIL" in result.output.upper()
@@ -2757,11 +2870,19 @@ def doctor() -> None:
         click.echo(f"  {name:<22} {info:<35} {marker}")
 
     click.echo("Hardware")
-    row("hw", "GPU vendor", hw.gpu.vendor == "nvidia" if hw.gpu else False,
-        hw.gpu.vendor if hw.gpu else "(no GPU)")
+    row(
+        "hw",
+        "GPU vendor",
+        hw.gpu.vendor == "nvidia" if hw.gpu else False,
+        hw.gpu.vendor if hw.gpu else "(no GPU)",
+    )
     cc_ok = bool(hw.gpu and hw.gpu.compute_capability.startswith("9.0"))
-    row("hw", "Compute capability", cc_ok,
-        hw.gpu.compute_capability if hw.gpu else "n/a")
+    row(
+        "hw",
+        "Compute capability",
+        cc_ok,
+        hw.gpu.compute_capability if hw.gpu else "n/a",
+    )
     vram = hw.gpu.vram_gb if hw.gpu else 0
     row("hw", "VRAM", vram >= 70, f"{vram:.0f} GB")
 
@@ -2794,7 +2915,8 @@ def doctor() -> None:
     click.echo("Provider capability")
     if mining_cfg is not None:
         cap = detect_for_engine_model(
-            hw=hw, engine_id="vllm",
+            hw=hw,
+            engine_id="vllm",
             model=mining_cfg.extra.get("model", DEFAULT_PEARL_MODEL),
             provider_id=mining_cfg.provider,
         )
@@ -2839,18 +2961,24 @@ Append to `tests/mining/test_cli.py`:
 ```python
 def test_mine_start_runs_provider_start(monkeypatch):
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
     fake_provider_class = MagicMock()
     fake_provider_class.return_value.start = MagicMock(return_value=None)
-    with patch("openjarvis.cli.mine_cmd.MinerRegistry") as reg, \
-         patch("openjarvis.cli.mine_cmd.load_config") as load, \
-         patch("openjarvis.cli.mine_cmd.asyncio.run") as arun:
+    with (
+        patch("openjarvis.cli.mine_cmd.MinerRegistry") as reg,
+        patch("openjarvis.cli.mine_cmd.load_config") as load,
+        patch("openjarvis.cli.mine_cmd.asyncio.run") as arun,
+    ):
         from openjarvis.mining._stubs import MiningConfig, SoloTarget
-        load.return_value = MagicMock(mining=MiningConfig(
-            provider="vllm-pearl",
-            wallet_address="prl1qaaa",
-            submit_target=SoloTarget(pearld_rpc_url="http://localhost:44107"),
-        ))
+
+        load.return_value = MagicMock(
+            mining=MiningConfig(
+                provider="vllm-pearl",
+                wallet_address="prl1qaaa",
+                submit_target=SoloTarget(pearld_rpc_url="http://localhost:44107"),
+            )
+        )
         reg.get.return_value = fake_provider_class
         result = runner.invoke(mine, ["start"])
     assert result.exit_code == 0
@@ -2859,17 +2987,23 @@ def test_mine_start_runs_provider_start(monkeypatch):
 
 def test_mine_stop_calls_provider_stop():
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
     fake_provider_class = MagicMock()
-    with patch("openjarvis.cli.mine_cmd.MinerRegistry") as reg, \
-         patch("openjarvis.cli.mine_cmd.load_config") as load, \
-         patch("openjarvis.cli.mine_cmd.asyncio.run") as arun:
+    with (
+        patch("openjarvis.cli.mine_cmd.MinerRegistry") as reg,
+        patch("openjarvis.cli.mine_cmd.load_config") as load,
+        patch("openjarvis.cli.mine_cmd.asyncio.run") as arun,
+    ):
         from openjarvis.mining._stubs import MiningConfig, SoloTarget
-        load.return_value = MagicMock(mining=MiningConfig(
-            provider="vllm-pearl",
-            wallet_address="prl1qaaa",
-            submit_target=SoloTarget(pearld_rpc_url="http://localhost:44107"),
-        ))
+
+        load.return_value = MagicMock(
+            mining=MiningConfig(
+                provider="vllm-pearl",
+                wallet_address="prl1qaaa",
+                submit_target=SoloTarget(pearld_rpc_url="http://localhost:44107"),
+            )
+        )
         reg.get.return_value = fake_provider_class
         result = runner.invoke(mine, ["stop"])
     assert result.exit_code == 0
@@ -2877,6 +3011,7 @@ def test_mine_stop_calls_provider_stop():
 
 def test_mine_start_errors_when_no_mining_config():
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
     with patch("openjarvis.cli.mine_cmd.load_config") as load:
         load.return_value = MagicMock(mining=None)
@@ -2903,11 +3038,13 @@ from openjarvis.core.registry import MinerRegistry
 
 @mine.command()
 @click.option("--wallet", prompt="Pearl Taproot wallet address (prl1q...)")
-@click.option("--pearld-url", default=DEFAULT_PEARLD_RPC_URL,
-              prompt="pearld RPC URL")
+@click.option("--pearld-url", default=DEFAULT_PEARLD_RPC_URL, prompt="pearld RPC URL")
 @click.option("--pearld-user", default="rpcuser", prompt="pearld RPC user")
-@click.option("--pearld-password-env", default="PEARLD_RPC_PASSWORD",
-              prompt="env var holding pearld password")
+@click.option(
+    "--pearld-password-env",
+    default="PEARLD_RPC_PASSWORD",
+    prompt="env var holding pearld password",
+)
 @click.option("--model", default=DEFAULT_PEARL_MODEL)
 @click.option("--image", default=PEARL_IMAGE_TAG)
 def init(
@@ -2922,7 +3059,10 @@ def init(
     # Pre-checks
     hw = _detect_hardware()
     cap = detect_for_engine_model(
-        hw=hw, engine_id="vllm", model=model, provider_id="vllm-pearl",
+        hw=hw,
+        engine_id="vllm",
+        model=model,
+        provider_id="vllm-pearl",
     )
     if not cap.supported:
         raise click.ClickException(
@@ -2976,7 +3116,9 @@ hf_token_env             = "HF_TOKEN"
     if config_path.exists():
         existing = config_path.read_text()
         if "[mining]" in existing:
-            click.echo("[mining] section already present; not overwriting. Edit manually if needed.")
+            click.echo(
+                "[mining] section already present; not overwriting. Edit manually if needed."
+            )
             return
         config_path.write_text(existing + new_section)
     else:
@@ -2986,6 +3128,7 @@ hf_token_env             = "HF_TOKEN"
     click.echo(f"Resolving image {image}... (build may take 30-60 min on first run)")
     import docker
     from openjarvis.mining._docker import PearlDockerLauncher
+
     launcher = PearlDockerLauncher(client=docker.from_env())
     launcher.ensure_image(image)
     click.echo(f"Done. Run `jarvis mine start` to begin mining.")
@@ -2996,12 +3139,15 @@ def start() -> None:
     """Launch the Pearl mining container and write the runtime sidecar."""
     cfg = load_config().mining
     if cfg is None:
-        raise click.ClickException("no [mining] section in config — run `jarvis mine init`")
+        raise click.ClickException(
+            "no [mining] section in config — run `jarvis mine init`"
+        )
     provider_cls = MinerRegistry.get(cfg.provider)
     provider = provider_cls()
 
     async def _run():
         await provider.start(cfg)
+
     asyncio.run(_run())
     click.echo(f"Mining started. Run `jarvis mine status` for live stats.")
 
@@ -3018,6 +3164,7 @@ def stop() -> None:
 
     async def _run():
         await provider.stop()
+
     asyncio.run(_run())
     click.echo("Mining stopped.")
 ```
@@ -3051,6 +3198,7 @@ Append to `tests/mining/test_cli.py`:
 ```python
 def test_mine_status_renders_stats(written_sidecar, monkeypatch):
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
     monkeypatch.setattr("openjarvis.cli.mine_cmd.SIDECAR_PATH", written_sidecar)
     sample = (
@@ -3058,11 +3206,14 @@ def test_mine_status_renders_stats(written_sidecar, monkeypatch):
         "pearl_gateway_shares_accepted_total 99\n"
         "pearl_gateway_blocks_found_total 2\n"
     )
-    with patch("openjarvis.mining.vllm_pearl.httpx.get") as get, \
-         patch("openjarvis.cli.mine_cmd.MinerRegistry") as reg:
+    with (
+        patch("openjarvis.mining.vllm_pearl.httpx.get") as get,
+        patch("openjarvis.cli.mine_cmd.MinerRegistry") as reg,
+    ):
         get.return_value.status_code = 200
         get.return_value.text = sample
         from openjarvis.mining.vllm_pearl import VllmPearlProvider
+
         reg.get.return_value = lambda: VllmPearlProvider(docker_client=MagicMock())
         result = runner.invoke(mine, ["status"])
     assert result.exit_code == 0
@@ -3071,27 +3222,37 @@ def test_mine_status_renders_stats(written_sidecar, monkeypatch):
 
 def test_mine_attach_writes_sidecar(tmp_path, monkeypatch):
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
     sidecar = tmp_path / "mining.json"
     monkeypatch.setattr("openjarvis.cli.mine_cmd.SIDECAR_PATH", sidecar)
-    result = runner.invoke(mine, [
-        "attach",
-        "--vllm-endpoint", "http://127.0.0.1:8000/v1",
-        "--gateway-url", "http://127.0.0.1:8337",
-        "--gateway-metrics-url", "http://127.0.0.1:8339",
-        "--model", "pearl-ai/Llama-3.3-70B-Instruct-pearl",
-    ])
+    result = runner.invoke(
+        mine,
+        [
+            "attach",
+            "--vllm-endpoint",
+            "http://127.0.0.1:8000/v1",
+            "--gateway-url",
+            "http://127.0.0.1:8337",
+            "--gateway-metrics-url",
+            "http://127.0.0.1:8339",
+            "--model",
+            "pearl-ai/Llama-3.3-70B-Instruct-pearl",
+        ],
+    )
     assert result.exit_code == 0
     assert sidecar.exists()
 
 
 def test_mine_logs_streams_container_output(monkeypatch):
     from openjarvis.cli.mine_cmd import mine
+
     runner = CliRunner()
     fake_launcher = MagicMock()
     fake_launcher.get_logs.return_value = "log line 1\nlog line 2\n"
-    with patch("openjarvis.cli.mine_cmd.PearlDockerLauncher",
-               return_value=fake_launcher):
+    with patch(
+        "openjarvis.cli.mine_cmd.PearlDockerLauncher", return_value=fake_launcher
+    ):
         result = runner.invoke(mine, ["logs", "--tail", "100"])
     assert result.exit_code == 0
     assert "log line 1" in result.output
@@ -3150,28 +3311,39 @@ def attach(
     wallet: str,
 ) -> None:
     """Manual mode — write a sidecar pointing at a Pearl container you started yourself."""
-    Sidecar.write(SIDECAR_PATH, {
-        "provider": "vllm-pearl",
-        "vllm_endpoint": vllm_endpoint,
-        "model": model,
-        "gateway_url": gateway_url,
-        "gateway_metrics_url": gateway_metrics_url,
-        "container_id": container_id,
-        "wallet_address": wallet,
-        "started_at": int(time.time()),
-    })
+    Sidecar.write(
+        SIDECAR_PATH,
+        {
+            "provider": "vllm-pearl",
+            "vllm_endpoint": vllm_endpoint,
+            "model": model,
+            "gateway_url": gateway_url,
+            "gateway_metrics_url": gateway_metrics_url,
+            "container_id": container_id,
+            "wallet_address": wallet,
+            "started_at": int(time.time()),
+        },
+    )
     click.echo(f"Sidecar written to {SIDECAR_PATH}")
 
 
 @mine.command()
 @click.option("-n", "--tail", "tail_n", default=200, type=int)
-@click.option("-f", "--follow", is_flag=True, default=False,
-              help="Follow logs (not supported in v1 — equivalent to --tail).")
+@click.option(
+    "-f",
+    "--follow",
+    is_flag=True,
+    default=False,
+    help="Follow logs (not supported in v1 — equivalent to --tail).",
+)
 def logs(tail_n: int, follow: bool) -> None:
     """Tail the Pearl mining container logs."""
     if follow:
-        click.echo("note: -f follow not implemented in v1; printing tail and exiting", err=True)
+        click.echo(
+            "note: -f follow not implemented in v1; printing tail and exiting", err=True
+        )
     import docker
+
     launcher = PearlDockerLauncher(client=docker.from_env())
     # Re-attach to the running container by name.
     try:
@@ -3223,6 +3395,7 @@ Add to `tests/cli/test_main.py` (create if absent):
 def test_mine_subcommand_registered():
     from click.testing import CliRunner
     from openjarvis.cli import main
+
     runner = CliRunner()
     result = runner.invoke(main, ["mine", "--help"])
     assert result.exit_code == 0
@@ -3243,6 +3416,7 @@ Add to `cli/__init__.py` near other `add_command` calls:
 
 ```python
 from openjarvis.cli.mine_cmd import mine
+
 main.add_command(mine)
 ```
 
@@ -3266,6 +3440,7 @@ Add to `tests/cli/test_hints.py`:
 ```python
 def test_mining_not_running_hint_when_configured_no_sidecar():
     from openjarvis.cli.hints import mining_not_running_hint
+
     cfg = object()  # any truthy stand-in for MiningConfig
     msg = mining_not_running_hint(cfg, sidecar_present=False)
     assert msg is not None
@@ -3274,12 +3449,14 @@ def test_mining_not_running_hint_when_configured_no_sidecar():
 
 def test_mining_not_running_hint_silent_when_running():
     from openjarvis.cli.hints import mining_not_running_hint
+
     msg = mining_not_running_hint(object(), sidecar_present=True)
     assert msg is None
 
 
 def test_mining_not_running_hint_silent_when_unconfigured():
     from openjarvis.cli.hints import mining_not_running_hint
+
     msg = mining_not_running_hint(None, sidecar_present=False)
     assert msg is None
 ```

@@ -290,9 +290,9 @@ needed:
 ```python
 from openjarvis.core.registry import EngineRegistry
 
+
 @EngineRegistry.register("my_engine")
-class MyEngine(InferenceEngine):
-    ...
+class MyEngine(InferenceEngine): ...
 ```
 
 Available registries:

@@ -648,19 +648,20 @@ The detection result is stored as a `HardwareInfo` dataclass:
 ```python
 @dataclass
 class HardwareInfo:
-    platform: str      # "linux", "darwin", "windows"
-    cpu_brand: str     # e.g., "AMD EPYC 7763"
-    cpu_count: int     # e.g., 128
-    ram_gb: float      # e.g., 512.0
+    platform: str  # "linux", "darwin", "windows"
+    cpu_brand: str  # e.g., "AMD EPYC 7763"
+    cpu_count: int  # e.g., 128
+    ram_gb: float  # e.g., 512.0
     gpu: GpuInfo | None
+
 
 @dataclass
 class GpuInfo:
-    vendor: str             # "nvidia", "amd", "apple"
-    name: str               # e.g., "NVIDIA A100-SXM4-80GB"
-    vram_gb: float          # e.g., 80.0
-    compute_capability: str # (NVIDIA only)
-    count: int              # e.g., 8
+    vendor: str  # "nvidia", "amd", "apple"
+    name: str  # e.g., "NVIDIA A100-SXM4-80GB"
+    vram_gb: float  # e.g., 80.0
+    compute_capability: str  # (NVIDIA only)
+    count: int  # e.g., 8
 ```
 
 ---

@@ -324,13 +324,17 @@ print(f"Step distribution: {summary.step_type_distribution}")
 
 # Per-route statistics (model + agent combinations)
 for rs in analyzer.per_route_stats():
-    print(f"  {rs.model}/{rs.agent}: {rs.count} traces, "
-          f"{rs.avg_latency:.3f}s avg, {rs.success_rate:.1%} success")
+    print(
+        f"  {rs.model}/{rs.agent}: {rs.count} traces, "
+        f"{rs.avg_latency:.3f}s avg, {rs.success_rate:.1%} success"
+    )
 
 # Per-tool statistics
 for ts in analyzer.per_tool_stats():
-    print(f"  {ts.tool_name}: {ts.call_count} calls, "
-          f"{ts.avg_latency:.3f}s avg, {ts.success_rate:.1%} success")
+    print(
+        f"  {ts.tool_name}: {ts.call_count} calls, "
+        f"{ts.avg_latency:.3f}s avg, {ts.success_rate:.1%} success"
+    )
 
 # Find traces matching query characteristics
 code_traces = analyzer.traces_for_query_type(has_code=True)

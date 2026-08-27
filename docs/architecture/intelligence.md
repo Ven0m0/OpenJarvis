@@ -26,17 +26,17 @@ Every model in the system is described by a `ModelSpec` dataclass, defined in `c
 ```python
 @dataclass(slots=True)
 class ModelSpec:
-    model_id: str                              # Unique identifier (e.g., "qwen3:8b")
-    name: str                                  # Human-readable name
-    parameter_count_b: float                   # Total parameters in billions
-    context_length: int                        # Maximum context window (tokens)
+    model_id: str  # Unique identifier (e.g., "qwen3:8b")
+    name: str  # Human-readable name
+    parameter_count_b: float  # Total parameters in billions
+    context_length: int  # Maximum context window (tokens)
     active_parameter_count_b: Optional[float]  # MoE active params (None for dense)
-    quantization: Quantization                 # Quantization format (none, fp8, int4, etc.)
-    min_vram_gb: float                         # Minimum VRAM required
-    supported_engines: Sequence[str]           # Which engines can run this model
-    provider: str                              # Model provider (e.g., "alibaba", "meta")
-    requires_api_key: bool                     # Whether cloud API key is needed
-    metadata: Dict[str, Any]                   # Additional metadata (pricing, architecture)
+    quantization: Quantization  # Quantization format (none, fp8, int4, etc.)
+    min_vram_gb: float  # Minimum VRAM required
+    supported_engines: Sequence[str]  # Which engines can run this model
+    provider: str  # Model provider (e.g., "alibaba", "meta")
+    requires_api_key: bool  # Whether cloud API key is needed
+    metadata: Dict[str, Any]  # Additional metadata (pricing, architecture)
 ```
 
 Models are registered in the `ModelRegistry`:
@@ -45,14 +45,17 @@ Models are registered in the `ModelRegistry`:
 from openjarvis.core.registry import ModelRegistry
 
 # Register a model
-ModelRegistry.register_value("qwen3:8b", ModelSpec(
-    model_id="qwen3:8b",
-    name="Qwen3 8B",
-    parameter_count_b=8.2,
-    context_length=32768,
-    supported_engines=("vllm", "ollama", "llamacpp", "sglang"),
-    provider="alibaba",
-))
+ModelRegistry.register_value(
+    "qwen3:8b",
+    ModelSpec(
+        model_id="qwen3:8b",
+        name="Qwen3 8B",
+        parameter_count_b=8.2,
+        context_length=32768,
+        supported_engines=("vllm", "ollama", "llamacpp", "sglang"),
+        provider="alibaba",
+    ),
+)
 ```
 
 ---
@@ -130,20 +133,20 @@ The `IntelligenceConfig` dataclass (in `core/config.py`) captures the full ident
 class IntelligenceConfig:
     """The model — identity, paths, quantization, fallback chain, and generation defaults."""
 
-    default_model: str = ""       # Primary model key (e.g., "qwen3:8b")
-    fallback_model: str = ""      # Fallback when default is unavailable
-    model_path: str = ""          # Local weights (HF repo, GGUF file, etc.)
-    checkpoint_path: str = ""     # Checkpoint/adapter path (e.g., LoRA)
-    quantization: str = "none"    # none, fp8, int8, int4, gguf_q4, gguf_q8
-    preferred_engine: str = ""    # Override engine for this model (e.g., "vllm")
-    provider: str = ""            # local, openai, anthropic, google
+    default_model: str = ""  # Primary model key (e.g., "qwen3:8b")
+    fallback_model: str = ""  # Fallback when default is unavailable
+    model_path: str = ""  # Local weights (HF repo, GGUF file, etc.)
+    checkpoint_path: str = ""  # Checkpoint/adapter path (e.g., LoRA)
+    quantization: str = "none"  # none, fp8, int8, int4, gguf_q4, gguf_q8
+    preferred_engine: str = ""  # Override engine for this model (e.g., "vllm")
+    provider: str = ""  # local, openai, anthropic, google
     # Generation defaults (overridable per-call)
     temperature: float = 0.7
     max_tokens: int = 1024
     top_p: float = 0.9
     top_k: int = 40
     repetition_penalty: float = 1.0
-    stop_sequences: str = ""      # Comma-separated stop strings
+    stop_sequences: str = ""  # Comma-separated stop strings
 ```
 
 ### Model Identity Fields
@@ -231,7 +234,7 @@ preferred_engine = "llamacpp"
 
 ```python
 from openjarvis.intelligence import (
-    BUILTIN_MODELS,           # List[ModelSpec] — the full built-in catalog
+    BUILTIN_MODELS,  # List[ModelSpec] — the full built-in catalog
     merge_discovered_models,  # (engine_key, model_ids) -> None
     register_builtin_models,  # () -> None
 )

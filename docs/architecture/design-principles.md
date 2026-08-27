@@ -53,18 +53,15 @@ All extensible components use the **`@XRegistry.register("name")` decorator** pa
 from openjarvis.core.registry import EngineRegistry
 from openjarvis.engine._stubs import InferenceEngine
 
+
 @EngineRegistry.register("my-engine")
 class MyEngine(InferenceEngine):
     engine_id = "my-engine"
 
-    def generate(self, messages, *, model, **kwargs):
-        ...
-    def stream(self, messages, *, model, **kwargs):
-        ...
-    def list_models(self):
-        ...
-    def health(self):
-        ...
+    def generate(self, messages, *, model, **kwargs): ...
+    def stream(self, messages, *, model, **kwargs): ...
+    def list_models(self): ...
+    def health(self): ...
 ```
 
 The `RegistryBase[T]` generic base class provides:
@@ -157,7 +154,7 @@ class TelemetryRecord:
     completion_tokens: int
     total_tokens: int
     latency_seconds: float
-    ttft: float              # Time to first token
+    ttft: float  # Time to first token
     cost_usd: float
     energy_joules: float
     power_watts: float

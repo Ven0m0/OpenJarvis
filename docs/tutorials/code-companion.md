@@ -49,9 +49,9 @@ from openjarvis import Jarvis
 j = Jarvis(model="qwen3:8b", engine_key="ollama")  # (1)!
 try:
     response = j.ask(
-        prompt,                      # (2)!
-        agent="native_react",        # (3)!
-        tools=["git_diff", "think"], # (4)!
+        prompt,  # (2)!
+        agent="native_react",  # (3)!
+        tools=["git_diff", "think"],  # (4)!
     )
     print(response)
 finally:
@@ -206,8 +206,7 @@ Each script contains a `prompt` string that instructs the agent what to do and w
 For multi-session workflows (e.g., a reviewer that remembers previous assessments of the same files), add `"memory_store"` and `"memory_search"` to the tool list and update the prompt to use them:
 
 ```python
-tools = ["git_diff", "git_log", "file_read", "think",
-         "memory_store", "memory_search"]
+tools = ["git_diff", "git_log", "file_read", "think", "memory_store", "memory_search"]
 ```
 
 ## See Also

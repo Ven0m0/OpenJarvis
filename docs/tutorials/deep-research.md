@@ -81,10 +81,10 @@ j = Jarvis(model="qwen3:8b", engine_key="ollama")  # (1)!
 try:
     response = j.ask(
         "Research the following topic in depth and produce a report:\n\nquantum computing",
-        agent="orchestrator",     # (2)!
-        tools=tools,              # (3)!
-        system_prompt=...,        # (4)!
-        max_turns=15,             # (5)!
+        agent="orchestrator",  # (2)!
+        tools=tools,  # (3)!
+        system_prompt=...,  # (4)!
+        max_turns=15,  # (5)!
         temperature=0.5,
     )
 finally:
@@ -176,8 +176,14 @@ response = j.ask(prompt, agent="native_react", tools=tools)
 Append any registered tool name to the `tools` list. For example, to also query a local knowledge base:
 
 ```python
-tools = ["web_search", "think", "file_write",
-         "memory_store", "memory_search", "knowledge_graph_query"]
+tools = [
+    "web_search",
+    "think",
+    "file_write",
+    "memory_store",
+    "memory_search",
+    "knowledge_graph_query",
+]
 ```
 
 Run `jarvis agent info orchestrator` to see the full tool catalog.
