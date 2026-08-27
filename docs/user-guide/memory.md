@@ -19,10 +19,14 @@ All memory backends implement the `MemoryBackend` abstract base class.
 class MemoryBackend(ABC):
     backend_id: str
 
-    def store(self, content: str, *, source: str = "", metadata: dict | None = None) -> str:
+    def store(
+        self, content: str, *, source: str = "", metadata: dict | None = None
+    ) -> str:
         """Persist content and return a unique document ID."""
 
-    def retrieve(self, query: str, *, top_k: int = 5, **kwargs) -> list[RetrievalResult]:
+    def retrieve(
+        self, query: str, *, top_k: int = 5, **kwargs
+    ) -> list[RetrievalResult]:
         """Search for query and return the top-k results."""
 
     def delete(self, doc_id: str) -> bool:

@@ -56,9 +56,9 @@ All extensible components in OpenJarvis use a **decorator-based registry** for r
 ```python
 from openjarvis.core.registry import EngineRegistry
 
+
 @EngineRegistry.register("ollama")
-class OllamaEngine(InferenceEngine):
-    ...
+class OllamaEngine(InferenceEngine): ...
 ```
 
 Each registry provides:

@@ -22,8 +22,8 @@ from abc import ABC, abstractmethod
 from openjarvis.bench._stubs import BenchmarkResult
 from openjarvis.engine._stubs import InferenceEngine
 
-class BaseBenchmark(ABC):
 
+class BaseBenchmark(ABC):
     @property
     @abstractmethod
     def name(self) -> str:
@@ -311,8 +311,7 @@ Alternatively, use the decorator at class definition time:
 
 ```python
 @BenchmarkRegistry.register("context_length")
-class ContextLengthBenchmark(BaseBenchmark):
-    ...
+class ContextLengthBenchmark(BaseBenchmark): ...
 ```
 
 !!! info "The `ensure_registered()` Pattern"

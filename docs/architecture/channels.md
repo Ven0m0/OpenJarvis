@@ -168,6 +168,7 @@ To add a new channel backend:
 from openjarvis.channels._stubs import BaseChannel, ChannelMessage, ChannelStatus
 from openjarvis.core.registry import ChannelRegistry
 
+
 @ChannelRegistry.register("my_platform")
 class MyPlatformChannel(BaseChannel):
     channel_id = "my_platform"

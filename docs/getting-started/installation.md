@@ -203,9 +203,9 @@ result = j.ask_full(
     agent="orchestrator",
     tools=["calculator", "think"],
 )
-print(result["content"])       # "12"
+print(result["content"])  # "12"
 print(result["tool_results"])  # tool invocations
-print(result["turns"])         # number of agent turns
+print(result["turns"])  # number of agent turns
 ```
 
 ### Composition layer

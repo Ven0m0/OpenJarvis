@@ -48,9 +48,9 @@ Search results are returned as `RetrievalResult` objects:
 ```python
 @dataclass(slots=True)
 class RetrievalResult:
-    content: str                  # The document text
-    score: float = 0.0            # Relevance score (higher is better)
-    source: str = ""              # Originating file path or identifier
+    content: str  # The document text
+    score: float = 0.0  # Relevance score (higher is better)
+    source: str = ""  # Originating file path or identifier
     metadata: Dict[str, Any] = field(default_factory=dict)
 ```
 
@@ -142,9 +142,9 @@ Large documents are split into manageable chunks before storage. The chunking pi
 ```python
 @dataclass(slots=True)
 class ChunkConfig:
-    chunk_size: int = 512      # Maximum tokens per chunk (whitespace-split)
-    chunk_overlap: int = 64    # Tokens to overlap between consecutive chunks
-    min_chunk_size: int = 50   # Minimum tokens for a chunk to be kept
+    chunk_size: int = 512  # Maximum tokens per chunk (whitespace-split)
+    chunk_overlap: int = 64  # Tokens to overlap between consecutive chunks
+    min_chunk_size: int = 50  # Minimum tokens for a chunk to be kept
 ```
 
 ### Chunk
@@ -152,10 +152,10 @@ class ChunkConfig:
 ```python
 @dataclass(slots=True)
 class Chunk:
-    content: str               # The chunk text
-    source: str = ""           # Originating file path
-    offset: int = 0            # Token offset within the original document
-    index: int = 0             # Chunk index (0, 1, 2, ...)
+    content: str  # The chunk text
+    source: str = ""  # Originating file path
+    offset: int = 0  # Token offset within the original document
+    index: int = 0  # Chunk index (0, 1, 2, ...)
     metadata: Dict[str, Any] = field(default_factory=dict)
 ```
 
@@ -266,10 +266,10 @@ The context injection pipeline retrieves relevant documents and prepends them to
 ```python
 @dataclass(slots=True)
 class ContextConfig:
-    enabled: bool = True           # Whether context injection is active
-    top_k: int = 5                 # Maximum results to retrieve
-    min_score: float = 0.1         # Minimum relevance score threshold
-    max_context_tokens: int = 2048 # Maximum tokens of context to inject
+    enabled: bool = True  # Whether context injection is active
+    top_k: int = 5  # Maximum results to retrieve
+    min_score: float = 0.1  # Minimum relevance score threshold
+    max_context_tokens: int = 2048  # Maximum tokens of context to inject
 ```
 
 ### `inject_context()`
@@ -324,6 +324,7 @@ Memory backends are registered via the `@MemoryRegistry.register("name")` decora
 ```python
 from openjarvis.core.registry import MemoryRegistry
 from openjarvis.tools.storage._stubs import MemoryBackend
+
 
 @MemoryRegistry.register("my-backend")
 class MyMemoryBackend(MemoryBackend):

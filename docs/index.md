@@ -81,7 +81,7 @@ OpenJarvis is that stack. It is a framework for local-first personal AI, built a
     ```python
     from openjarvis import Jarvis
 
-    j = Jarvis()                              # auto-detect engine
+    j = Jarvis()  # auto-detect engine
     response = j.ask("Explain quicksort.")
     print(response)
     ```
@@ -94,7 +94,7 @@ OpenJarvis is that stack. It is a framework for local-first personal AI, built a
         agent="orchestrator",
         tools=["calculator"],
     )
-    print(result["content"])       # "4"
+    print(result["content"])  # "4"
     print(result["tool_results"])  # [{tool_name: "calculator", ...}]
     ```
 

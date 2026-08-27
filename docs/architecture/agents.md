@@ -65,17 +65,18 @@ It returns an `AgentResult` containing the response content, any tool results, t
 ```python
 @dataclass(slots=True)
 class AgentContext:
-    conversation: Conversation    # Prior messages for multi-turn context
-    tools: List[str]              # Available tool names
-    memory_results: List[Any]     # Pre-fetched memory search results
-    metadata: Dict[str, Any]      # Arbitrary key-value pairs
+    conversation: Conversation  # Prior messages for multi-turn context
+    tools: List[str]  # Available tool names
+    memory_results: List[Any]  # Pre-fetched memory search results
+    metadata: Dict[str, Any]  # Arbitrary key-value pairs
+
 
 @dataclass(slots=True)
 class AgentResult:
-    content: str                  # The agent's response text
+    content: str  # The agent's response text
     tool_results: List[ToolResult]  # Results from tool invocations
-    turns: int                    # Number of inference turns taken
-    metadata: Dict[str, Any]      # Arbitrary metadata
+    turns: int  # Number of inference turns taken
+    metadata: Dict[str, Any]  # Arbitrary metadata
 ```
 
 ---
@@ -397,8 +398,8 @@ How it works:
 from openjarvis.agents.claude_code import ClaudeCodeAgent
 
 agent = ClaudeCodeAgent(
-    engine=None,   # not used
-    model="",      # not used
+    engine=None,  # not used
+    model="",  # not used
     workspace="/path/to/project",
     timeout=120,
 )
@@ -543,12 +544,12 @@ Agents are registered via the `@AgentRegistry.register("name")` decorator:
 from openjarvis.core.registry import AgentRegistry
 from openjarvis.agents._stubs import BaseAgent
 
+
 @AgentRegistry.register("my-agent")
 class MyAgent(BaseAgent):
     agent_id = "my-agent"
 
-    def run(self, input, context=None, **kwargs):
-        ...
+    def run(self, input, context=None, **kwargs): ...
 ```
 
 To list all registered agents:

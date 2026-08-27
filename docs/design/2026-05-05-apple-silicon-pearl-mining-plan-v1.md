@@ -167,6 +167,7 @@ Create `tests/mining/test_install.py`:
 
 ```python
 """Tests for openjarvis.mining._install."""
+
 from __future__ import annotations
 
 import sys
@@ -191,6 +192,7 @@ def test_pearl_packages_available_returns_true_when_all_present():
 
     # Install three fake modules so importlib.util.find_spec returns truthy.
     import types
+
     fakes = {
         name: types.ModuleType(name)
         for name in ("pearl_mining", "pearl_gateway", "miner_base")
@@ -225,6 +227,7 @@ The cpu-pearl provider depends on three upstream packages: ``pearl_mining``,
 implementation plan covers a build-from-pin fallback. This module is the
 single source of truth for "is the user's environment ready?".
 """
+
 from __future__ import annotations
 
 import importlib.util
@@ -242,8 +245,7 @@ def pearl_packages_available() -> bool:
     next step to the user.
     """
     return all(
-        _module_available(m)
-        for m in ("pearl_mining", "pearl_gateway", "miner_base")
+        _module_available(m) for m in ("pearl_mining", "pearl_gateway", "miner_base")
     )
 
 
@@ -393,9 +395,7 @@ def build_from_pin(pinned_ref: str = PEARL_PINNED_REF) -> Path:
     for pkg_name in ("miner-utils", "pearl-gateway", "miner-base"):
         pkg_dir = clone_dir / "miner" / pkg_name
         if pkg_dir.is_dir():
-            subprocess.check_call(
-                ["uv", "pip", "install", "--no-deps", str(pkg_dir)]
-            )
+            subprocess.check_call(["uv", "pip", "install", "--no-deps", str(pkg_dir)])
 
     return clone_dir
 ```
@@ -433,6 +433,7 @@ Create `tests/mining/test_miner_loop.py`:
 
 ```python
 """Tests for openjarvis.mining._miner_loop_main."""
+
 from __future__ import annotations
 
 import asyncio
@@ -512,6 +513,7 @@ This module is the subprocess; the parent OJ process never imports
 it directly (it spawns it via ``python -m``). That keeps the parent's
 import graph free of pearl_mining (which is an optional dependency).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -525,7 +527,9 @@ from typing import Any
 logger = logging.getLogger("openjarvis.mining.miner_loop")
 
 
-def _make_request(method: str, params: dict[str, Any], request_id: int) -> dict[str, Any]:
+def _make_request(
+    method: str, params: dict[str, Any], request_id: int
+) -> dict[str, Any]:
     """Build a JSON-RPC 2.0 request envelope matching gateway's schema."""
     return {"jsonrpc": "2.0", "method": method, "params": params, "id": request_id}
 
@@ -594,7 +598,9 @@ async def _mine_one_round(
             "target": target,
         },
     }
-    await _send_request(writer, _make_request("submitPlainProof", submit_params, request_id + 1))
+    await _send_request(
+        writer, _make_request("submitPlainProof", submit_params, request_id + 1)
+    )
     submit_response = await _read_response(reader)
     if "error" in submit_response:
         logger.warning("submitPlainProof rejected: %s", submit_response["error"])
@@ -665,7 +671,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"
+    )
     args = parse_args()
     try:
         asyncio.run(_main_loop(args))
@@ -706,6 +714,7 @@ Create `tests/mining/test_pearl_subprocess.py`:
 
 ```python
 """Tests for openjarvis.mining._pearl_subprocess."""
+
 from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
@@ -801,6 +810,7 @@ Manages two subprocesses:
 Lifecycle is in-memory: while this object lives, both subprocesses live.
 The provider holds it; sidecar JSON records PIDs for crash recovery.
 """
+
 from __future__ import annotations
 
 import os
@@ -1009,6 +1019,7 @@ Create `tests/mining/test_cpu_pearl.py`:
 
 ```python
 """Tests for openjarvis.mining.cpu_pearl.CpuPearlProvider."""
+
 from __future__ import annotations
 
 from unittest.mock import patch
@@ -1113,10 +1124,17 @@ where py-pearl-mining builds — verified on macOS arm64 (M2 Max) in Spec B.
 Engine-independent: this provider does not plug into the user's inference
 stack. The user keeps using whatever engine they want; mining runs alongside.
 """
+
 from __future__ import annotations
 
 from . import _install
-from ._stubs import HardwareInfo, MiningCapabilities, MiningConfig, MiningProvider, MiningStats
+from ._stubs import (
+    HardwareInfo,
+    MiningCapabilities,
+    MiningConfig,
+    MiningProvider,
+    MiningStats,
+)
 
 
 class CpuPearlProvider(MiningProvider):
@@ -1175,7 +1193,9 @@ Wire the provider lifecycle methods to the subprocess launcher and Spec A's side
 Append to `tests/mining/test_cpu_pearl.py`:
 
 ```python
-def test_start_writes_sidecar_and_returns_running(darwin_apple_hw, tmp_path, monkeypatch):
+def test_start_writes_sidecar_and_returns_running(
+    darwin_apple_hw, tmp_path, monkeypatch
+):
     from openjarvis.mining.cpu_pearl import CpuPearlProvider
     from openjarvis.mining._stubs import MiningConfig
 
@@ -1209,7 +1229,10 @@ def test_start_writes_sidecar_and_returns_running(darwin_apple_hw, tmp_path, mon
                 "pearld_rpc_url": "http://localhost:44107",
                 "pearld_rpc_user": "rpcuser",
                 "pearld_rpc_password_env": "TESTPW",
-                "m": 256, "n": 128, "k": 1024, "rank": 32,
+                "m": 256,
+                "n": 128,
+                "k": 1024,
+                "rank": 32,
             },
         )
         monkeypatch.setenv("TESTPW", "secret")
@@ -1238,6 +1261,7 @@ Replace `src/openjarvis/mining/cpu_pearl.py` with the full implementation:
 Spec B v1: wraps Pearl's pure-Rust ``mine()`` function via py-pearl-mining
 and runs Pearl's pearl-gateway as a sibling subprocess.
 """
+
 from __future__ import annotations
 
 import json
@@ -1255,7 +1279,13 @@ from ._constants import (
     CPU_PEARL_DEFAULT_RANK,
 )
 from ._pearl_subprocess import PearlSubprocessLauncher
-from ._stubs import HardwareInfo, MiningCapabilities, MiningConfig, MiningProvider, MiningStats
+from ._stubs import (
+    HardwareInfo,
+    MiningCapabilities,
+    MiningConfig,
+    MiningProvider,
+    MiningStats,
+)
 
 
 def _sidecar_path() -> Path:
@@ -1682,6 +1712,7 @@ def test_provider_runs_end_to_end_on_this_host(tmp_path, monkeypatch):
     provider.start(cfg)
 
     import time
+
     deadline = time.monotonic() + 30
     saw_running = False
     while time.monotonic() < deadline:

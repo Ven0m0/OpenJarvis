@@ -338,9 +338,7 @@ Response headers include `Cache-Control: no-cache` and `Connection: keep-alive` 
     # Non-streaming
     response = client.chat.completions.create(
         model="qwen3:8b",
-        messages=[
-            {"role": "user", "content": "What is the capital of France?"}
-        ],
+        messages=[{"role": "user", "content": "What is the capital of France?"}],
         temperature=0.7,
         max_tokens=256,
     )
@@ -349,9 +347,7 @@ Response headers include `Cache-Control: no-cache` and `Connection: keep-alive` 
     # Streaming
     stream = client.chat.completions.create(
         model="qwen3:8b",
-        messages=[
-            {"role": "user", "content": "Write a short poem about AI."}
-        ],
+        messages=[{"role": "user", "content": "Write a short poem about AI."}],
         stream=True,
     )
     for chunk in stream:
@@ -380,9 +376,7 @@ Response headers include `Cache-Control: no-cache` and `Connection: keep-alive` 
         f"{BASE_URL}/v1/chat/completions",
         json={
             "model": "qwen3:8b",
-            "messages": [
-                {"role": "user", "content": "What is the capital of France?"}
-            ],
+            "messages": [{"role": "user", "content": "What is the capital of France?"}],
             "temperature": 0.7,
             "max_tokens": 256,
         },
@@ -396,9 +390,7 @@ Response headers include `Cache-Control: no-cache` and `Connection: keep-alive` 
         f"{BASE_URL}/v1/chat/completions",
         json={
             "model": "qwen3:8b",
-            "messages": [
-                {"role": "user", "content": "Write a haiku about code."}
-            ],
+            "messages": [{"role": "user", "content": "Write a haiku about code."}],
             "stream": True,
         },
     ) as response:

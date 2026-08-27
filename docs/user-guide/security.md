@@ -192,10 +192,12 @@ scanner = SecretScanner()
 
 # Scan text
 result = scanner.scan("My key is sk-abc123xyz789 and it is secret")
-print(result.clean)           # False
+print(result.clean)  # False
 print(result.highest_threat)  # ThreatLevel.CRITICAL
 for finding in result.findings:
-    print(f"  {finding.pattern_name}: {finding.description} at [{finding.start}:{finding.end}]")
+    print(
+        f"  {finding.pattern_name}: {finding.description} at [{finding.start}:{finding.end}]"
+    )
 
 # Redact text
 clean = scanner.redact("Token: sk-abc123xyz789")
@@ -272,9 +274,9 @@ from pathlib import Path
 from openjarvis.security.file_policy import is_sensitive_file, filter_sensitive_paths
 
 # Check a single file
-print(is_sensitive_file(".env"))           # True
-print(is_sensitive_file("server.key"))     # True
-print(is_sensitive_file("README.md"))      # False
+print(is_sensitive_file(".env"))  # True
+print(is_sensitive_file("server.key"))  # True
+print(is_sensitive_file("README.md"))  # False
 
 # Filter a list of paths
 paths = [
@@ -355,6 +357,7 @@ secret_events = audit.query(event_type="secret_detected")
 
 # Filter by time range
 import time
+
 recent = audit.query(since=time.time() - 3600)  # last hour
 
 # Count total events
@@ -419,14 +422,16 @@ class InternalUrlScanner(BaseScanner):
     def scan(self, text: str) -> ScanResult:
         findings = []
         for match in self.PATTERN.finditer(text):
-            findings.append(ScanFinding(
-                pattern_name="internal_url",
-                matched_text=match.group(0),
-                threat_level=ThreatLevel.MEDIUM,
-                start=match.start(),
-                end=match.end(),
-                description="Internal service URL",
-            ))
+            findings.append(
+                ScanFinding(
+                    pattern_name="internal_url",
+                    matched_text=match.group(0),
+                    threat_level=ThreatLevel.MEDIUM,
+                    start=match.start(),
+                    end=match.end(),
+                    description="Internal service URL",
+                )
+            )
         return ScanResult(findings=findings)
 
     def redact(self, text: str) -> str:

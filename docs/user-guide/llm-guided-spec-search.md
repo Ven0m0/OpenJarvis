@@ -88,7 +88,8 @@ regular loader picks it up:
 
 ```python
 from openjarvis.core.config import load_config
-cfg = load_config().learning.spec_search   # SpecSearchLearningConfig
+
+cfg = load_config().learning.spec_search  # SpecSearchLearningConfig
 ```
 
 The `[learning.spec_search]` table maps 1:1 onto the

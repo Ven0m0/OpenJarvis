@@ -27,6 +27,7 @@ All agents extend the abstract `BaseAgent` class.
 from abc import ABC, abstractmethod
 from openjarvis.agents._stubs import AgentContext, AgentResult
 
+
 class BaseAgent(ABC):
     agent_id: str
     accepts_tools: bool = False
@@ -364,8 +365,8 @@ The `ClaudeCodeAgent` wraps the `@anthropic-ai/claude-code` SDK via a bundled No
 from openjarvis.agents.claude_code import ClaudeCodeAgent
 
 agent = ClaudeCodeAgent(
-    engine=None,          # not used
-    model="",             # not used
+    engine=None,  # not used
+    model="",  # not used
     workspace="/path/to/project",
     allowed_tools=["Read", "Write", "Bash"],
     timeout=120,

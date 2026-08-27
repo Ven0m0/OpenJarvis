@@ -137,7 +137,7 @@ The discovery process:
 Once an engine is found, the system discovers available models:
 
 ```python
-register_builtin_models()          # Register known models (catalog)
+register_builtin_models()  # Register known models (catalog)
 all_engines = discover_engines(config)
 all_models = discover_models(all_engines)
 for ek, model_ids in all_models.items():
@@ -151,6 +151,7 @@ If no model was explicitly specified, the router policy selects one:
 ```python
 from openjarvis.learning import ensure_registered
 from openjarvis.learning.router import build_routing_context
+
 ensure_registered()  # Ensure learning policies are registered
 
 policy_key = router_policy or config.learning.routing.policy
@@ -175,7 +176,7 @@ If memory context injection is enabled (default: `true`) and the memory backend 
 backend = _get_memory_backend(config)
 if backend is not None:
     ctx_cfg = ContextConfig(
-        top_k=config.memory.context_top_k,        # Default: 5
+        top_k=config.memory.context_top_k,  # Default: 5
         min_score=config.memory.context_min_score,  # Default: 0.1
         max_context_tokens=config.memory.context_max_tokens,  # Default: 2048
     )
@@ -193,7 +194,8 @@ This retrieves relevant chunks from the memory backend and prepends a system mes
 
 ```python
 result = instrumented_generate(
-    engine, messages,
+    engine,
+    messages,
     model=model_name,
     bus=bus,
     temperature=temperature,
@@ -235,7 +237,7 @@ class TelemetryRecord:
     completion_tokens: int
     total_tokens: int
     latency_seconds: float
-    ttft: float              # Time to first token
+    ttft: float  # Time to first token
     cost_usd: float
     energy_joules: float
     power_watts: float

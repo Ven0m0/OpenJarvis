@@ -113,7 +113,7 @@ def handle_incoming(msg: ChannelMessage) -> None:
 
 
 channel.on_message(handle_incoming)  # (1)!
-channel.connect()                    # (2)!
+channel.connect()  # (2)!
 
 # Messages now arrive asynchronously via the background listener thread
 # Your main thread can continue doing other work
@@ -419,9 +419,9 @@ To get a dedicated number, upgrade to a paid SendBlue plan.
 from openjarvis.channels.sendblue import SendBlueChannel
 
 channel = SendBlueChannel(
-    api_key_id="YOUR_API_KEY_ID",         # or SENDBLUE_API_KEY_ID env var
-    api_secret_key="YOUR_API_SECRET_KEY", # or SENDBLUE_API_SECRET_KEY env var
-    from_number="+16452468235",           # or SENDBLUE_FROM_NUMBER env var
+    api_key_id="YOUR_API_KEY_ID",  # or SENDBLUE_API_KEY_ID env var
+    api_secret_key="YOUR_API_SECRET_KEY",  # or SENDBLUE_API_SECRET_KEY env var
+    from_number="+16452468235",  # or SENDBLUE_FROM_NUMBER env var
 )
 channel.connect()
 
@@ -541,8 +541,8 @@ If `ready` is `false`, the Messaging tab shows a "Disconnected" badge with a "Re
 from openjarvis.channels.whatsapp_baileys import WhatsAppBaileysChannel
 
 channel = WhatsAppBaileysChannel(
-    assistant_name="Jarvis",           # (1)!
-    assistant_has_own_number=False,    # (2)!
+    assistant_name="Jarvis",  # (1)!
+    assistant_has_own_number=False,  # (2)!
 )
 channel.connect()  # spawns the Node.js bridge subprocess
 ```
@@ -581,7 +581,7 @@ Messages are addressed by WhatsApp **JID** (Jabber ID) -- the canonical identifi
 # Group JID format: <group-id>@g.us
 
 ok = channel.send(
-    "15551234567@s.whatsapp.net",      # JID of the recipient
+    "15551234567@s.whatsapp.net",  # JID of the recipient
     "Hello from OpenJarvis!",
 )
 

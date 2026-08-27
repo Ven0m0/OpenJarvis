@@ -120,31 +120,39 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from openjarvis.core.config import HardwareInfo
 
+
 @dataclass(slots=True)
 class MiningCapabilities:
     supported: bool
-    reason: str | None = None              # human-readable: "needs sm90", "no Pearl plugin for engine ollama"
+    reason: str | None = (
+        None  # human-readable: "needs sm90", "no Pearl plugin for engine ollama"
+    )
     estimated_hashrate: float | None = None
+
 
 @dataclass(slots=True)
 class SoloTarget:
     pearld_rpc_url: str
+
 
 @dataclass(slots=True)
 class PoolTarget:
     url: str
     worker_id: str | None = None
 
+
 SubmitTarget = SoloTarget | PoolTarget
+
 
 @dataclass(slots=True)
 class MiningConfig:
-    provider: str                          # MinerRegistry key
+    provider: str  # MinerRegistry key
     wallet_address: str
-    submit_target: SubmitTarget            # parsed from TOML "solo" / "pool:<url>"; v1 accepts only SoloTarget at runtime
-    fee_bps: int = 0                       # v1: 0; v2: 2000 (=20%)
+    submit_target: SubmitTarget  # parsed from TOML "solo" / "pool:<url>"; v1 accepts only SoloTarget at runtime
+    fee_bps: int = 0  # v1: 0; v2: 2000 (=20%)
     fee_payout_address: str | None = None  # v1: ignored; v2: OJ's address
     extra: dict = field(default_factory=dict)
+
 
 @dataclass(slots=True)
 class MiningStats:
@@ -156,15 +164,18 @@ class MiningStats:
     uptime_seconds: float = 0.0
     last_share_at: float | None = None
     last_error: str | None = None
-    payout_target: str = "solo"            # v2 reporting; "solo" in v1
-    fees_owed: int = 0                     # v2 accounting hook; 0 in v1
+    payout_target: str = "solo"  # v2 reporting; "solo" in v1
+    fees_owed: int = 0  # v2 accounting hook; 0 in v1
+
 
 class MiningProvider(ABC):
     provider_id: str
 
     @classmethod
     @abstractmethod
-    def detect(cls, hw: HardwareInfo, engine_id: str, model: str) -> MiningCapabilities: ...
+    def detect(
+        cls, hw: HardwareInfo, engine_id: str, model: str
+    ) -> MiningCapabilities: ...
 
     @abstractmethod
     async def start(self, config: MiningConfig) -> None: ...
@@ -355,9 +366,9 @@ Selection logic in `_docker.PearlDockerLauncher.ensure_image()`:
 `mining/_constants.py`:
 
 ```python
-PEARL_REPO       = "https://github.com/pearl-research-labs/pearl.git"
-PEARL_PINNED_REF = "<sha-or-tag>"            # bumped per OJ release after rev-testing
-PEARL_IMAGE_TAG  = f"openjarvis/pearl-miner:{PEARL_PINNED_REF}"
+PEARL_REPO = "https://github.com/pearl-research-labs/pearl.git"
+PEARL_PINNED_REF = "<sha-or-tag>"  # bumped per OJ release after rev-testing
+PEARL_IMAGE_TAG = f"openjarvis/pearl-miner:{PEARL_PINNED_REF}"
 ```
 
 OJ release notes call out the Pearl ref shipped. Bumping the ref is its own PR with a documented Pearl-rev workflow.
@@ -371,17 +382,21 @@ container = client.containers.run(
     image=PEARL_IMAGE_TAG,
     command=[
         config.extra["model"],
-        "--host", "0.0.0.0",
-        "--port", str(config.extra["vllm_port"]),
-        "--gpu-memory-utilization", str(config.extra["gpu_memory_utilization"]),
+        "--host",
+        "0.0.0.0",
+        "--port",
+        str(config.extra["vllm_port"]),
+        "--gpu-memory-utilization",
+        str(config.extra["gpu_memory_utilization"]),
         "--enforce-eager",
-        "--max-model-len", str(config.extra.get("max_model_len", 8192)),
+        "--max-model-len",
+        str(config.extra.get("max_model_len", 8192)),
     ],
     name="openjarvis-pearl-miner",
     detach=True,
     auto_remove=False,
     restart_policy={"Name": "unless-stopped"},
-    device_requests=[ DeviceRequest(count=-1, capabilities=[["gpu"]]) ],
+    device_requests=[DeviceRequest(count=-1, capabilities=[["gpu"]])],
     shm_size="8g",
     network_mode="host",
     volumes={
@@ -391,12 +406,12 @@ container = client.containers.run(
         },
     },
     environment={
-        "PEARLD_RPC_URL":         config.extra["pearld_rpc_url"],
-        "PEARLD_RPC_USER":        config.extra["pearld_rpc_user"],
-        "PEARLD_RPC_PASSWORD":    os.environ[config.extra["pearld_rpc_password_env"]],
-        "PEARLD_MINING_ADDRESS":  config.wallet_address,
-        "HF_TOKEN":               os.environ.get(config.extra.get("hf_token_env", "HF_TOKEN"), ""),
-        "MINER_RPC_TRANSPORT":    "tcp",
+        "PEARLD_RPC_URL": config.extra["pearld_rpc_url"],
+        "PEARLD_RPC_USER": config.extra["pearld_rpc_user"],
+        "PEARLD_RPC_PASSWORD": os.environ[config.extra["pearld_rpc_password_env"]],
+        "PEARLD_MINING_ADDRESS": config.wallet_address,
+        "HF_TOKEN": os.environ.get(config.extra.get("hf_token_env", "HF_TOKEN"), ""),
+        "MINER_RPC_TRANSPORT": "tcp",
     },
 )
 ```

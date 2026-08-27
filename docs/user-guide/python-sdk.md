@@ -171,10 +171,10 @@ The parameters are identical to `ask()`.
 
 ```python
 result = j.ask_full("What is 2+2?")
-print(result["content"])       # "4"
-print(result["model"])         # "qwen3:8b"
-print(result["engine"])        # "ollama"
-print(result["usage"])         # {"prompt_tokens": 10, ...}
+print(result["content"])  # "4"
+print(result["model"])  # "qwen3:8b"
+print(result["engine"])  # "ollama"
+print(result["usage"])  # {"prompt_tokens": 10, ...}
 ```
 
 ---
@@ -204,8 +204,8 @@ result = j.ask_full(
     tools=["calculator"],
 )
 
-print(result["content"])       # "15% of 340 is 51.0"
-print(result["turns"])         # 2
+print(result["content"])  # "15% of 340 is 51.0"
+print(result["turns"])  # 2
 print(result["tool_results"])
 # [{"tool_name": "calculator", "content": "51.0", "success": True}]
 ```
